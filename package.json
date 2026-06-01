@@ -49,6 +49,7 @@
 	],
 	"scripts": {
 		"axerity": "node ./bin/axerity.js",
+		"postversion": "git push --follow-tags",
 		"prepare-engine": "node scripts/prepare-engine.mjs",
 		"predev": "node scripts/prepare-engine.mjs",
 		"dev": "vite dev",
