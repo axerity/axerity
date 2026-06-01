@@ -1,18 +1,7 @@
 import { base as basePath } from '$app/paths';
-import { site } from '$lib/config/site';
-import type { PageFrontmatter } from '$lib/types';
+import { getSite } from '$lib/server/site';
+import { allPages } from '$lib/server/content-store';
 import type { RequestHandler } from './$types';
-
-const pages = import.meta.glob<{ metadata: PageFrontmatter }>('/src/content/docs/**/*.md', {
-	eager: true
-});
-
-const BASE = '/src/content/docs/';
-
-function pathToSlug(path: string): string {
-	const rel = path.slice(BASE.length).replace(/\.md$/, '');
-	return rel === 'index' ? '' : rel.replace(/\/index$/, '');
-}
 
 function escapeXml(value: string): string {
 	return value
@@ -23,13 +12,12 @@ function escapeXml(value: string): string {
 		.replace(/'/g, '&apos;');
 }
 
-export const prerender = true;
-
 export const GET: RequestHandler = () => {
+	const site = getSite();
 	const origin = (site.url ?? '') + basePath;
 
-	const items = Object.entries(pages)
-		.map(([path, mod]) => ({ slug: pathToSlug(path), fm: mod.metadata ?? {} }))
+	const items = allPages()
+		.map((p) => ({ slug: p.slug, fm: p.frontmatter }))
 		.filter((entry) => Boolean(entry.fm.date))
 		.sort(
 			(a, b) => new Date(b.fm.date as string).getTime() - new Date(a.fm.date as string).getTime()

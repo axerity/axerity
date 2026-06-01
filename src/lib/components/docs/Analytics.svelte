@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { site } from '$lib/config/site';
+	import type { SiteConfig } from '$lib/types';
+
+	let { site }: { site: SiteConfig } = $props();
 
 	$effect(() => {
 		if (!browser || !site.analytics) return;

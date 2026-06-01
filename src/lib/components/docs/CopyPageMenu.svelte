@@ -1,24 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { base } from '$app/paths';
 	import { fade } from 'svelte/transition';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import ExternalLink from '@lucide/svelte/icons/external-link';
-	import { getRawMarkdown } from '$lib/content/raw';
 
 	let open = $state(false);
 	let copied = $state(false);
 
-	const slug = $derived(page.url.pathname.slice(base.length).replace(/^\//, ''));
-
 	async function copyPage() {
-		const markdown = await getRawMarkdown(slug);
-		if (markdown == null) return;
 		try {
-			await navigator.clipboard.writeText(markdown);
+			const res = await fetch(`${page.url.pathname.replace(/\/$/, '')}.md`);
+			if (!res.ok) return;
+			await navigator.clipboard.writeText(await res.text());
 			copied = true;
 			setTimeout(() => (copied = false), 1500);
 		} catch {

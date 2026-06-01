@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { site } from '$lib/config/site';
 	import House from '@lucide/svelte/icons/house';
 	import BookOpen from '@lucide/svelte/icons/book-open';
 
+	const siteName = $derived(page.data.site?.name ?? 'Axerity');
 	const status = $derived(page.status);
 	const heading = $derived(status === 404 ? 'Page not found' : 'Something went wrong');
 	const message = $derived(
@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-	<title>{status} · {site.name}</title>
+	<title>{status} · {siteName}</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg px-6 text-center">

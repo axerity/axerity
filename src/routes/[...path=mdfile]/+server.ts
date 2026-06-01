@@ -1,17 +1,10 @@
 import { error } from '@sveltejs/kit';
-import { base } from '$app/paths';
-import { flatPages } from '$lib/content';
-import { getRawMarkdown } from '$lib/content/raw';
-import type { EntryGenerator, RequestHandler } from './$types';
-
-export const prerender = true;
-
-export const entries: EntryGenerator = () =>
-	flatPages.map((page) => ({ path: page.href.slice(base.length).replace(/^\//, '') + '.md' }));
+import { raw } from '$lib/server/content-store';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ params }) => {
 	const slug = params.path.replace(/\.md$/, '');
-	const markdown = await getRawMarkdown(slug);
+	const markdown = await raw(slug);
 
 	if (markdown == null) error(404, 'Not found');
 

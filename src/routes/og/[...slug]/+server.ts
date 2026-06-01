@@ -1,63 +1,52 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { error } from '@sveltejs/kit';
-import { base } from '$app/paths';
-import { site } from '$lib/config/site';
+import { getSite } from '$lib/server/site';
 import { renderOgImage } from '$lib/server/og';
-import type { PageFrontmatter } from '$lib/types';
-import type { EntryGenerator, RequestHandler } from './$types';
+import { frontmatterByPath } from '$lib/server/content-store';
+import type { RequestHandler } from './$types';
 
-const pages = import.meta.glob<{ metadata: PageFrontmatter }>('/src/content/docs/**/*.md', {
-	eager: true
-});
-
-const BASE = '/src/content/docs/';
-
+const ASSETS = process.env.AXERITY_ASSETS ?? 'static';
 const WEIGHTS = [400, 600, 700] as const;
 let fontCache: { data: ArrayBuffer; weight: 400 | 600 | 700 }[] | null = null;
 
-async function getFonts(fetch: typeof globalThis.fetch) {
+function getFonts() {
 	if (!fontCache) {
-		fontCache = await Promise.all(
-			WEIGHTS.map(async (weight) => {
-				const response = await fetch(`${base}/fonts/geist-${weight}.ttf`);
-				return { data: await response.arrayBuffer(), weight };
-			})
-		);
+		fontCache = WEIGHTS.map((weight) => {
+			const buf = readFileSync(join(ASSETS, 'fonts', `geist-${weight}.ttf`));
+			return { data: buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength), weight };
+		});
 	}
 	return fontCache;
 }
 
-const logoPath = site.og?.logo ?? site.logo?.dark ?? site.logo?.light;
 let logoCache: string | null | undefined;
 
-async function getLogo(fetch: typeof globalThis.fetch): Promise<string | undefined> {
+function getLogo(): string | undefined {
+	const site = getSite();
+	const logoPath = site.og?.logo ?? site.logo?.dark ?? site.logo?.light;
 	if (logoCache === undefined) {
 		if (!logoPath) {
 			logoCache = null;
 		} else {
-			const response = await fetch(logoPath);
-			const svg = await response.text();
-			logoCache = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+			try {
+				const svg = readFileSync(join(ASSETS, logoPath.replace(/^\//, '')), 'utf8');
+				logoCache = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
+			} catch {
+				logoCache = null;
+			}
 		}
 	}
 	return logoCache ?? undefined;
 }
 
-export const prerender = true;
-
-export const entries: EntryGenerator = () => {
-	return Object.keys(pages).map((path) => ({
-		slug: `${path.slice(BASE.length).replace(/\.md$/, '')}.png`
-	}));
-};
-
-export const GET: RequestHandler = async ({ params, fetch }) => {
+export const GET: RequestHandler = async ({ params }) => {
 	const key = params.slug.replace(/\.png$/, '');
-	const mod = pages[`${BASE}${key}.md`];
-	if (!mod) error(404, 'Not found');
-
-	const fm = mod.metadata ?? {};
-	const fonts = await getFonts(fetch);
-	const logo = await getLogo(fetch);
+	const fm = frontmatterByPath(key);
+	if (!fm) error(404, 'Not found');
+	const fonts = getFonts();
+	const logo = getLogo();
+	const site = getSite();
 
 	const png = await renderOgImage({
 		title: fm.title ?? site.name,

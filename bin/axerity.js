@@ -1,41 +1,24 @@
 #!/usr/bin/env node
-import { spawn, spawnSync } from 'node:child_process';
-import { createRequire } from 'node:module';
+import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import {
-	cpSync,
-	existsSync,
-	mkdirSync,
-	readFileSync,
-	readdirSync,
-	rmSync,
-	symlinkSync,
-	watch,
-	writeFileSync
-} from 'node:fs';
-import { basename, dirname, join, relative, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const engineRoot = resolve(here, '..');
 const userRoot = process.cwd();
 const isEngineRepo = userRoot === engineRoot;
 
-const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+const DIST = join(engineRoot, 'dist');
+const ASSETS = join(DIST, 'client');
 
-const require = createRequire(import.meta.url);
-function viteBin() {
-	const pkgPath = require.resolve('vite/package.json');
-	const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
-	const rel = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin.vite;
-	return resolve(dirname(pkgPath), rel);
-}
-
-const ENGINE_DOCS = join(engineRoot, 'src', 'content', 'docs');
-const ENGINE_CONFIG = join(engineRoot, 'axerity.json');
-const ENGINE_STATIC = join(engineRoot, 'static');
-const ENGINE_BUILD = join(engineRoot, 'build');
-const SPECS_DIR = join(engineRoot, '.axerity-specs');
-const ASSETS_DIR = join(engineRoot, '.axerity-assets');
+const tty = process.stdout.isTTY;
+const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
+const dim = paint('2');
+const bold = paint('1');
+const green = paint('32');
+const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
+const banner = (sub) => process.stdout.write(`\n  ${brand('◆')} ${bold('axerity')} ${dim(sub)}\n\n`);
 
 function findContentDir() {
 	for (const candidate of ['docs', join('content', 'docs'), 'content']) {
@@ -45,176 +28,13 @@ function findContentDir() {
 	return null;
 }
 
-function prepareEngine() {
-	spawnSync(process.execPath, [join(engineRoot, 'scripts', 'prepare-engine.mjs')], {
-		stdio: 'inherit'
-	});
-}
-
-function mountSpecs(config) {
-	const rewrite = (source) => {
-		const spec = typeof source === 'string' ? source : source.spec;
-		if (!spec || /^https?:\/\//.test(spec) || !existsSync(join(userRoot, spec))) return source;
-		const local = `.axerity-specs/${basename(spec)}`;
-		cpSync(join(userRoot, spec), join(engineRoot, local));
-		return typeof source === 'string' ? local : { ...source, spec: local };
-	};
-
-	if (!config.openapi) return config;
-	mkdirSync(SPECS_DIR, { recursive: true });
-	const openapi = Array.isArray(config.openapi)
-		? config.openapi.map(rewrite)
-		: rewrite(config.openapi);
-	return { ...config, openapi };
-}
-
-function writeConfig() {
-	const config = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8'));
-	writeFileSync(ENGINE_CONFIG, JSON.stringify(mountSpecs(config), null, '\t'));
-}
-
-function mount(contentDir) {
-	rmSync(ENGINE_DOCS, { recursive: true, force: true });
-	mkdirSync(ENGINE_DOCS, { recursive: true });
-	for (const entry of readdirSync(contentDir)) {
-		symlinkSync(join(contentDir, entry), join(ENGINE_DOCS, entry), symlinkType);
-	}
-
-	writeConfig();
-
-	rmSync(ASSETS_DIR, { recursive: true, force: true });
-	cpSync(ENGINE_STATIC, ASSETS_DIR, { recursive: true });
-	const userPublic = join(userRoot, 'public');
-	if (existsSync(userPublic)) cpSync(userPublic, ASSETS_DIR, { recursive: true });
-}
-
-function tidy() {
-	rmSync(SPECS_DIR, { recursive: true, force: true });
-	rmSync(ASSETS_DIR, { recursive: true, force: true });
-	rmSync(ENGINE_BUILD, { recursive: true, force: true });
-}
-
-const tty = process.stdout.isTTY;
-const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
-const dim = paint('2');
-const bold = paint('1');
-const red = paint('31');
-const green = paint('32');
-const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
-const mark = brand('◆');
-const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
-
-const banner = (sub) => process.stdout.write(`\n  ${mark} ${bold('axerity')} ${dim(sub)}\n\n`);
-
-const NOISE =
-	/^\s*(VITE v|➜|press h|ready in|Local:|Network:|use --host|watching for file changes)/i;
-const VITE_CHATTER =
-	/\[optimizer\]|\[vite\].*(re-?optimiz|optimized dependencies|new dependencies|page reload|hmr update|dependencies because)/i;
-
-function streamServer(child) {
-	let shown = false;
-	let buffer = '';
-	const onData = (chunk) => {
-		buffer += chunk;
-		const lines = buffer.split('\n');
-		buffer = lines.pop() ?? '';
-		for (const line of lines) {
-			const clean = strip(line);
-			const url = clean.match(/Local:\s*(http:\/\/\S+)/);
-			if (url && !shown) {
-				shown = true;
-				process.stdout.write(`  ${dim('ready at')}  ${brand(url[1])}\n`);
-				process.stdout.write(`  ${dim('Ctrl+C to stop')}\n\n`);
-				continue;
-			}
-			if (!clean.trim() || NOISE.test(clean.trim()) || VITE_CHATTER.test(clean)) continue;
-			process.stdout.write(`  ${line}\n`);
-		}
-	};
-	child.stdout.on('data', onData);
-	child.stderr.on('data', onData);
-}
-
-function streamBuild(child) {
-	const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-	let i = 0;
-	let log = '';
-	child.stdout.on('data', (d) => (log += d));
-	child.stderr.on('data', (d) => (log += d));
-	const timer = tty
-		? setInterval(() => {
-				process.stdout.write(`\r  ${brand(frames[(i = ++i % frames.length)])} ${dim('building…')}`);
-			}, 80)
-		: null;
-	return {
-		stop(ok) {
-			if (timer) clearInterval(timer);
-			if (tty) process.stdout.write('\r\x1b[K');
-			if (!ok) process.stdout.write(log);
-		}
-	};
-}
-
-function runEngine(sub, extra, { mounted, onSuccess }) {
-	const child = spawn(process.execPath, [viteBin(), sub, ...extra], {
-		cwd: engineRoot,
-		stdio: ['inherit', 'pipe', 'pipe'],
-		env: {
-			...process.env,
-			...(mounted
-				? { AXERITY_FS_ALLOW: userRoot, AXERITY_MOUNTED: '1', AXERITY_ASSETS: ASSETS_DIR }
-				: {})
-		}
-	});
-
-	banner(sub);
-	const build = sub === 'build' ? streamBuild(child) : (streamServer(child), null);
-
-	let configWatcher = null;
-	if (mounted && sub === 'dev') {
-		let timer = null;
-		configWatcher = watch(userRoot, (_event, filename) => {
-			if (filename !== 'axerity.json') return;
-			clearTimeout(timer);
-			timer = setTimeout(() => {
-				try {
-					writeConfig();
-				} catch {
-					return;
-				}
-			}, 80);
-		});
-	}
-
-	let cleaned = false;
-	const cleanup = () => {
-		if (cleaned || !mounted) return;
-		cleaned = true;
-		configWatcher?.close();
-		tidy();
-	};
-
-	child.on('exit', (code) => {
-		const ok = code === 0;
-		if (build) build.stop(ok);
-		if (ok && onSuccess) onSuccess();
-		else if (!ok && sub !== 'build')
-			process.stdout.write(`\n  ${red('✗')} exited with code ${code}\n`);
-		cleanup();
-		process.exit(code ?? 0);
-	});
-
-	process.on('SIGINT', () => child.kill('SIGINT'));
-	process.on('SIGTERM', () => child.kill('SIGINT'));
-	process.on('exit', cleanup);
-}
-
-function run(sub, extra) {
+function context() {
 	if (isEngineRepo) {
-		prepareEngine();
-		return runEngine(sub, extra, { mounted: false });
+		return {
+			contentDir: join(engineRoot, 'src', 'content', 'docs'),
+			config: join(engineRoot, 'axerity.json')
+		};
 	}
-
 	if (!existsSync(join(userRoot, 'axerity.json'))) {
 		console.error('No axerity.json found here. Run `axerity init` to create a starter site.');
 		process.exit(1);
@@ -224,30 +44,61 @@ function run(sub, extra) {
 		console.error('No content found. Create a `docs/` folder with your Markdown.');
 		process.exit(1);
 	}
+	return { contentDir, config: join(userRoot, 'axerity.json') };
+}
 
-	mount(contentDir);
+function ensureDist() {
+	if (existsSync(join(DIST, 'handler.js'))) return;
+	console.error('The Axerity engine is not built. Run `pnpm build:engine` first.');
+	process.exit(1);
+}
 
-	if (sub === 'preview') {
-		const built = join(userRoot, 'build');
-		if (!existsSync(built)) {
-			tidy();
-			console.error('No build found. Run `axerity build` first.');
-			process.exit(1);
-		}
-		cpSync(built, ENGINE_BUILD, { recursive: true });
+function env(ctx, extra) {
+	return {
+		...process.env,
+		AXERITY_CONTENT_DIR: ctx.contentDir,
+		AXERITY_CONFIG: ctx.config,
+		AXERITY_ASSETS: ASSETS,
+		...extra
+	};
+}
+
+function runScript(name, vars, onExit) {
+	const child = spawn(process.execPath, [join(engineRoot, 'runtime', name)], {
+		cwd: engineRoot,
+		stdio: 'inherit',
+		env: vars
+	});
+	process.on('SIGINT', () => child.kill('SIGINT'));
+	process.on('SIGTERM', () => child.kill('SIGINT'));
+	child.on('exit', (code) => {
+		if (onExit) onExit(code ?? 0);
+		process.exit(code ?? 0);
+	});
+}
+
+function dev() {
+	ensureDist();
+	banner('dev');
+	runScript('serve.js', env(context(), { AXERITY_DEV: '1' }));
+}
+
+function build() {
+	ensureDist();
+	banner('build');
+	runScript('crawl.js', env(context(), { AXERITY_OUT: join(userRoot, 'build') }), (code) => {
+		if (code === 0) process.stdout.write(`  ${green('✓')} built ${dim('→')} ./build\n\n`);
+	});
+}
+
+function preview() {
+	const out = join(userRoot, 'build');
+	if (!existsSync(out)) {
+		console.error('No build found. Run `axerity build` first.');
+		process.exit(1);
 	}
-
-	const onSuccess =
-		sub === 'build'
-			? () => {
-					const out = join(userRoot, 'build');
-					rmSync(out, { recursive: true, force: true });
-					cpSync(ENGINE_BUILD, out, { recursive: true });
-					process.stdout.write(`  ${green('✓')} built ${dim('→')} ./build\n\n`);
-				}
-			: undefined;
-
-	runEngine(sub, extra, { mounted: true, onSuccess });
+	banner('preview');
+	runScript('preview.js', { ...process.env, AXERITY_OUT: out });
 }
 
 function init() {
@@ -290,8 +141,7 @@ function init() {
 	console.log('  axerity dev');
 }
 
-const pkgVersion = () =>
-	JSON.parse(readFileSync(join(engineRoot, 'package.json'), 'utf8')).version;
+const pkgVersion = () => JSON.parse(readFileSync(join(engineRoot, 'package.json'), 'utf8')).version;
 
 function help() {
 	console.log(`Axerity ${pkgVersion()} — a documentation site generator\n`);
@@ -305,7 +155,6 @@ function help() {
 }
 
 const command = process.argv[2];
-const extra = process.argv.slice(3);
 
 switch (command) {
 	case '--version':
@@ -317,13 +166,13 @@ switch (command) {
 		init();
 		break;
 	case 'dev':
-		run('dev', extra);
+		dev();
 		break;
 	case 'build':
-		run('build', extra);
+		build();
 		break;
 	case 'preview':
-		run('preview', extra);
+		preview();
 		break;
 	default:
 		help();

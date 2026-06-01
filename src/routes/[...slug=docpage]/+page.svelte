@@ -2,14 +2,13 @@
 	import { page } from '$app/state';
 	import { base } from '$app/paths';
 	import { DocsLayout } from '$lib';
-	import { site } from '$lib/config/site';
-	import { navFor, pathInVersion } from '$lib/content';
+	import Markdown from '$lib/markdown/Markdown.svelte';
+	import { pathInVersion } from '$lib/content';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
-	const nav = $derived(navFor(page.url.pathname));
-	const Content = $derived(data.component);
+	const site = $derived(data.site);
 	const fm = $derived(data.frontmatter);
 	const wide = $derived(fm.layout === 'api');
 
@@ -52,12 +51,12 @@
 
 <DocsLayout
 	{site}
-	sidebar={nav.sidebar}
-	flatPages={nav.flatPages}
+	sidebar={data.nav.sidebar}
+	flatPages={data.nav.flatPages}
 	{wide}
 	{editUrl}
 	updated={fm.updated}
-	resolveVersion={pathInVersion}
+	resolveVersion={(pathname, versionPath) => pathInVersion(site, pathname, versionPath)}
 >
-	<Content />
+	<Markdown nodes={data.doc} />
 </DocsLayout>

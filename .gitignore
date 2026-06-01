@@ -27,9 +27,8 @@ vite.config.ts.timestamp-*
 # CLI. Never tracked, so no run ever dirties the repo.
 /src/content/docs
 /axerity.json
-.axerity-specs
-.axerity-assets
 build
+/dist
 
 # axerity:openapi (generated)
 src/content/docs/petstore-api

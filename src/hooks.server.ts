@@ -1,8 +1,6 @@
-import { site } from '$lib/config/site';
+import { getSite } from '$lib/server/site';
 import type { BrandConfig } from '$lib/types';
 import type { Handle } from '@sveltejs/kit';
-
-const theme = site.theme ?? 'neutral';
 
 // Reject anything that could break out of the <style> block. Config is authored
 // by the site owner, but this keeps a stray brace or tag from corrupting the CSS.
@@ -39,11 +37,20 @@ function brandStyle(brand?: BrandConfig): string {
 	return `<style>${css}</style>`;
 }
 
-const brandTag = brandStyle(site.brand);
+const liveReload =
+	process.env.AXERITY_DEV === '1'
+		? `<script>(function(){var s=new EventSource('/__axerity_livereload');s.onmessage=function(e){if(e.data==='reload')location.reload()}})()</script>`
+		: '';
 
 export const handle: Handle = ({ event, resolve }) => {
+	const site = getSite();
+	const theme = site.theme ?? 'neutral';
+	const brandTag = brandStyle(site.brand);
 	return resolve(event, {
 		transformPageChunk: ({ html }) =>
-			html.replace('<html', `<html data-theme="${theme}"`).replace('</head>', `${brandTag}</head>`)
+			html
+				.replace('<html', `<html data-theme="${theme}"`)
+				.replace('</head>', `${brandTag}</head>`)
+				.replace('</body>', `${liveReload}</body>`)
 	});
 };

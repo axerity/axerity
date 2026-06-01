@@ -5,9 +5,10 @@
 	import './layout.css';
 	import { base } from '$app/paths';
 	import Analytics from '$lib/components/docs/Analytics.svelte';
-	import { site } from '$lib/config/site';
 
-	let { children } = $props();
+	let { data, children } = $props();
+
+	const site = $derived(data.site);
 </script>
 
 <svelte:head>
@@ -21,5 +22,5 @@
 		/>
 	{/if}
 </svelte:head>
-<Analytics />
+<Analytics {site} />
 {@render children()}

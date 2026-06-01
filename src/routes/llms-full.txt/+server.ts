@@ -1,18 +1,16 @@
 import { base } from '$app/paths';
-import { site } from '$lib/config/site';
-import { flatPages } from '$lib/content';
-import { getRawMarkdown } from '$lib/content/raw';
+import { getSite } from '$lib/server/site';
+import { getNav, raw } from '$lib/server/content-store';
 import type { RequestHandler } from './$types';
 
-export const prerender = true;
-
 export const GET: RequestHandler = async () => {
+	const site = getSite();
 	const parts = [`# ${site.name}`];
 	if (site.description) parts.push('', `> ${site.description}`);
 
-	for (const page of flatPages) {
+	for (const page of getNav().flatPages) {
 		const slug = page.href.slice(base.length).replace(/^\//, '');
-		const markdown = await getRawMarkdown(slug);
+		const markdown = await raw(slug);
 		if (markdown) parts.push('', '---', '', markdown);
 	}
 
