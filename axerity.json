@@ -1,0 +1,70 @@
+{
+	"name": "Axerity",
+	"description": "A documentation site generator built with Svelte.",
+	"url": "https://axerity.com",
+	"github": "https://github.com/axerity",
+	"editLink": "https://github.com/axerity/axerity/edit/main/src/content/docs",
+	"og": {
+		"enabled": true,
+		"background": "#0a0a0a",
+		"foreground": "#fafafa",
+		"muted": "#a1a1a1",
+		"accent": "#fafafa"
+	},
+	"logo": {
+		"light": "/favicon-light.svg",
+		"dark": "/favicon-dark.svg",
+		"alt": "Axerity",
+		"href": "/"
+	},
+	"layout": "boxed",
+	"versions": [{ "label": "v1.0-preview", "href": "/docs" }],
+	"dropdowns": [
+		{
+			"label": "Guides",
+			"icon": "book-open",
+			"href": "/docs",
+			"match": "/docs",
+			"tabs": [
+				{ "title": "Documentation", "href": "/docs", "match": "/docs", "icon": "book-open" },
+				{
+					"title": "Components",
+					"href": "/docs/components/callout",
+					"match": "/docs/components",
+					"icon": "blocks"
+				}
+			]
+		},
+		{
+			"label": "API Reference",
+			"icon": "code",
+			"href": "/docs/api/pet/pet-object",
+			"match": "/docs/api",
+			"tabs": [
+				{
+					"title": "Pet",
+					"href": "/docs/api/pet/pet-object",
+					"match": "/docs/api/pet",
+					"icon": "paw-print"
+				},
+				{
+					"title": "Store",
+					"href": "/docs/api/store/order-object",
+					"match": "/docs/api/store",
+					"icon": "shopping-cart"
+				},
+				{
+					"title": "User",
+					"href": "/docs/api/user/user-object",
+					"match": "/docs/api/user",
+					"icon": "user"
+				}
+			]
+		}
+	],
+	"sidebarLinks": [{ "title": "Issues", "href": "https://github.com/axerity/axerity/issues" }],
+	"topNav": [
+		{ "title": "Docs", "href": "/docs" },
+		{ "title": "Components", "href": "/docs/components/callout" }
+	]
+}

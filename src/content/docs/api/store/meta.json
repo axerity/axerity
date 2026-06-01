@@ -1,0 +1,5 @@
+{
+	"title": "Store",
+	"icon": "shopping-cart",
+	"pages": ["order-object", "inventory", "place-order", "get-order", "delete-order"]
+}

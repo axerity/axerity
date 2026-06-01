@@ -1,0 +1,21 @@
+{
+	"title": "Components",
+	"icon": "blocks",
+	"pages": [
+		"callout",
+		"cards",
+		"accordion",
+		"tabs",
+		"code-group",
+		"tooltip",
+		"tree",
+		"icon",
+		"frame",
+		"video",
+		"steps",
+		"columns",
+		"badge",
+		"kbd",
+		"type-table"
+	]
+}

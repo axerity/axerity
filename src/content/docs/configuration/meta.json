@@ -1,0 +1,5 @@
+{
+	"title": "Configuration",
+	"icon": "sliders",
+	"pages": ["index", "navigation", "layouts", "search", "ai", "cli", "deployment"]
+}

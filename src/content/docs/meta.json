@@ -1,0 +1,15 @@
+{
+	"title": "Getting Started",
+	"icon": "rocket",
+	"pages": [
+		"index",
+		"installation",
+		"quick-start",
+		"writing",
+		"configuration",
+		"theming",
+		"components",
+		"api",
+		"changelog"
+	]
+}

@@ -1,0 +1,5 @@
+{
+	"title": "Writing Content",
+	"icon": "pencil-line",
+	"pages": ["markdown", "frontmatter", "code-blocks", "diagrams"]
+}

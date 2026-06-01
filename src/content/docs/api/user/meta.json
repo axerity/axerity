@@ -1,0 +1,14 @@
+{
+	"title": "User",
+	"icon": "user",
+	"pages": [
+		"user-object",
+		"create-user",
+		"create-with-list",
+		"login",
+		"logout",
+		"get-user",
+		"update-user",
+		"delete-user"
+	]
+}

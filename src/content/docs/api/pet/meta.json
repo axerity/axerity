@@ -1,0 +1,15 @@
+{
+	"title": "Pet",
+	"icon": "paw-print",
+	"pages": [
+		"pet-object",
+		"add-pet",
+		"update-pet",
+		"find-by-status",
+		"find-by-tags",
+		"get-pet",
+		"update-pet-with-form",
+		"upload-image",
+		"delete-pet"
+	]
+}
