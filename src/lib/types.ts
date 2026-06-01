@@ -127,6 +127,18 @@ export interface AnalyticsConfig {
 	googleAnalytics?: string;
 }
 
+/**
+ * Brand overrides. Set your own accent and corners on top of any `theme`
+ * preset. Colors take any CSS color value; `radius` takes a length like
+ * `0.5rem`. Applied with `!important` so they win over the preset.
+ */
+export interface BrandConfig {
+	accent?: string;
+	accentDark?: string;
+	accentContrast?: string;
+	radius?: string;
+}
+
 export interface OgConfig {
 	/** Generate a per-page OpenGraph image. Off uses the static `ogImage`. */
 	enabled?: boolean;
@@ -155,6 +167,7 @@ export interface SiteConfig {
 	footer?: FooterConfig;
 	banner?: Banner;
 	analytics?: AnalyticsConfig;
+	brand?: BrandConfig;
 	editLink?: string;
 	github?: string;
 	layout?: LayoutVariant;

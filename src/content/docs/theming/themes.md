@@ -19,6 +19,32 @@ Leave it out (or use `"neutral"`) for the default grayscale look. The theme is
 applied on the server, so there is no flash on load, and dark mode works with
 every preset.
 
+## Your own brand
+
+Not tied to the presets. Set `brand` to drop in your own accent and corners on
+top of any `theme` (the accent drives links, active items, buttons, and the
+sidebar tint):
+
+```json
+{
+	"theme": "neutral",
+	"brand": {
+		"accent": "#ff5722",
+		"radius": "0.75rem"
+	}
+}
+```
+
+| Field            | Description                                |
+| ---------------- | ------------------------------------------ |
+| `accent`         | Accent color, any CSS color                |
+| `accentDark`     | Accent in dark mode (defaults to `accent`) |
+| `accentContrast` | Text color on the accent (default white)   |
+| `radius`         | Base corner radius, e.g. `0.5rem`          |
+
+Brand values win over the preset, so `neutral` plus your accent gives a clean,
+on-brand site. Pick a colored preset for a fuller reskin.
+
 ## Presets
 
 Each preset is tuned after a product's documentation. Set the `theme` value to

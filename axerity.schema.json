@@ -164,6 +164,23 @@
 				"googleAnalytics": { "type": "string", "description": "Google Analytics measurement id." }
 			}
 		},
+		"brand": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Override the accent and corners on top of the theme preset.",
+			"properties": {
+				"accent": { "type": "string", "description": "Accent color (any CSS color)." },
+				"accentDark": {
+					"type": "string",
+					"description": "Accent color in dark mode (defaults to accent)."
+				},
+				"accentContrast": {
+					"type": "string",
+					"description": "Text color on the accent (default white)."
+				},
+				"radius": { "type": "string", "description": "Base corner radius, e.g. \"0.5rem\"." }
+			}
+		},
 		"editLink": {
 			"type": "string",
 			"description": "Base URL for the 'Edit this page' link; the source path is appended."
