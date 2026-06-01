@@ -57,28 +57,28 @@ editor gives you autocomplete and validation for every field:
 
 ## Fields
 
-| Field          | Type   | What it does                                                                   |
-| -------------- | ------ | ------------------------------------------------------------------------------ |
-| `name`         | string | Site name, used in the page title and navbar                                   |
-| `description`  | string | Site description, used for SEO and `llms.txt`                                  |
-| `url`          | string | Canonical site URL; enables absolute links in sitemap, RSS, and OpenGraph      |
-| `github`       | string | Repo URL, shown as the GitHub icon in the navbar and footer                    |
-| `editLink`     | string | Base URL for the "Edit this page" link; the source path is appended            |
-| `theme`        | string | A built-in [theme](/theming/themes) preset                                     |
-| `layout`       | string | `flat` (default) or `boxed`. See [Layouts](/configuration/layouts)             |
+| Field          | Type   | What it does                                                                    |
+| -------------- | ------ | ------------------------------------------------------------------------------- |
+| `name`         | string | Site name, used in the page title and navbar                                    |
+| `description`  | string | Site description, used for SEO and `llms.txt`                                   |
+| `url`          | string | Canonical site URL; enables absolute links in sitemap, RSS, and OpenGraph       |
+| `github`       | string | Repo URL, shown as the GitHub icon in the navbar and footer                     |
+| `editLink`     | string | Base URL for the "Edit this page" link; the source path is appended             |
+| `theme`        | string | A built-in [theme](/theming/themes) preset                                      |
+| `layout`       | string | `flat` (default) or `boxed`. See [Layouts](/configuration/layouts)              |
 | `basePath`     | string | Serve the whole site under a sub-path like `/docs`. Empty (default) is the root |
-| `sidebar`      | object | Sidebar appearance: `{ "variant": "flush" \| "card" \| "floating" }`           |
-| `logo`         | object | Navbar logo `{ light, dark, alt, href }`. Local SVGs are inlined               |
-| `og`           | object | Per-page OpenGraph image generation `{ enabled, background, foreground, … }`   |
-| `ogImage`      | string | Static OG image path, used when `og.enabled` is off                            |
-| `banner`       | object | Announcement bar `{ text, href, id, dismissible }`                             |
-| `analytics`    | object | `{ plausible, googleAnalytics }` scripts injected on every page                |
-| `topNav`       | array  | Fallback top nav links when no dropdowns are set                               |
-| `versions`     | array  | Versions shown in the navbar version switcher                                  |
-| `dropdowns`    | array  | Areas that swap the whole sidebar. See [Navigation](/configuration/navigation) |
-| `sidebarLinks` | array  | Links pinned to the bottom of the sidebar                                      |
-| `social`       | array  | Social links shown in the footer `{ icon, href, label }`                       |
-| `footer`       | object | Footer `{ note, links }`                                                       |
+| `sidebar`      | object | Sidebar appearance: `{ "variant": "flush" \| "card" \| "floating" }`            |
+| `logo`         | object | Navbar logo `{ light, dark, alt, href }`. Local SVGs are inlined                |
+| `og`           | object | Per-page OpenGraph image generation `{ enabled, background, foreground, … }`    |
+| `ogImage`      | string | Static OG image path, used when `og.enabled` is off                             |
+| `banner`       | object | Announcement bar `{ text, href, id, dismissible }`                              |
+| `analytics`    | object | `{ plausible, googleAnalytics }` scripts injected on every page                 |
+| `topNav`       | array  | Fallback top nav links when no dropdowns are set                                |
+| `versions`     | array  | Versions shown in the navbar version switcher                                   |
+| `dropdowns`    | array  | Areas that swap the whole sidebar. See [Navigation](/configuration/navigation)  |
+| `sidebarLinks` | array  | Links pinned to the bottom of the sidebar                                       |
+| `social`       | array  | Social links shown in the footer `{ icon, href, label }`                        |
+| `footer`       | object | Footer `{ note, links }`                                                        |
 
 Every field except `name` and `topNav` is optional. Leave a field out and the
 related UI does not render.
