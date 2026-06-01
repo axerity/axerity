@@ -1,8 +1,36 @@
 {
-	"name": "axerity",
-	"version": "0.0.1",
+	"name": "@axerity/cli",
+	"version": "0.1.0",
 	"description": "A documentation site generator built with Svelte.",
 	"type": "module",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"author": "aelpxy",
+	"homepage": "https://axerity.com",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/axerity/axerity.git"
+	},
+	"bugs": {
+		"url": "https://github.com/axerity/axerity/issues"
+	},
+	"keywords": [
+		"documentation",
+		"docs",
+		"static-site-generator",
+		"ssg",
+		"sveltekit",
+		"svelte",
+		"markdown",
+		"mdsvex",
+		"openapi"
+	],
+	"engines": {
+		"node": ">=24"
+	},
+	"packageManager": "pnpm@11.3.0",
 	"bin": {
 		"axerity": "./bin/axerity.js"
 	},
