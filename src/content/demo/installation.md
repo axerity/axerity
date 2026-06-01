@@ -6,35 +6,52 @@ icon: download
 
 # Installation
 
-Axerity is a CLI. You do not clone or fork anything. Install it, scaffold a site,
-and start writing Markdown.
+Axerity is a CLI. You do not clone or fork anything. Run it, scaffold a site, and
+start writing Markdown.
 
 ## Requirements
 
-- Node.js 20 or newer
+- Node.js 24 or newer
 
 ## Create a site
 
 Scaffold a new site with `init`, then start the dev server:
 
 ```bash
-npx axerity init my-docs
+pnpm dlx @axerity/cli init my-docs
 cd my-docs
-npx axerity dev
+pnpm dlx @axerity/cli dev
 ```
 
-Your site is running at `http://localhost:5173`. Or install it globally and drop
-the `npx`:
+Your site is running at `http://localhost:5173`. `pnpm dlx` runs the CLI without
+installing it. `npx @axerity/cli <command>` works the same way.
+
+## Install it
+
+For a project you build often, add it as a dev dependency so the version is
+pinned:
 
 ```bash
-npm install -g axerity
-axerity init my-docs
+pnpm add -D @axerity/cli
 ```
+
+Then wire up scripts in your `package.json`:
+
+```json
+{
+  "scripts": {
+    "dev": "axerity dev",
+    "build": "axerity build",
+    "preview": "axerity preview"
+  }
+}
+```
+
+Now `pnpm dev` and `pnpm build` just work, no global install or PATH setup.
 
 ## Project layout
 
-A site is just your content and one config file. Everything else lives in the
-package:
+A site is your content and one config file:
 
 ```
 my-docs/
@@ -44,6 +61,6 @@ my-docs/
 ```
 
 Write Markdown in `docs/`, order pages with `meta.json`, and configure the site
-in [`axerity.json`](/configuration). The CLI builds a hidden `.axerity`
-workspace to run the engine against your content, so add `.axerity` to your
-`.gitignore` (the scaffold does this for you).
+in [`axerity.json`](/configuration). The engine runs from its own install, so the
+only thing Axerity ever creates in your project is the `build/` folder. The
+scaffold adds it to your `.gitignore` for you.

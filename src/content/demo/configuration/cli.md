@@ -18,8 +18,8 @@ axerity build        # build the static site
 axerity preview      # preview the production build
 ```
 
-Run them with `npx axerity <command>`, or install globally with
-`npm install -g axerity` and call `axerity` directly.
+Run them with `pnpm dlx @axerity/cli <command>` (or `npx @axerity/cli <command>`),
+or add `@axerity/cli` as a dev dependency and call `axerity` through your scripts.
 
 ## init
 
@@ -35,12 +35,14 @@ example `axerity dev --port 4000`.
 
 ## build
 
-`axerity build` produces a static site. Every page is prerendered to HTML, and
-the search index, `llms.txt`, sitemap, RSS feed, and OpenGraph images are all
-written out, ready to host anywhere.
+`axerity build` produces a static site in `build/`. Every page is prerendered to
+HTML, and the search index, `llms.txt`, sitemap, RSS feed, and OpenGraph images
+are all written out, ready to host anywhere.
 
 ## How it works
 
-The CLI never touches your content. It assembles a hidden `.axerity` workspace
-that pairs the packaged engine with your `docs/` folder and `axerity.json`, then
-runs Vite there. Add `.axerity` to your `.gitignore`; `init` does this for you.
+The engine runs from its own install, not from your repo. When you run a command,
+Axerity reads your `docs/` and `axerity.json` and renders against them, then
+writes the result to `build/` in your project. Your content is the source of
+truth and nothing else in your folder is touched, so there is no workspace to
+gitignore beyond `build/`.

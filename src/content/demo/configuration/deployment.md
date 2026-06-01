@@ -40,7 +40,7 @@ Settings and set the Framework Preset to **Other**.
 
 In the Pages project settings:
 
-- **Build command:** `npx axerity build`
+- **Build command:** `npx @axerity/cli build`
 - **Build output directory:** `build`
 - **Framework preset:** None
 
@@ -50,7 +50,7 @@ Cloudflare serves clean URLs automatically.
 
 ```toml title="netlify.toml"
 [build]
-  command = "npx axerity build"
+  command = "npx @axerity/cli build"
   publish = "build"
 ```
 
@@ -59,7 +59,7 @@ Netlify serves clean URLs (pretty URLs) by default.
 ## GitHub Pages
 
 Build, then publish the `build/` folder (for example with a GitHub Action that
-runs `npx axerity build` and uploads `build/` as the Pages artifact).
+runs `npx @axerity/cli build` and uploads `build/` as the Pages artifact).
 
 Project sites are served from `https://<user>.github.io/<repo>/`, a sub-path, so
 set the base in `axerity.json`:

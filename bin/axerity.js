@@ -233,7 +233,7 @@ function init() {
 	const files = {
 		'axerity.json': `${JSON.stringify(
 			{
-				$schema: 'https://axerity.com/axerity.schema.json',
+				$schema: 'https://unpkg.com/@axerity/cli/axerity.schema.json',
 				name: 'My Docs',
 				description: 'Documentation built with Axerity.',
 				theme: 'neutral',

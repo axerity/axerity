@@ -1,8 +1,8 @@
 <script lang="ts" module>
-	import type { Component } from 'svelte';
-	import * as icons from '@lucide/svelte';
+	import { icons } from 'lucide';
 
-	const registry = icons as unknown as Record<string, Component>;
+	type IconNode = [string, Record<string, string | number>][];
+	const registry = icons as unknown as Record<string, IconNode>;
 
 	const pascal = (name: string) =>
 		name
@@ -18,9 +18,24 @@
 		class: className = ''
 	}: { name?: string; size?: number; class?: string } = $props();
 
-	const Icon = $derived(name ? registry[pascal(name)] : undefined);
+	const node = $derived(name ? registry[pascal(name)] : undefined);
 </script>
 
-{#if Icon}
-	<Icon {size} class={className} />
+{#if node}
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		width={size}
+		height={size}
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-width="2"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class={`lucide ${className}`}
+	>
+		{#each node as [tag, attrs], i (i)}
+			<svelte:element this={tag} {...attrs} />
+		{/each}
+	</svg>
 {/if}
