@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
 	cpSync,
@@ -11,7 +11,7 @@ import {
 	symlinkSync,
 	writeFileSync
 } from 'node:fs';
-import { dirname, join, relative, resolve, sep } from 'node:path';
+import { basename, dirname, join, relative, resolve } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const engineRoot = resolve(here, '..');
@@ -19,6 +19,16 @@ const userRoot = process.cwd();
 const isEngineRepo = userRoot === engineRoot;
 
 const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+
+// The engine runs in place, from its own install with its real node_modules. The
+// user's project is mounted into a handful of gitignored paths for a single run,
+// so nothing the engine tracks is ever touched — clean exit, Ctrl-C, or crash.
+const ENGINE_DOCS = join(engineRoot, 'src', 'content', 'docs');
+const ENGINE_CONFIG = join(engineRoot, 'axerity.json');
+const ENGINE_STATIC = join(engineRoot, 'static');
+const ENGINE_BUILD = join(engineRoot, 'build');
+const SPECS_DIR = join(engineRoot, '.axerity-specs');
+const ASSETS_DIR = join(engineRoot, '.axerity-assets');
 
 function findContentDir() {
 	for (const candidate of ['docs', join('content', 'docs'), 'content']) {
@@ -28,118 +38,197 @@ function findContentDir() {
 	return null;
 }
 
-function setupWorkspace() {
-	const contentDir = findContentDir();
+/** Reset the engine's own demo site into the mount points (for `axerity` runs
+ *  from inside the engine repo). `pnpm dev` does this via its pre-scripts. */
+function prepareEngine() {
+	spawnSync(process.execPath, [join(engineRoot, 'scripts', 'prepare-engine.mjs')], {
+		stdio: 'inherit'
+	});
+}
+
+/** Copy local specs into a gitignored folder and rewrite the config to point at
+ *  them, so the user's spec paths resolve without touching the engine tree. */
+function mountSpecs(config) {
+	const rewrite = (source) => {
+		const spec = typeof source === 'string' ? source : source.spec;
+		if (!spec || /^https?:\/\//.test(spec) || !existsSync(join(userRoot, spec))) return source;
+		const local = `.axerity-specs/${basename(spec)}`;
+		cpSync(join(userRoot, spec), join(engineRoot, local));
+		return typeof source === 'string' ? local : { ...source, spec: local };
+	};
+
+	if (!config.openapi) return config;
+	mkdirSync(SPECS_DIR, { recursive: true });
+	const openapi = Array.isArray(config.openapi)
+		? config.openapi.map(rewrite)
+		: rewrite(config.openapi);
+	return { ...config, openapi };
+}
+
+function mount(contentDir) {
+	// Content -> the path the engine globs, as symlinks so generated pages (an API
+	// reference) can sit alongside without touching the user's repo.
+	rmSync(ENGINE_DOCS, { recursive: true, force: true });
+	mkdirSync(ENGINE_DOCS, { recursive: true });
+	for (const entry of readdirSync(contentDir)) {
+		symlinkSync(join(contentDir, entry), join(ENGINE_DOCS, entry), symlinkType);
+	}
+
+	// Config (with local spec paths rewritten into the gitignored specs folder).
+	const config = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8'));
+	writeFileSync(ENGINE_CONFIG, JSON.stringify(mountSpecs(config), null, '\t'));
+
+	// Assets: engine defaults overlaid with the user's public/ folder.
+	rmSync(ASSETS_DIR, { recursive: true, force: true });
+	cpSync(ENGINE_STATIC, ASSETS_DIR, { recursive: true });
+	const userPublic = join(userRoot, 'public');
+	if (existsSync(userPublic)) cpSync(userPublic, ASSETS_DIR, { recursive: true });
+}
+
+function tidy() {
+	rmSync(SPECS_DIR, { recursive: true, force: true });
+	rmSync(ASSETS_DIR, { recursive: true, force: true });
+	rmSync(ENGINE_BUILD, { recursive: true, force: true });
+}
+
+const tty = process.stdout.isTTY;
+const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
+const dim = paint('2');
+const bold = paint('1');
+const red = paint('31');
+const green = paint('32');
+const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
+const mark = brand('◆');
+const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
+
+const banner = (sub) => process.stdout.write(`\n  ${mark} ${bold('axerity')} ${dim(sub)}\n\n`);
+
+const NOISE =
+	/^\s*(VITE v|➜|press h|ready in|Local:|Network:|\[vite\].*(optimiz|dependencies)|\[optimizer\]|Forced re-opt|watching for file changes|use --host)/i;
+
+function streamServer(child, sub) {
+	let shown = false;
+	let buffer = '';
+	const onData = (chunk) => {
+		buffer += chunk;
+		const lines = buffer.split('\n');
+		buffer = lines.pop() ?? '';
+		for (const line of lines) {
+			const clean = strip(line);
+			const url = clean.match(/Local:\s*(http:\/\/\S+)/);
+			if (url && !shown) {
+				shown = true;
+				process.stdout.write(`  ${dim('ready at')}  ${brand(url[1])}\n`);
+				process.stdout.write(`  ${dim('Ctrl+C to stop')}\n\n`);
+				continue;
+			}
+			if (!clean.trim() || NOISE.test(clean.trim())) continue;
+			process.stdout.write(`  ${line}\n`);
+		}
+	};
+	child.stdout.on('data', onData);
+	child.stderr.on('data', onData);
+}
+
+/** A build: silent spinner on success, full captured output only on failure. */
+function streamBuild(child) {
+	const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+	let i = 0;
+	let log = '';
+	child.stdout.on('data', (d) => (log += d));
+	child.stderr.on('data', (d) => (log += d));
+	const timer = tty
+		? setInterval(() => {
+				process.stdout.write(`\r  ${brand(frames[(i = ++i % frames.length)])} ${dim('building…')}`);
+			}, 80)
+		: null;
+	return {
+		stop(ok) {
+			if (timer) clearInterval(timer);
+			if (tty) process.stdout.write('\r\x1b[K');
+			if (!ok) process.stdout.write(log);
+		}
+	};
+}
+
+function runEngine(sub, extra, { mounted, onSuccess }) {
+	const viteEntry = join(engineRoot, 'node_modules', 'vite', 'bin', 'vite.js');
+	const child = spawn(process.execPath, [viteEntry, sub, ...extra], {
+		cwd: engineRoot,
+		stdio: ['inherit', 'pipe', 'pipe'],
+		env: {
+			...process.env,
+			...(mounted
+				? { AXERITY_FS_ALLOW: userRoot, AXERITY_MOUNTED: '1', AXERITY_ASSETS: ASSETS_DIR }
+				: {})
+		}
+	});
+
+	banner(sub);
+	const build = sub === 'build' ? streamBuild(child) : (streamServer(child, sub), null);
+
+	let cleaned = false;
+	const cleanup = () => {
+		if (cleaned || !mounted) return;
+		cleaned = true;
+		tidy();
+	};
+
+	child.on('exit', (code) => {
+		const ok = code === 0;
+		if (build) build.stop(ok);
+		if (ok && onSuccess) onSuccess();
+		else if (!ok && sub !== 'build')
+			process.stdout.write(`\n  ${red('✗')} exited with code ${code}\n`);
+		cleanup();
+		process.exit(code ?? 0);
+	});
+
+	process.on('SIGINT', () => child.kill('SIGINT'));
+	process.on('SIGTERM', () => child.kill('SIGINT'));
+	process.on('exit', cleanup);
+}
+
+function run(sub, extra) {
+	// Inside the engine repo: serve its own demo site.
+	if (isEngineRepo) {
+		prepareEngine();
+		return runEngine(sub, extra, { mounted: false });
+	}
+
 	if (!existsSync(join(userRoot, 'axerity.json'))) {
 		console.error('No axerity.json found here. Run `axerity init` to create a starter site.');
 		process.exit(1);
 	}
+	const contentDir = findContentDir();
 	if (!contentDir) {
 		console.error('No content found. Create a `docs/` folder with your Markdown.');
 		process.exit(1);
 	}
 
-	const workDir = join(userRoot, '.axerity');
-	mkdirSync(workDir, { recursive: true });
+	mount(contentDir);
 
-	// node_modules: link to the engine's installed deps (don't copy).
-	const nodeModulesLink = join(workDir, 'node_modules');
-	if (!existsSync(nodeModulesLink)) {
-		symlinkSync(join(engineRoot, 'node_modules'), nodeModulesLink, symlinkType);
-	}
-
-	// Engine config files — copied so relative imports resolve in the workspace.
-	for (const file of [
-		'svelte.config.js',
-		'vite.config.ts',
-		'mdsvex.config.js',
-		'tsconfig.json',
-		'package.json',
-		'axerity.schema.json'
-	]) {
-		const from = join(engineRoot, file);
-		if (existsSync(from)) cpSync(from, join(workDir, file));
-	}
-
-	// Engine source, minus its demo content (the user's content is linked in).
-	const engineSrc = join(engineRoot, 'src');
-	const workSrc = join(workDir, 'src');
-	rmSync(workSrc, { recursive: true, force: true });
-	cpSync(engineSrc, workSrc, {
-		recursive: true,
-		filter: (src) => {
-			const rel = relative(engineSrc, src);
-			return rel !== 'content' && !rel.startsWith(`content${sep}`);
+	if (sub === 'preview') {
+		const built = join(userRoot, 'build');
+		if (!existsSync(built)) {
+			tidy();
+			console.error('No build found. Run `axerity build` first.');
+			process.exit(1);
 		}
-	});
-
-	// User content -> the path the engine globs. A real folder with the user's
-	// entries symlinked in, so generated content (e.g. an API reference) can be
-	// written alongside without touching the user's repo.
-	const contentMount = join(workSrc, 'content', 'docs');
-	rmSync(contentMount, { recursive: true, force: true });
-	mkdirSync(contentMount, { recursive: true });
-	for (const entry of readdirSync(contentDir)) {
-		symlinkSync(join(contentDir, entry), join(contentMount, entry), symlinkType);
+		cpSync(built, ENGINE_BUILD, { recursive: true });
 	}
 
-	// User config.
-	cpSync(join(userRoot, 'axerity.json'), join(workDir, 'axerity.json'));
-
-	// Copy any local OpenAPI specs in so the build can read them (URLs are fetched
-	// at build time, so they need no copying).
-	const openapi = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8')).openapi;
-	const sources = (Array.isArray(openapi) ? openapi : openapi ? [openapi] : []).map((o) =>
-		typeof o === 'string' ? { spec: o } : o
-	);
-	for (const source of sources) {
-		if (!source.spec || /^https?:\/\//.test(source.spec)) continue;
-		if (!existsSync(join(userRoot, source.spec))) continue;
-		const dest = join(workDir, source.spec);
-		mkdirSync(dirname(dest), { recursive: true });
-		cpSync(join(userRoot, source.spec), dest);
-	}
-
-	// Static assets: engine defaults, then overlay the user's `public/`.
-	const workStatic = join(workDir, 'static');
-	rmSync(workStatic, { recursive: true, force: true });
-	cpSync(join(engineRoot, 'static'), workStatic, { recursive: true });
-	const userPublic = join(userRoot, 'public');
-	if (existsSync(userPublic)) cpSync(userPublic, workStatic, { recursive: true });
-
-	return { workDir, contentDir };
-}
-
-function runVite(sub, extra, { cwd, fsAllow, onSuccess }) {
-	const viteEntry = join(engineRoot, 'node_modules', 'vite', 'bin', 'vite.js');
-	const child = spawn(process.execPath, [viteEntry, sub, ...extra], {
-		cwd,
-		stdio: 'inherit',
-		env: { ...process.env, ...(fsAllow ? { AXERITY_FS_ALLOW: fsAllow } : {}) }
-	});
-	child.on('exit', (code) => {
-		if (code === 0 && onSuccess) onSuccess();
-		process.exit(code ?? 0);
-	});
-}
-
-function dev(sub, extra) {
-	if (isEngineRepo) return runVite(sub, extra, { cwd: engineRoot });
-	const { workDir, contentDir } = setupWorkspace();
-	console.log(`axerity: serving ${relative(userRoot, contentDir) || '.'}\n`);
-
-	// After a static build, lift the output out of the hidden workspace.
 	const onSuccess =
 		sub === 'build'
 			? () => {
 					const out = join(userRoot, 'build');
 					rmSync(out, { recursive: true, force: true });
-					cpSync(join(workDir, 'build'), out, { recursive: true });
-					console.log(`\nStatic site written to ./build`);
+					cpSync(ENGINE_BUILD, out, { recursive: true });
+					process.stdout.write(`  ${green('✓')} built ${dim('→')} ./build\n\n`);
 				}
 			: undefined;
 
-	runVite(sub, extra, { cwd: workDir, fsAllow: userRoot, onSuccess });
+	runEngine(sub, extra, { mounted: true, onSuccess });
 }
 
 function init() {
@@ -153,7 +242,7 @@ function init() {
 				name: 'My Docs',
 				description: 'Documentation built with Axerity.',
 				theme: 'neutral',
-				topNav: [{ title: 'Docs', href: '/docs' }]
+				topNav: [{ title: 'Docs', href: '/' }]
 			},
 			null,
 			'\t'
@@ -165,7 +254,7 @@ function init() {
 		)}\n`,
 		'docs/index.md': `---\ntitle: Introduction\ndescription: Welcome to your docs.\nicon: book-open\n---\n\n# Introduction\n\nWelcome to your new Axerity site. Edit \`docs/index.md\` to change this page.\n`,
 		'docs/quickstart.md': `---\ntitle: Quick Start\ndescription: Get going in a minute.\nicon: rocket\n---\n\n# Quick Start\n\nRun \`axerity dev\` and start writing Markdown in the \`docs/\` folder.\n`,
-		'.gitignore': `.axerity\n`
+		'.gitignore': `build\n`
 	};
 
 	for (const [file, content] of Object.entries(files)) {
@@ -202,13 +291,13 @@ switch (command) {
 		init();
 		break;
 	case 'dev':
-		dev('dev', extra);
+		run('dev', extra);
 		break;
 	case 'build':
-		dev('build', extra);
+		run('build', extra);
 		break;
 	case 'preview':
-		dev('preview', extra);
+		run('preview', extra);
 		break;
 	default:
 		help();

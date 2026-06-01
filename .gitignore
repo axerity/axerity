@@ -22,7 +22,13 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-.axerity
+# Ephemeral mount points — populated from the tracked defaults (src/content/demo,
+# axerity.default.json) for the engine's own runs, or with a user's project by the
+# CLI. Never tracked, so no run ever dirties the repo.
+/src/content/docs
+/axerity.json
+.axerity-specs
+.axerity-assets
 build
 
 # axerity:openapi (generated)

@@ -621,6 +621,9 @@ export async function generateApiDocs(
 			console.warn(`[axerity] OpenAPI generation failed for ${source.spec}:`, error);
 		}
 	}
-	ignoreGenerated(contentRoot, groups);
+	// When the CLI mounts a user's project into the engine, generated pages live
+	// engine-side and never touch the user's repo, so the .gitignore block is
+	// pointless — and rewriting .gitignore mid-run is dangerous. Skip it then.
+	if (!process.env.AXERITY_MOUNTED) ignoreGenerated(contentRoot, groups);
 	return written;
 }
