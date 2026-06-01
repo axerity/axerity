@@ -18,7 +18,7 @@ steps" grids, feature overviews, and navigation.
 A standalone `Card` with an icon, title, and description. Add `href` to make the
 whole card a link (it gains a hover state and an arrow):
 
-<Card title="Installation" icon="download" href="/docs/installation">
+<Card title="Installation" icon="download" href="/installation">
 
 Get Axerity running locally in a minute.
 
@@ -30,17 +30,17 @@ Wrap cards in a `CardGroup` to lay them out in a responsive grid. Use `cols` to
 set the number of columns:
 
 <CardGroup cols={2}>
-	<Card title="Quick Start" icon="rocket" href="/docs/quick-start">
+	<Card title="Quick Start" icon="rocket" href="/quick-start">
 
 Write your first page in two minutes.
 
     </Card>
-    <Card title="Markdown" icon="file-text" href="/docs/writing/markdown">
+    <Card title="Markdown" icon="file-text" href="/writing/markdown">
 
 Author content in Markdown and Svelte.
 
     </Card>
-    <Card title="Components" icon="blocks" href="/docs/components/callout">
+    <Card title="Components" icon="blocks" href="/components/callout">
 
 Explore the component kit.
 
@@ -71,7 +71,7 @@ A horizontal card is handy in tighter layouts.
 </script>
 
 <CardGroup cols={2}>
-	<Card title="Quick Start" icon="rocket" href="/docs/quick-start">
+	<Card title="Quick Start" icon="rocket" href="/quick-start">
 		Write your first page in two minutes.
 	</Card>
 </CardGroup>

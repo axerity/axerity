@@ -35,22 +35,22 @@ set up your `meta.json` files, and you never have to touch the code.
 ## Get started
 
 <CardGroup cols={2}>
-	<Card title="Installation" icon="download" href="/docs/installation">
+	<Card title="Installation" icon="download" href="/installation">
 
 Get Axerity running locally in about a minute.
 
     </Card>
-    <Card title="Quick Start" icon="rocket" href="/docs/quick-start">
+    <Card title="Quick Start" icon="rocket" href="/quick-start">
 
 Write your first page and watch the sidebar fill in.
 
     </Card>
-    <Card title="Components" icon="blocks" href="/docs/components/callout">
+    <Card title="Components" icon="blocks" href="/components/callout">
 
 Browse the components you can use in your pages.
 
     </Card>
-    <Card title="API Reference" icon="code" href="/docs/api/pet/pet-object">
+    <Card title="API Reference" icon="code" href="/api/pet/pet-object">
 
 See the layout built for documenting an API.
 

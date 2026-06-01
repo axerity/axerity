@@ -11,8 +11,7 @@ icon: history
 # Update
 
 `Update` renders a single entry on a vertical timeline. Stack several to build a
-changelog. Pair it with a `date` in the page frontmatter so the page also shows
-up in the [RSS feed](/rss.xml).
+changelog. Pair it with a `date` in the page frontmatter.
 
 ## Example
 

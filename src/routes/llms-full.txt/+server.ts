@@ -1,3 +1,4 @@
+import { base } from '$app/paths';
 import { site } from '$lib/config/site';
 import { flatPages } from '$lib/content';
 import { getRawMarkdown } from '$lib/content/raw';
@@ -10,7 +11,7 @@ export const GET: RequestHandler = async () => {
 	if (site.description) parts.push('', `> ${site.description}`);
 
 	for (const page of flatPages) {
-		const slug = page.href.replace(/^\/docs\/?/, '');
+		const slug = page.href.slice(base.length).replace(/^\//, '');
 		const markdown = await getRawMarkdown(slug);
 		if (markdown) parts.push('', '---', '', markdown);
 	}

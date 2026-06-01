@@ -3,6 +3,7 @@
 	import '@fontsource-variable/geist-mono/index.css';
 	import '@shikijs/twoslash/style-rich.css';
 	import './layout.css';
+	import { base } from '$app/paths';
 	import Analytics from '$lib/components/docs/Analytics.svelte';
 	import { site } from '$lib/config/site';
 
@@ -10,13 +11,13 @@
 </script>
 
 <svelte:head>
-	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href="{base}/favicon.svg" type="image/svg+xml" />
 	{#if site.url}
 		<link
 			rel="alternate"
 			type="application/rss+xml"
 			title="{site.name} changelog"
-			href="{site.url}/rss.xml"
+			href="{site.url}{base}/rss.xml"
 		/>
 	{/if}
 </svelte:head>

@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import ArrowRight from '@lucide/svelte/icons/arrow-right';
 	import DynamicIcon from '$lib/components/DynamicIcon.svelte';
+	import { withBase } from '$lib/base';
 
 	let {
 		title,
@@ -23,7 +24,7 @@
 
 <svelte:element
 	this={href ? 'a' : 'div'}
-	href={href || undefined}
+	href={withBase(href) || undefined}
 	target={external ? '_blank' : undefined}
 	rel={external ? 'noreferrer' : undefined}
 	class="card-root group block rounded-lg border border-border bg-surface p-4 transition

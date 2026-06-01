@@ -20,7 +20,7 @@ Creates a list of users from a given input array.
 
 ## Body parameters
 
-<ParamField name="users" type="array of User" typeLink="/docs/api/user/user-object">
+<ParamField name="users" type="array of User" typeLink="/api/user/user-object">
 
 The users to create.
 
@@ -28,7 +28,7 @@ The users to create.
 
 ## Returns
 
-Returns the first created [User](/docs/api/user/user-object).
+Returns the first created [User](/api/user/user-object).
 
 <ResponseField name="id" type="integer">
 

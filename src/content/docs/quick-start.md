@@ -24,7 +24,7 @@ icon: book-open
 My first Axerity page.
 ```
 
-It's immediately available at `/docs/hello` and shows up in the sidebar.
+It's immediately available at `/hello` and shows up in the sidebar.
 
 ## Order it with meta.json
 

@@ -2,4 +2,9 @@ import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-export default defineConfig({ plugins: [tailwindcss(), sveltekit()] });
+const allow = process.env.AXERITY_FS_ALLOW;
+
+export default defineConfig({
+	plugins: [tailwindcss(), sveltekit()],
+	server: allow ? { fs: { allow: ['.', allow] } } : undefined
+});

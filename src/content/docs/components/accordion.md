@@ -30,7 +30,7 @@ rows. Pass `open` to expand one by default, and `icon` for a Lucide glyph.
 <AccordionGroup>
 	<Accordion title="Installation" icon="download" open>
 
-Run `pnpm install` then `pnpm dev`. See [Installation](/docs/installation) for
+Run `pnpm install` then `pnpm dev`. See [Installation](/installation) for
 the full walkthrough.
 
     </Accordion>

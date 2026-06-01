@@ -34,7 +34,7 @@ The status to filter by.
 
 ## Returns
 
-Returns an array of [Pet](/docs/api/pet/pet-object) objects.
+Returns an array of [Pet](/api/pet/pet-object) objects.
 
 <ResponseField name="data" type="Pet[]">
 

@@ -42,7 +42,7 @@ Pet status in the store. One of `available`, `pending`, or `sold`.
 
 ## Returns
 
-Returns the updated [Pet](/docs/api/pet/pet-object).
+Returns the updated [Pet](/api/pet/pet-object).
 
 <ResponseField name="id" type="integer">
 

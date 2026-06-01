@@ -38,7 +38,7 @@ layout: api
 ---
 ```
 
-See the [API reference components](/docs/api/pet/pet-object) for what you can
+See the [API reference components](/api/pet/pet-object) for what you can
 put on these pages.
 
 ## On every page
@@ -46,6 +46,6 @@ put on these pages.
 Both layouts include a few things automatically:
 
 - A breadcrumb trail above the title.
-- A copy page button. See [AI and LLMs](/docs/configuration/ai).
+- A copy page button. See [AI and LLMs](/configuration/ai).
 - Previous and next links at the bottom.
 - A footer.

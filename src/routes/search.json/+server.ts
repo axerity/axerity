@@ -1,3 +1,4 @@
+import { base } from '$app/paths';
 import { sidebar } from '$lib/content';
 import { getRawMarkdown } from '$lib/content/raw';
 import type { NavEntry } from '$lib/types';
@@ -29,7 +30,7 @@ export const GET: RequestHandler = async () => {
 	async function walk(entries: NavEntry[], section: string) {
 		for (const entry of entries) {
 			if ('href' in entry) {
-				const slug = entry.href.replace(/^\/docs\/?/, '');
+				const slug = entry.href.slice(base.length).replace(/^\//, '');
 				const raw = await getRawMarkdown(slug);
 				docs.push({
 					id: entry.href,

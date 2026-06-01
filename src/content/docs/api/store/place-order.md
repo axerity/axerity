@@ -46,7 +46,7 @@ Whether the order is complete.
 
 ## Returns
 
-Returns the created [Order](/docs/api/store/order-object).
+Returns the created [Order](/api/store/order-object).
 
 <ResponseField name="id" type="integer">
 

@@ -1,3 +1,4 @@
+import { base as basePath } from '$app/paths';
 import { site } from '$lib/config/site';
 import type { PageFrontmatter } from '$lib/types';
 import type { RequestHandler } from './$types';
@@ -25,7 +26,7 @@ function escapeXml(value: string): string {
 export const prerender = true;
 
 export const GET: RequestHandler = () => {
-	const base = site.url ?? '';
+	const origin = (site.url ?? '') + basePath;
 
 	const items = Object.entries(pages)
 		.map(([path, mod]) => ({ slug: pathToSlug(path), fm: mod.metadata ?? {} }))
@@ -34,7 +35,7 @@ export const GET: RequestHandler = () => {
 			(a, b) => new Date(b.fm.date as string).getTime() - new Date(a.fm.date as string).getTime()
 		)
 		.map((entry) => {
-			const link = `${base}/docs/${entry.slug}`;
+			const link = `${origin}/${entry.slug}`;
 			const title = escapeXml(entry.fm.title ?? entry.slug);
 			const description = escapeXml(entry.fm.description ?? '');
 			const pubDate = new Date(entry.fm.date as string).toUTCString();
@@ -52,7 +53,7 @@ export const GET: RequestHandler = () => {
 <rss version="2.0">
   <channel>
     <title>${escapeXml(site.name)}</title>
-    <link>${base}</link>
+    <link>${origin}</link>
     <description>${escapeXml(site.description ?? '')}</description>
 ${items}
   </channel>

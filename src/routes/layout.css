@@ -481,6 +481,12 @@ body {
 	text-rendering: optimizeLegibility;
 }
 
+/* Text selection uses the theme accent instead of the browser default blue. */
+::selection {
+	background-color: color-mix(in oklab, var(--accent) 25%, transparent);
+	color: var(--fg);
+}
+
 /* Respect users who don't want the smooth-scroll motion. */
 @media (prefers-reduced-motion: reduce) {
 	html {

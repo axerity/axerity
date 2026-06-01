@@ -160,6 +160,8 @@ export interface SiteConfig {
 	layout?: LayoutVariant;
 	theme?: ThemeName;
 	sidebar?: SidebarConfig;
+	/** Serve the whole site under a sub-path, e.g. "/docs". Empty = root. */
+	basePath?: string;
 }
 
 /**

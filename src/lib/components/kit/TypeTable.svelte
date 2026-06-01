@@ -19,6 +19,7 @@
 	import { SvelteSet } from 'svelte/reactivity';
 	import { slide } from 'svelte/transition';
 	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import { withBase } from '$lib/base';
 
 	let { type }: { type: Record<string, TypeTableProp> } = $props();
 
@@ -63,7 +64,7 @@
 					<div class="tt-meta-row">
 						<span class="tt-meta-label">Type</span>
 						{#if prop.typeDescriptionLink}
-							<a class="tt-code tt-link" href={prop.typeDescriptionLink}>
+							<a class="tt-code tt-link" href={withBase(prop.typeDescriptionLink)}>
 								{prop.typeDescription ?? prop.type ?? '—'}
 							</a>
 						{:else}

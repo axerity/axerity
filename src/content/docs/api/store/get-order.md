@@ -29,7 +29,7 @@ The id of the order to fetch.
 
 ## Returns
 
-Returns the [Order](/docs/api/store/order-object).
+Returns the [Order](/api/store/order-object).
 
 <ResponseField name="id" type="integer">
 

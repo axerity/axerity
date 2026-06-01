@@ -28,7 +28,7 @@ The name of the user to fetch.
 
 ## Returns
 
-Returns the [User](/docs/api/user/user-object).
+Returns the [User](/api/user/user-object).
 
 <ResponseField name="id" type="integer">
 

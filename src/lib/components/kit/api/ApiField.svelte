@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { withBase } from '$lib/base';
 
 	let {
 		name,
@@ -25,7 +26,7 @@
 		<code class="field-name" class:field-deprecated={deprecated}>{name}</code>
 		{#if type}
 			{#if typeLink}
-				<a class="field-type field-type-link" href={typeLink}>{type}</a>
+				<a class="field-type field-type-link" href={withBase(typeLink)}>{type}</a>
 			{:else}
 				<span class="field-type">{type}</span>
 			{/if}

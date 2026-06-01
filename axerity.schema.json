@@ -203,6 +203,11 @@
 					"description": "flush (default), card (inset panel), or floating (detached card)."
 				}
 			}
+		},
+		"basePath": {
+			"type": "string",
+			"description": "Serve the whole site under a sub-path, e.g. \"/docs\". Empty serves at the root.",
+			"pattern": "^(/[^/]+)*$"
 		}
 	},
 	"definitions": {

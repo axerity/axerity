@@ -1,8 +1,36 @@
+import { readFileSync } from 'node:fs';
 import { defineMDSveXConfig } from 'mdsvex';
 import { escapeSvelte } from 'mdsvex';
 import rehypeSlug from 'rehype-slug';
 import { createHighlighter } from 'shiki';
 import { transformerTwoslash } from '@shikijs/twoslash';
+
+let basePath = '';
+try {
+	basePath = JSON.parse(readFileSync('./axerity.json', 'utf8')).basePath ?? '';
+} catch {
+	// no config
+}
+
+function rehypeBasePath() {
+	return (tree) => {
+		const walk = (node) => {
+			if (node.type === 'element' && node.tagName === 'a') {
+				const href = node.properties?.href;
+				if (
+					typeof href === 'string' &&
+					href.startsWith('/') &&
+					!href.startsWith('//') &&
+					!href.startsWith(`${basePath}/`)
+				) {
+					node.properties.href = basePath + href;
+				}
+			}
+			node.children?.forEach(walk);
+		};
+		if (basePath) walk(tree);
+	};
+}
 
 /**
  * Wrap every `<table>` in a `<div class="table-wrapper">` so it can be a rounded,
@@ -183,7 +211,7 @@ const COPY_BUTTON =
 export default defineMDSveXConfig({
 	extensions: ['.svx', '.md'],
 	// Give every heading a stable id so the TOC can anchor + scroll-spy to it.
-	rehypePlugins: [rehypeSlug, rehypeTableWrapper, rehypeExternalLinks],
+	rehypePlugins: [rehypeSlug, rehypeTableWrapper, rehypeExternalLinks, rehypeBasePath],
 	highlight: {
 		highlighter: async (code, lang, meta) => {
 			if (lang === 'mermaid') {

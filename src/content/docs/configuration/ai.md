@@ -25,8 +25,8 @@ Every page is also served as raw Markdown at a `.md` URL. Add `.md` to any page
 path:
 
 ```
-/docs/installation      ->  the rendered page
-/docs/installation.md   ->  the raw Markdown
+/installation      ->  the rendered page
+/installation.md   ->  the raw Markdown
 ```
 
 These are static files, generated at build time.

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
 	import { fade } from 'svelte/transition';
 	import Copy from '@lucide/svelte/icons/copy';
 	import Check from '@lucide/svelte/icons/check';
@@ -11,7 +12,7 @@
 	let open = $state(false);
 	let copied = $state(false);
 
-	const slug = $derived(page.url.pathname.replace(/^\/docs\/?/, ''));
+	const slug = $derived(page.url.pathname.slice(base.length).replace(/^\//, ''));
 
 	async function copyPage() {
 		const markdown = await getRawMarkdown(slug);
@@ -31,9 +32,9 @@
 		open = false;
 	}
 
-	function ask(base: string) {
+	function ask(endpoint: string) {
 		const prompt = `Read ${page.url.href} and help me with questions about this page.`;
-		window.open(`${base}${encodeURIComponent(prompt)}`, '_blank');
+		window.open(`${endpoint}${encodeURIComponent(prompt)}`, '_blank');
 		open = false;
 	}
 </script>

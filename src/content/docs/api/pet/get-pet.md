@@ -36,7 +36,7 @@ The id of the pet to return.
 
 ## Returns
 
-Returns the [Pet](/docs/api/pet/pet-object).
+Returns the [Pet](/api/pet/pet-object).
 
 <ResponseField name="id" type="integer">
 

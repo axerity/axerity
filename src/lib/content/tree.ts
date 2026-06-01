@@ -2,6 +2,7 @@
  * Content-tree generator.
  *
  */
+import { base } from '$app/paths';
 import type { FolderMeta, NavEntry, NavLink, NavSection, PageFrontmatter } from '$lib/types';
 
 const ROOT = '/src/content/docs';
@@ -30,8 +31,8 @@ function slugOf(path: string): string {
 
 function hrefFor(folder: string, slug: string): string {
 	const rel = folder.slice(ROOT.length);
-	if (slug === 'index') return '/docs' + rel;
-	return '/docs' + rel + '/' + slug;
+	if (slug === 'index') return base + (rel || '/');
+	return base + rel + '/' + slug;
 }
 
 const metaFor = (folder: string): FolderMeta =>

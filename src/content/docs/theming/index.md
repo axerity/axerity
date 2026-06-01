@@ -81,8 +81,8 @@ Out of the box Axerity ships a **neutral (shadcn-style)** theme: pure grayscale
 surfaces, a monochrome accent, and **dark by default**. The next pages show how
 to make it yours.
 
-- [Colors](/docs/theming/colors), accent and surfaces
-- [Typography](/docs/theming/typography), fonts
-- [Layout](/docs/theming/layout), widths and rails
-- [Code blocks](/docs/theming/code), syntax themes
-- [Advanced](/docs/theming/advanced), radius, custom tokens, full themes
+- [Colors](/theming/colors), accent and surfaces
+- [Typography](/theming/typography), fonts
+- [Layout](/theming/layout), widths and rails
+- [Code blocks](/theming/code), syntax themes
+- [Advanced](/theming/advanced), radius, custom tokens, full themes

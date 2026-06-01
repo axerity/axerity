@@ -40,7 +40,7 @@ The user's password.
 
 ## Returns
 
-Returns the created [User](/docs/api/user/user-object).
+Returns the created [User](/api/user/user-object).
 
 <ResponseField name="id" type="integer">
 

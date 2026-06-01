@@ -12,7 +12,7 @@ Markdown that can also embed live Svelte components.
 ## Standard Markdown
 
 All the usual Markdown works, **bold**, _italic_, `inline code`, and
-[links](/docs).
+[links](/).
 
 - Bullet lists
 - With multiple items
@@ -58,5 +58,5 @@ anywhere in the Markdown:
 ```
 
 The blank line around the content matters. Without it the inner text is treated
-as plain text, not Markdown. See the [Components](/docs/components/callout)
+as plain text, not Markdown. See the [Components](/components/callout)
 section for everything available.

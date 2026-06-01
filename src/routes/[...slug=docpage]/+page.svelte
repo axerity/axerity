@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { base } from '$app/paths';
 	import { DocsLayout } from '$lib';
 	import { site } from '$lib/config/site';
 	import { sidebar, flatPages } from '$lib/content';
@@ -18,8 +19,8 @@
 	const canonical = $derived(site.url ? site.url + page.url.pathname : undefined);
 	const ogImagePath = $derived(
 		site.og?.enabled
-			? `/og/${data.sourcePath.replace(/\.md$/, '')}.png`
-			: (site.ogImage ?? '/og-image.png')
+			? `${base}/og/${data.sourcePath.replace(/\.md$/, '')}.png`
+			: `${base}${site.ogImage ?? '/og-image.png'}`
 	);
 	const ogImage = $derived(site.url ? site.url + ogImagePath : ogImagePath);
 </script>

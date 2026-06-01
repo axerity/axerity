@@ -12,7 +12,7 @@ updated: 2026-06-01
 
 # Changelog
 
-Every notable change, newest first. Subscribe with the [RSS feed](/rss.xml).
+Every notable change, newest first.
 
 <Update label="v1.0.0" date="June 1, 2026">
 

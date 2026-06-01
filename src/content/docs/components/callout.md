@@ -55,7 +55,7 @@ as Markdown (an mdsvex requirement):
 	import { Callout } from '$lib';
 </script>
 
-<Callout type="warn">Careful, this is a **warning** with a [link](/docs).</Callout>
+<Callout type="warn">Careful, this is a **warning** with a [link](/).</Callout>
 ```
 
 ## Types

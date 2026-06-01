@@ -42,7 +42,7 @@ The new status of the pet.
 
 ## Returns
 
-Returns the updated [Pet](/docs/api/pet/pet-object).
+Returns the updated [Pet](/api/pet/pet-object).
 
 <ResponseField name="id" type="integer">
 

@@ -1,4 +1,5 @@
 import { error } from '@sveltejs/kit';
+import { base } from '$app/paths';
 import { site } from '$lib/config/site';
 import { renderOgImage } from '$lib/server/og';
 import type { PageFrontmatter } from '$lib/types';
@@ -17,7 +18,7 @@ async function getFonts(fetch: typeof globalThis.fetch) {
 	if (!fontCache) {
 		fontCache = await Promise.all(
 			WEIGHTS.map(async (weight) => {
-				const response = await fetch(`/fonts/geist-${weight}.ttf`);
+				const response = await fetch(`${base}/fonts/geist-${weight}.ttf`);
 				return { data: await response.arrayBuffer(), weight };
 			})
 		);

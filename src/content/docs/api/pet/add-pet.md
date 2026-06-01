@@ -34,7 +34,7 @@ URLs of the pet's photos.
 
 </ParamField>
 
-<ParamField name="category" type="Category" typeLink="/docs/api/pet/pet-object">
+<ParamField name="category" type="Category" typeLink="/api/pet/pet-object">
 
 The category this pet belongs to.
 
@@ -48,7 +48,7 @@ Pet status in the store. One of `available`, `pending`, or `sold`.
 
 ## Returns
 
-Returns the created [Pet](/docs/api/pet/pet-object).
+Returns the created [Pet](/api/pet/pet-object).
 
 <ResponseField name="id" type="integer">
 

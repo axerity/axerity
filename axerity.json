@@ -20,20 +20,32 @@
 	},
 	"layout": "flat",
 	"theme": "neutral",
-	"sidebar": { "variant": "card" },
-	"versions": [{ "label": "v1.0-preview", "href": "/docs" }],
+	"sidebar": {
+		"variant": "card"
+	},
+	"versions": [
+		{
+			"label": "v1.0-preview",
+			"href": "/"
+		}
+	],
 	"dropdowns": [
 		{
 			"label": "Guides",
 			"icon": "book-open",
-			"href": "/docs",
-			"match": "/docs",
+			"href": "/",
+			"match": "/",
 			"tabs": [
-				{ "title": "Documentation", "href": "/docs", "match": "/docs", "icon": "book-open" },
+				{
+					"title": "Documentation",
+					"href": "/",
+					"match": "/",
+					"icon": "book-open"
+				},
 				{
 					"title": "Components",
-					"href": "/docs/components/callout",
-					"match": "/docs/components",
+					"href": "/components/callout",
+					"match": "/components",
 					"icon": "blocks"
 				}
 			]
@@ -41,33 +53,44 @@
 		{
 			"label": "API Reference",
 			"icon": "code",
-			"href": "/docs/api/pet/pet-object",
-			"match": "/docs/api",
+			"href": "/api/pet/pet-object",
+			"match": "/api",
 			"tabs": [
 				{
 					"title": "Pet",
-					"href": "/docs/api/pet/pet-object",
-					"match": "/docs/api/pet",
+					"href": "/api/pet/pet-object",
+					"match": "/api/pet",
 					"icon": "paw-print"
 				},
 				{
 					"title": "Store",
-					"href": "/docs/api/store/order-object",
-					"match": "/docs/api/store",
+					"href": "/api/store/order-object",
+					"match": "/api/store",
 					"icon": "shopping-cart"
 				},
 				{
 					"title": "User",
-					"href": "/docs/api/user/user-object",
-					"match": "/docs/api/user",
+					"href": "/api/user/user-object",
+					"match": "/api/user",
 					"icon": "user"
 				}
 			]
 		}
 	],
-	"sidebarLinks": [{ "title": "Issues", "href": "https://github.com/axerity/axerity/issues" }],
+	"sidebarLinks": [
+		{
+			"title": "Issues",
+			"href": "https://github.com/axerity/axerity/issues"
+		}
+	],
 	"topNav": [
-		{ "title": "Docs", "href": "/docs" },
-		{ "title": "Components", "href": "/docs/components/callout" }
+		{
+			"title": "Docs",
+			"href": "/"
+		},
+		{
+			"title": "Components",
+			"href": "/components/callout"
+		}
 	]
 }
