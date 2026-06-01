@@ -22,7 +22,7 @@ function openapi() {
 			}
 			await generateApiDocs(openapi, 'src/content/docs');
 		} catch {
-			// theres nothing
+			return;
 		}
 	};
 	return {
@@ -42,5 +42,5 @@ function openapi() {
 
 export default defineConfig({
 	plugins: [openapi(), tailwindcss(), sveltekit()],
-	server: allow ? { fs: { allow: ['.', allow] } } : undefined
+	server: allow ? { fs: { strict: false } } : undefined
 });

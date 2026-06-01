@@ -29,9 +29,6 @@ function viteBin() {
 	return resolve(dirname(pkgPath), rel);
 }
 
-// The engine runs in place, from its own install with its real node_modules. The
-// user's project is mounted into a handful of gitignored paths for a single run,
-// so nothing the engine tracks is ever touched — clean exit, Ctrl-C, or crash.
 const ENGINE_DOCS = join(engineRoot, 'src', 'content', 'docs');
 const ENGINE_CONFIG = join(engineRoot, 'axerity.json');
 const ENGINE_STATIC = join(engineRoot, 'static');
@@ -47,16 +44,12 @@ function findContentDir() {
 	return null;
 }
 
-/** Reset the engine's own demo site into the mount points (for `axerity` runs
- *  from inside the engine repo). `pnpm dev` does this via its pre-scripts. */
 function prepareEngine() {
 	spawnSync(process.execPath, [join(engineRoot, 'scripts', 'prepare-engine.mjs')], {
 		stdio: 'inherit'
 	});
 }
 
-/** Copy local specs into a gitignored folder and rewrite the config to point at
- *  them, so the user's spec paths resolve without touching the engine tree. */
 function mountSpecs(config) {
 	const rewrite = (source) => {
 		const spec = typeof source === 'string' ? source : source.spec;
@@ -75,19 +68,15 @@ function mountSpecs(config) {
 }
 
 function mount(contentDir) {
-	// Content -> the path the engine globs, as symlinks so generated pages (an API
-	// reference) can sit alongside without touching the user's repo.
 	rmSync(ENGINE_DOCS, { recursive: true, force: true });
 	mkdirSync(ENGINE_DOCS, { recursive: true });
 	for (const entry of readdirSync(contentDir)) {
 		symlinkSync(join(contentDir, entry), join(ENGINE_DOCS, entry), symlinkType);
 	}
 
-	// Config (with local spec paths rewritten into the gitignored specs folder).
 	const config = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8'));
 	writeFileSync(ENGINE_CONFIG, JSON.stringify(mountSpecs(config), null, '\t'));
 
-	// Assets: engine defaults overlaid with the user's public/ folder.
 	rmSync(ASSETS_DIR, { recursive: true, force: true });
 	cpSync(ENGINE_STATIC, ASSETS_DIR, { recursive: true });
 	const userPublic = join(userRoot, 'public');
@@ -115,7 +104,7 @@ const banner = (sub) => process.stdout.write(`\n  ${mark} ${bold('axerity')} ${d
 const NOISE =
 	/^\s*(VITE v|➜|press h|ready in|Local:|Network:|\[vite\].*(optimiz|dependencies)|\[optimizer\]|Forced re-opt|watching for file changes|use --host)/i;
 
-function streamServer(child, sub) {
+function streamServer(child) {
 	let shown = false;
 	let buffer = '';
 	const onData = (chunk) => {
@@ -139,7 +128,6 @@ function streamServer(child, sub) {
 	child.stderr.on('data', onData);
 }
 
-/** A build: silent spinner on success, full captured output only on failure. */
 function streamBuild(child) {
 	const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 	let i = 0;
@@ -173,7 +161,7 @@ function runEngine(sub, extra, { mounted, onSuccess }) {
 	});
 
 	banner(sub);
-	const build = sub === 'build' ? streamBuild(child) : (streamServer(child, sub), null);
+	const build = sub === 'build' ? streamBuild(child) : (streamServer(child), null);
 
 	let cleaned = false;
 	const cleanup = () => {
@@ -198,7 +186,6 @@ function runEngine(sub, extra, { mounted, onSuccess }) {
 }
 
 function run(sub, extra) {
-	// Inside the engine repo: serve its own demo site.
 	if (isEngineRepo) {
 		prepareEngine();
 		return runEngine(sub, extra, { mounted: false });
