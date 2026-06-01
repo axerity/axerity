@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { spawn, spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import {
 	cpSync,
@@ -19,6 +20,14 @@ const userRoot = process.cwd();
 const isEngineRepo = userRoot === engineRoot;
 
 const symlinkType = process.platform === 'win32' ? 'junction' : 'dir';
+
+const require = createRequire(import.meta.url);
+function viteBin() {
+	const pkgPath = require.resolve('vite/package.json');
+	const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+	const rel = typeof pkg.bin === 'string' ? pkg.bin : pkg.bin.vite;
+	return resolve(dirname(pkgPath), rel);
+}
 
 // The engine runs in place, from its own install with its real node_modules. The
 // user's project is mounted into a handful of gitignored paths for a single run,
@@ -152,8 +161,7 @@ function streamBuild(child) {
 }
 
 function runEngine(sub, extra, { mounted, onSuccess }) {
-	const viteEntry = join(engineRoot, 'node_modules', 'vite', 'bin', 'vite.js');
-	const child = spawn(process.execPath, [viteEntry, sub, ...extra], {
+	const child = spawn(process.execPath, [viteBin(), sub, ...extra], {
 		cwd: engineRoot,
 		stdio: ['inherit', 'pipe', 'pipe'],
 		env: {
