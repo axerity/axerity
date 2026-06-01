@@ -1,0 +1,5 @@
+{
+	"title": "Development",
+	"icon": "code",
+	"pages": ["index", "content-pipeline", "dev-and-build", "extending", "releasing", "roadmap"]
+}
