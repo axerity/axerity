@@ -15,13 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Node first so pnpm installs on a version it supports, then pnpm.
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
-      - uses: pnpm/action-setup@v4
+      # Corepack ships with Node, so pnpm runs on Node 24 (not the action runtime).
+      - run: corepack enable
 
       - run: pnpm install --frozen-lockfile
 
