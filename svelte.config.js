@@ -21,7 +21,9 @@ const config = {
 	},
 	kit: {
 		adapter: adapter({ fallback: '404.html' }),
-		paths: { base: basePath }
+		// Absolute base (not relative to the page) so `base` is a stable prefix
+		// for both links and absolute URLs like OpenGraph images.
+		paths: { base: basePath, relative: false }
 	},
 	preprocess: [mdsvex(mdsvexConfig)],
 	extensions: ['.svelte', '.svx', '.md']
