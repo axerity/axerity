@@ -16,6 +16,8 @@
 		"columns",
 		"badge",
 		"kbd",
-		"type-table"
+		"update",
+		"type-table",
+		"api"
 	]
 }

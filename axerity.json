@@ -1,4 +1,5 @@
 {
+	"$schema": "./axerity.schema.json",
 	"name": "Axerity",
 	"description": "A documentation site generator built with Svelte.",
 	"url": "https://axerity.com",
@@ -17,7 +18,9 @@
 		"alt": "Axerity",
 		"href": "/"
 	},
-	"layout": "boxed",
+	"layout": "flat",
+	"theme": "neutral",
+	"sidebar": { "variant": "card" },
 	"versions": [{ "label": "v1.0-preview", "href": "/docs" }],
 	"dropdowns": [
 		{

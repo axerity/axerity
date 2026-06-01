@@ -59,6 +59,21 @@ export interface TocEntry {
  */
 export type LayoutVariant = 'flat' | 'boxed';
 
+/**
+ * A built-in theme preset. Each is a cohesive palette (and where it matters,
+ * font + corner radius) inspired by a well-known product's docs.
+ */
+export type ThemeName =
+	| 'neutral'
+	| 'stripe'
+	| 'vercel'
+	| 'linear'
+	| 'supabase'
+	| 'github'
+	| 'tailwind'
+	| 'mintlify'
+	| 'anthropic';
+
 export interface Version {
 	label: string;
 	href: string;
@@ -97,6 +112,16 @@ export interface Banner {
 	dismissible?: boolean;
 }
 
+/**
+ * Sidebar appearance.
+ * - `flush`    — tinted panel flush to the edge with a divider (default).
+ * - `card`     — a bordered, rounded panel inset from the edges.
+ * - `floating` — a detached, rounded, shadowed card that floats in the margin.
+ */
+export interface SidebarConfig {
+	variant?: 'flush' | 'card' | 'floating';
+}
+
 export interface AnalyticsConfig {
 	plausible?: string;
 	googleAnalytics?: string;
@@ -133,6 +158,8 @@ export interface SiteConfig {
 	editLink?: string;
 	github?: string;
 	layout?: LayoutVariant;
+	theme?: ThemeName;
+	sidebar?: SidebarConfig;
 }
 
 /**

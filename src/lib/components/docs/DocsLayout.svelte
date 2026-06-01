@@ -42,6 +42,18 @@
 			: 'flex w-full px-0 sm:px-6'
 	);
 
+	const sidebarVariants = {
+		flush:
+			'sticky top-(--spacing-header) h-[calc(100vh-var(--spacing-header))] border-r border-border bg-sidebar px-4',
+		card: 'sticky top-[calc(var(--spacing-header)_+_1rem)] my-4 mr-3 h-[calc(100vh_-_var(--spacing-header)_-_2rem)] overflow-hidden rounded-xl border border-border bg-sidebar px-3',
+		floating:
+			'sticky top-[calc(var(--spacing-header)_+_0.75rem)] my-3 mr-2 h-[calc(100vh_-_var(--spacing-header)_-_1.5rem)] overflow-hidden rounded-2xl border border-border bg-sidebar px-3 shadow-sm'
+	} as const;
+
+	const asideClass = $derived(
+		`hidden w-sidebar shrink-0 flex-col lg:flex ${sidebarVariants[site.sidebar?.variant ?? 'flush']}`
+	);
+
 	let mobileOpen = $state(false);
 
 	// Close the mobile drawer after navigating to a new page.
@@ -93,9 +105,7 @@
 
 	<div class={containerClass}>
 		<!-- Sidebar (desktop) -->
-		<aside
-			class="sticky top-(--spacing-header) hidden h-[calc(100vh-var(--spacing-header))] w-sidebar shrink-0 flex-col pr-4 lg:flex"
-		>
+		<aside class={asideClass}>
 			<div class="min-h-0 flex-1 overflow-y-auto py-8">
 				<Sidebar sections={sidebar} dropdowns={site.dropdowns} />
 			</div>
@@ -164,7 +174,7 @@
 			transition:fade={{ duration: 150 }}
 		></button>
 		<div
-			class="absolute top-0 left-0 flex h-full w-72 max-w-[85%] flex-col border-r border-border bg-bg"
+			class="absolute top-0 left-0 flex h-full w-72 max-w-[85%] flex-col border-r border-border bg-sidebar"
 			transition:fly={{ x: -300, duration: 200 }}
 		>
 			<div class="min-h-0 flex-1 overflow-y-auto p-6">

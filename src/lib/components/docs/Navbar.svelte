@@ -28,7 +28,7 @@
 </script>
 
 <header
-	class="sticky top-0 z-40 h-(--spacing-header) border-b border-border bg-bg/80 backdrop-blur-md"
+	class="sticky top-0 z-40 h-(--spacing-header) border-b border-border bg-header/80 backdrop-blur-md"
 >
 	<div class={innerClass}>
 		<!-- Mobile sidebar toggle -->
@@ -78,7 +78,7 @@
 					rel={tab.external ? 'noreferrer' : undefined}
 					aria-current={tab === activeTab ? 'page' : undefined}
 					class="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition
-						{tab === activeTab ? 'text-fg' : 'text-fg-muted hover:text-fg'}"
+						{tab === activeTab ? 'text-accent' : 'text-fg-muted hover:text-fg'}"
 				>
 					{#if tab.icon}
 						<DynamicIcon name={tab.icon} size={15} />

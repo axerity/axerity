@@ -45,6 +45,13 @@
 	--border: oklch(0.915 0 0);
 	--border-strong: oklch(0.82 0 0);
 
+	/* Chrome surfaces — the sidebar/header panels are a subtle wash of the accent
+	   over the page bg. Mix in oklab (not oklch) so a faint tint keeps the
+	   accent's hue instead of interpolating toward the bg's hue-0 (which turns
+	   a low-chroma green/blue pinkish). */
+	--sidebar-bg: color-mix(in oklab, var(--accent) 6%, var(--bg));
+	--header-bg: color-mix(in oklab, var(--accent) 3%, var(--bg));
+
 	color-scheme: light;
 }
 
@@ -67,6 +74,275 @@
 	color-scheme: dark;
 }
 
+/*
+ * Theme presets.
+ *
+  */
+
+/* Stripe — indigo accent, airy light surfaces, soft corners. */
+[data-theme='stripe'] {
+	--theme-radius-md: 0.375rem;
+	--theme-radius-lg: 0.5rem;
+	--theme-radius-xl: 0.75rem;
+	--theme-radius-2xl: 0.875rem;
+	--accent: oklch(0.55 0.23 274);
+	--accent-hover: oklch(0.5 0.23 274);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.975 0.006 274);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.985 0.006 274);
+	--fg: oklch(0.24 0.03 274);
+	--fg-muted: oklch(0.46 0.025 274);
+	--fg-subtle: oklch(0.58 0.02 274);
+	--border: oklch(0.92 0.01 274);
+	--border-strong: oklch(0.85 0.014 274);
+}
+[data-theme='stripe'].dark {
+	--accent: oklch(0.67 0.18 274);
+	--accent-hover: oklch(0.72 0.18 274);
+	--accent-contrast: oklch(0.16 0.03 274);
+	--bg: oklch(0.17 0.02 274);
+	--bg-subtle: oklch(0.21 0.022 274);
+	--surface: oklch(0.2 0.022 274);
+	--surface-raised: oklch(0.24 0.026 274);
+	--fg: oklch(0.97 0.006 274);
+	--fg-muted: oklch(0.72 0.016 274);
+	--fg-subtle: oklch(0.6 0.016 274);
+	--border: oklch(0.3 0.022 274);
+	--border-strong: oklch(0.38 0.024 274);
+}
+
+/* Vercel — pure monochrome, maximum contrast, sharp corners. */
+[data-theme='vercel'] {
+	--theme-radius-sm: 0.0625rem;
+	--theme-radius-md: 0.125rem;
+	--theme-radius-lg: 0.1875rem;
+	--theme-radius-xl: 0.25rem;
+	--theme-radius-2xl: 0.3125rem;
+	--theme-radius-3xl: 0.375rem;
+	--accent: oklch(0.18 0 0);
+	--accent-hover: oklch(0.32 0 0);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.97 0 0);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.98 0 0);
+	--fg: oklch(0.16 0 0);
+	--fg-muted: oklch(0.44 0 0);
+	--fg-subtle: oklch(0.6 0 0);
+	--border: oklch(0.92 0 0);
+	--border-strong: oklch(0.8 0 0);
+}
+[data-theme='vercel'].dark {
+	--accent: oklch(0.99 0 0);
+	--accent-hover: oklch(0.85 0 0);
+	--accent-contrast: oklch(0.14 0 0);
+	--bg: oklch(0.12 0 0);
+	--bg-subtle: oklch(0.18 0 0);
+	--surface: oklch(0.15 0 0);
+	--surface-raised: oklch(0.2 0 0);
+	--fg: oklch(0.99 0 0);
+	--fg-muted: oklch(0.7 0 0);
+	--fg-subtle: oklch(0.56 0 0);
+	--border: oklch(0.26 0 0);
+	--border-strong: oklch(0.34 0 0);
+}
+
+/* Linear — violet accent, cool grays, dense with small corners. */
+[data-theme='linear'] {
+	--theme-radius-lg: 0.3125rem;
+	--theme-radius-xl: 0.4375rem;
+	--accent: oklch(0.55 0.16 277);
+	--accent-hover: oklch(0.5 0.16 277);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(0.995 0.002 277);
+	--bg-subtle: oklch(0.975 0.005 277);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.985 0.005 277);
+	--fg: oklch(0.24 0.02 277);
+	--fg-muted: oklch(0.47 0.016 277);
+	--fg-subtle: oklch(0.6 0.014 277);
+	--border: oklch(0.91 0.008 277);
+	--border-strong: oklch(0.84 0.012 277);
+}
+[data-theme='linear'].dark {
+	--accent: oklch(0.66 0.15 277);
+	--accent-hover: oklch(0.71 0.15 277);
+	--accent-contrast: oklch(0.15 0 0);
+	--bg: oklch(0.16 0.01 277);
+	--bg-subtle: oklch(0.19 0.012 277);
+	--surface: oklch(0.185 0.012 277);
+	--surface-raised: oklch(0.225 0.014 277);
+	--fg: oklch(0.96 0.005 277);
+	--fg-muted: oklch(0.7 0.012 277);
+	--fg-subtle: oklch(0.56 0.012 277);
+	--border: oklch(0.28 0.014 277);
+	--border-strong: oklch(0.36 0.016 277);
+}
+
+/* Supabase — signature green, dark-first surfaces. */
+[data-theme='supabase'] {
+	--accent: oklch(0.76 0.16 162);
+	--accent-hover: oklch(0.71 0.16 162);
+	--accent-contrast: oklch(0.2 0.03 162);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.975 0.004 162);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.985 0.005 162);
+	--fg: oklch(0.22 0.01 162);
+	--fg-muted: oklch(0.45 0.012 162);
+	--fg-subtle: oklch(0.58 0.012 162);
+	--border: oklch(0.92 0.006 162);
+	--border-strong: oklch(0.84 0.01 162);
+}
+[data-theme='supabase'].dark {
+	--accent: oklch(0.78 0.16 162);
+	--accent-hover: oklch(0.83 0.16 162);
+	--accent-contrast: oklch(0.16 0.03 162);
+	--bg: oklch(0.16 0.006 162);
+	--bg-subtle: oklch(0.2 0.008 162);
+	--surface: oklch(0.19 0.008 162);
+	--surface-raised: oklch(0.23 0.01 162);
+	--fg: oklch(0.96 0.004 162);
+	--fg-muted: oklch(0.7 0.008 162);
+	--fg-subtle: oklch(0.56 0.008 162);
+	--border: oklch(0.28 0.01 162);
+	--border-strong: oklch(0.35 0.012 162);
+}
+
+/* GitHub — Primer blue, cool neutral grays, system font. */
+[data-theme='github'] {
+	--theme-font-sans:
+		-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+	--accent: oklch(0.52 0.18 256);
+	--accent-hover: oklch(0.47 0.18 256);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.97 0.004 256);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.98 0.004 256);
+	--fg: oklch(0.27 0.012 256);
+	--fg-muted: oklch(0.48 0.014 256);
+	--fg-subtle: oklch(0.58 0.014 256);
+	--border: oklch(0.9 0.008 256);
+	--border-strong: oklch(0.8 0.01 256);
+}
+[data-theme='github'].dark {
+	--accent: oklch(0.66 0.16 245);
+	--accent-hover: oklch(0.71 0.16 245);
+	--accent-contrast: oklch(0.15 0.01 256);
+	--bg: oklch(0.17 0.012 268);
+	--bg-subtle: oklch(0.21 0.014 268);
+	--surface: oklch(0.19 0.013 268);
+	--surface-raised: oklch(0.24 0.015 268);
+	--fg: oklch(0.93 0.006 256);
+	--fg-muted: oklch(0.68 0.012 256);
+	--fg-subtle: oklch(0.55 0.012 256);
+	--border: oklch(0.3 0.014 268);
+	--border-strong: oklch(0.38 0.016 268);
+}
+
+/* Tailwind — sky accent, slate grays, generous corners. */
+[data-theme='tailwind'] {
+	--theme-radius-md: 0.375rem;
+	--theme-radius-lg: 0.5rem;
+	--theme-radius-xl: 0.75rem;
+	--theme-radius-2xl: 1rem;
+	--accent: oklch(0.68 0.15 233);
+	--accent-hover: oklch(0.62 0.15 233);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.975 0.008 247);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.985 0.008 247);
+	--fg: oklch(0.28 0.03 257);
+	--fg-muted: oklch(0.48 0.03 257);
+	--fg-subtle: oklch(0.6 0.025 257);
+	--border: oklch(0.92 0.012 247);
+	--border-strong: oklch(0.85 0.016 247);
+}
+[data-theme='tailwind'].dark {
+	--accent: oklch(0.72 0.14 233);
+	--accent-hover: oklch(0.77 0.14 233);
+	--accent-contrast: oklch(0.18 0.03 257);
+	--bg: oklch(0.21 0.03 257);
+	--bg-subtle: oklch(0.26 0.03 257);
+	--surface: oklch(0.24 0.03 257);
+	--surface-raised: oklch(0.29 0.03 257);
+	--fg: oklch(0.96 0.01 247);
+	--fg-muted: oklch(0.72 0.02 247);
+	--fg-subtle: oklch(0.6 0.02 247);
+	--border: oklch(0.32 0.03 257);
+	--border-strong: oklch(0.4 0.03 257);
+}
+
+/* Mintlify — friendly green, light-first, rounded. */
+[data-theme='mintlify'] {
+	--theme-radius-md: 0.375rem;
+	--theme-radius-lg: 0.5rem;
+	--theme-radius-xl: 0.75rem;
+	--theme-radius-2xl: 1rem;
+	--accent: oklch(0.62 0.16 150);
+	--accent-hover: oklch(0.57 0.16 150);
+	--accent-contrast: oklch(0.99 0 0);
+	--bg: oklch(1 0 0);
+	--bg-subtle: oklch(0.975 0.006 150);
+	--surface: oklch(1 0 0);
+	--surface-raised: oklch(0.985 0.006 150);
+	--fg: oklch(0.25 0.012 150);
+	--fg-muted: oklch(0.46 0.014 150);
+	--fg-subtle: oklch(0.58 0.014 150);
+	--border: oklch(0.91 0.008 150);
+	--border-strong: oklch(0.84 0.012 150);
+}
+[data-theme='mintlify'].dark {
+	--accent: oklch(0.72 0.16 150);
+	--accent-hover: oklch(0.77 0.16 150);
+	--accent-contrast: oklch(0.16 0.02 150);
+	--bg: oklch(0.16 0.006 150);
+	--bg-subtle: oklch(0.2 0.008 150);
+	--surface: oklch(0.19 0.008 150);
+	--surface-raised: oklch(0.23 0.01 150);
+	--fg: oklch(0.96 0.004 150);
+	--fg-muted: oklch(0.7 0.008 150);
+	--fg-subtle: oklch(0.56 0.008 150);
+	--border: oklch(0.28 0.01 150);
+	--border-strong: oklch(0.35 0.012 150);
+}
+
+/* Anthropic — warm clay accent on ivory, cozy dark. */
+[data-theme='anthropic'] {
+	--theme-radius-md: 0.375rem;
+	--theme-radius-lg: 0.5rem;
+	--accent: oklch(0.62 0.13 42);
+	--accent-hover: oklch(0.57 0.13 42);
+	--accent-contrast: oklch(0.99 0.005 80);
+	--bg: oklch(0.99 0.008 85);
+	--bg-subtle: oklch(0.96 0.012 85);
+	--surface: oklch(0.995 0.006 85);
+	--surface-raised: oklch(0.972 0.012 85);
+	--fg: oklch(0.26 0.015 60);
+	--fg-muted: oklch(0.47 0.02 60);
+	--fg-subtle: oklch(0.58 0.02 65);
+	--border: oklch(0.9 0.014 75);
+	--border-strong: oklch(0.82 0.018 70);
+}
+[data-theme='anthropic'].dark {
+	--accent: oklch(0.72 0.12 42);
+	--accent-hover: oklch(0.77 0.12 42);
+	--accent-contrast: oklch(0.18 0.02 60);
+	--bg: oklch(0.18 0.006 60);
+	--bg-subtle: oklch(0.22 0.008 60);
+	--surface: oklch(0.21 0.008 60);
+	--surface-raised: oklch(0.25 0.01 60);
+	--fg: oklch(0.95 0.008 80);
+	--fg-muted: oklch(0.71 0.012 70);
+	--fg-subtle: oklch(0.57 0.012 70);
+	--border: oklch(0.3 0.012 65);
+	--border-strong: oklch(0.37 0.014 65);
+}
+
 /* Expose semantic tokens to Tailwind utilities (bg-bg, text-fg, border-border…). */
 @theme inline {
 	--color-bg: var(--bg);
@@ -81,25 +357,115 @@
 	--color-accent: var(--accent);
 	--color-accent-hover: var(--accent-hover);
 	--color-accent-contrast: var(--accent-contrast);
+	--color-sidebar: var(--sidebar-bg);
+	--color-header: var(--header-bg);
 
-	--font-sans:
-		'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-	--font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, monospace;
+	/* Fonts route through a theme override var so a preset can swap the family. */
+	--font-sans: var(
+		--theme-font-sans,
+		'Geist Variable',
+		ui-sans-serif,
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		Roboto,
+		sans-serif
+	);
+	--font-mono: var(
+		--theme-font-mono,
+		'Geist Mono Variable',
+		ui-monospace,
+		'SF Mono',
+		'Cascadia Code',
+		Menlo,
+		monospace
+	);
 
-	/* Tight, shadcn-ish radii — overrides Tailwind's defaults so every
-	   rounded-* utility across the UI gets less rounded at once. */
-	--radius-sm: 0.125rem;
-	--radius-md: 0.25rem;
-	--radius-lg: 0.375rem;
-	--radius-xl: 0.5rem;
-	--radius-2xl: 0.625rem;
-	--radius-3xl: 0.75rem;
+	--radius-sm: var(--theme-radius-sm, 0.125rem);
+	--radius-md: var(--theme-radius-md, 0.25rem);
+	--radius-lg: var(--theme-radius-lg, 0.375rem);
+	--radius-xl: var(--theme-radius-xl, 0.5rem);
+	--radius-2xl: var(--theme-radius-2xl, 0.625rem);
+	--radius-3xl: var(--theme-radius-3xl, 0.75rem);
 
-	/* Layout rails — referenced by the three-column grid. */
-	--spacing-sidebar: 17rem;
+	/* Layout rails — referenced by the three-column grid. A preset can widen or
+	   tighten the sidebar/content to match a company's structure. */
+	--spacing-sidebar: var(--theme-sidebar-w, 17rem);
 	--spacing-toc: 15rem;
 	--spacing-header: 4rem;
-	--spacing-content: 48rem;
+	--spacing-content: var(--theme-content-w, 48rem);
+}
+
+/*
+ * Per-preset chrome.
+ *
+ * A handful of presets go beyond color and restructure the sidebar, density,
+ * and type scale to match the company's actual docs. Selectors target the live
+ * markup (`nav[aria-label='Documentation']`, `.doc-content`) so no component
+ * needs to know which preset is active.
+ */
+
+/* Stripe — clean text-link sidebar with an indigo edge marker, roomy reading. */
+[data-theme='stripe'] {
+	--theme-sidebar-w: 16rem;
+	--theme-content-w: 50rem;
+}
+[data-theme='stripe'] nav[aria-label='Documentation'] a[aria-current='page'] {
+	background: transparent;
+	box-shadow: inset 2px 0 0 0 var(--accent);
+	border-radius: 0;
+}
+[data-theme='stripe'] nav[aria-label='Documentation'] {
+	gap: 1.75rem;
+}
+[data-theme='stripe'] .doc-content {
+	line-height: 1.8;
+}
+[data-theme='stripe'] .doc-content h1 {
+	font-size: 2.6rem;
+	letter-spacing: -0.025em;
+}
+
+/* Mintlify — friendly rounded pills, soft and spacious. */
+[data-theme='mintlify'] nav[aria-label='Documentation'] a {
+	border-radius: 0.6rem;
+	padding-top: 0.4rem;
+	padding-bottom: 0.4rem;
+}
+[data-theme='mintlify'] nav[aria-label='Documentation'] a[aria-current='page'] {
+	background: color-mix(in oklch, var(--accent) 14%, transparent);
+	font-weight: 600;
+}
+[data-theme='mintlify'] .doc-content h2 {
+	font-weight: 700;
+}
+
+/* Linear — dense, compact, near-monochrome chrome with a tighter type scale. */
+[data-theme='linear'] {
+	--theme-sidebar-w: 15rem;
+}
+[data-theme='linear'] nav[aria-label='Documentation'] {
+	gap: 1.25rem;
+}
+[data-theme='linear'] nav[aria-label='Documentation'] a {
+	font-size: 0.8125rem;
+	padding-top: 0.28rem;
+	padding-bottom: 0.28rem;
+}
+[data-theme='linear'] nav[aria-label='Documentation'] a[aria-current='page'] {
+	background: var(--bg-subtle);
+	color: var(--fg);
+	font-weight: 500;
+}
+[data-theme='linear'] .doc-content {
+	font-size: 0.95rem;
+	line-height: 1.7;
+}
+[data-theme='linear'] .doc-content h1 {
+	font-size: 2rem;
+}
+[data-theme='linear'] .doc-content h2 {
+	font-size: 1.35rem;
 }
 
 html {

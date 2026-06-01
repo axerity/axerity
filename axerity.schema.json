@@ -1,0 +1,222 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://axerity.com/axerity.schema.json",
+	"title": "Axerity configuration",
+	"description": "Site-wide configuration for an Axerity documentation site.",
+	"type": "object",
+	"additionalProperties": false,
+	"required": ["name", "topNav"],
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "Path or URL to this JSON schema, for editor autocomplete."
+		},
+		"name": {
+			"type": "string",
+			"description": "Site name, used in the page title and the navbar."
+		},
+		"tagline": {
+			"type": "string",
+			"description": "Short tagline for the site."
+		},
+		"description": {
+			"type": "string",
+			"description": "Site description, used for SEO meta tags and llms.txt."
+		},
+		"url": {
+			"type": "string",
+			"format": "uri",
+			"description": "Canonical site URL. Enables absolute links in sitemap, RSS, and OpenGraph."
+		},
+		"ogImage": {
+			"type": "string",
+			"description": "Path to a static OpenGraph image, used when per-page generation is off."
+		},
+		"og": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Per-page OpenGraph image generation.",
+			"properties": {
+				"enabled": {
+					"type": "boolean",
+					"description": "Generate a unique OG image per page at build time."
+				},
+				"background": { "type": "string", "description": "Card background color (any CSS color)." },
+				"foreground": { "type": "string", "description": "Title color." },
+				"muted": { "type": "string", "description": "Description and footer color." },
+				"accent": { "type": "string", "description": "Accent color for the mark fallback." },
+				"logo": {
+					"type": "string",
+					"description": "Path to the logo SVG shown in the card. Defaults to the site logo."
+				}
+			}
+		},
+		"logo": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Navbar logo. Local SVGs are inlined; other formats render as an image.",
+			"properties": {
+				"light": { "type": "string", "description": "Logo shown in light mode." },
+				"dark": { "type": "string", "description": "Logo shown in dark mode." },
+				"alt": { "type": "string", "description": "Alt text / aria-label." },
+				"href": { "type": "string", "description": "Where the logo links to (default /)." }
+			}
+		},
+		"topNav": {
+			"type": "array",
+			"description": "Fallback top-nav links shown when no dropdowns are configured.",
+			"items": { "$ref": "#/definitions/navLink" }
+		},
+		"versions": {
+			"type": "array",
+			"description": "Versions shown in the navbar version switcher.",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["label", "href"],
+				"properties": {
+					"label": { "type": "string" },
+					"href": { "type": "string" }
+				}
+			}
+		},
+		"dropdowns": {
+			"type": "array",
+			"description": "Areas that swap the whole sidebar, each with its own tabs.",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["label", "href"],
+				"properties": {
+					"label": { "type": "string" },
+					"icon": { "type": "string" },
+					"href": { "type": "string" },
+					"match": { "type": "string" },
+					"tabs": { "type": "array", "items": { "$ref": "#/definitions/navLink" } }
+				}
+			}
+		},
+		"sidebarLinks": {
+			"type": "array",
+			"description": "Links pinned to the bottom of the sidebar.",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["title", "href"],
+				"properties": {
+					"title": { "type": "string" },
+					"href": { "type": "string" }
+				}
+			}
+		},
+		"social": {
+			"type": "array",
+			"description": "Social links shown in the footer.",
+			"items": {
+				"type": "object",
+				"additionalProperties": false,
+				"required": ["icon", "href"],
+				"properties": {
+					"icon": { "type": "string", "description": "Lucide icon name." },
+					"href": { "type": "string" },
+					"label": { "type": "string" }
+				}
+			}
+		},
+		"footer": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Footer content.",
+			"properties": {
+				"note": { "type": "string", "description": "Text shown on the right of the footer." },
+				"links": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"additionalProperties": false,
+						"required": ["title", "href"],
+						"properties": {
+							"title": { "type": "string" },
+							"href": { "type": "string" }
+						}
+					}
+				}
+			}
+		},
+		"banner": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Announcement bar above the navbar.",
+			"required": ["text"],
+			"properties": {
+				"text": { "type": "string" },
+				"href": { "type": "string" },
+				"id": { "type": "string", "description": "Stable id used to remember dismissal." },
+				"dismissible": { "type": "boolean" }
+			}
+		},
+		"analytics": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Analytics scripts injected on every page.",
+			"properties": {
+				"plausible": { "type": "string", "description": "Plausible data-domain." },
+				"googleAnalytics": { "type": "string", "description": "Google Analytics measurement id." }
+			}
+		},
+		"editLink": {
+			"type": "string",
+			"description": "Base URL for the 'Edit this page' link; the source path is appended."
+		},
+		"github": {
+			"type": "string",
+			"description": "Repository URL, shown as the GitHub icon in the navbar and footer."
+		},
+		"layout": {
+			"type": "string",
+			"enum": ["flat", "boxed"],
+			"description": "Page shape: flat (full-bleed) or boxed (centered max-width)."
+		},
+		"theme": {
+			"type": "string",
+			"enum": [
+				"neutral",
+				"stripe",
+				"vercel",
+				"linear",
+				"supabase",
+				"github",
+				"tailwind",
+				"mintlify",
+				"anthropic"
+			],
+			"description": "Built-in color theme preset."
+		},
+		"sidebar": {
+			"type": "object",
+			"additionalProperties": false,
+			"description": "Sidebar appearance.",
+			"properties": {
+				"variant": {
+					"type": "string",
+					"enum": ["flush", "card", "floating"],
+					"description": "flush (default), card (inset panel), or floating (detached card)."
+				}
+			}
+		}
+	},
+	"definitions": {
+		"navLink": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["title", "href"],
+			"properties": {
+				"title": { "type": "string" },
+				"href": { "type": "string" },
+				"icon": { "type": "string", "description": "Lucide icon name." },
+				"match": { "type": "string", "description": "Path prefix that marks this link active." },
+				"external": { "type": "boolean", "description": "Open in a new tab." }
+			}
+		}
+	}
+}
