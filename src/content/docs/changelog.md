@@ -18,8 +18,11 @@ Every notable change, newest first.
 
 The first stable release. <Badge color="success">stable</Badge>
 
-- Component kit: callouts, cards, accordions, tabs, code groups, steps, and type tables.
+- Component kit: callouts, cards, accordions, tabs, code groups, steps, columns, badges, roadmaps, and type tables.
 - Media: framed images with click to zoom, video embeds, and inline icons.
+- API docs: generate a full reference from an OpenAPI spec, plus webhook and WebSocket components.
+- Versioned content with a switcher that follows the reader across versions.
+- The `axerity` CLI: `init`, `dev`, `build`, and `preview`, so there is nothing to clone.
 - Mermaid diagrams, Twoslash type hovers, and YAML highlighting.
 - Build-time search, an RSS feed, and edit links on every page.
 

@@ -1,6 +1,8 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
+import { base } from '$app/paths';
 import type { Component } from 'svelte';
 import type { PageFrontmatter } from '$lib/types';
+import { defaultVersionPath, versioned } from '$lib/content';
 import type { EntryGenerator, PageLoad } from './$types';
 
 const pages = import.meta.glob<{ default: Component; metadata: PageFrontmatter }>(
@@ -18,11 +20,15 @@ function pathToSlug(path: string): string {
 export const prerender = true;
 
 export const entries: EntryGenerator = () => {
-	return Object.keys(pages).map((path) => ({ slug: pathToSlug(path) }));
+	const slugs = Object.keys(pages).map((path) => ({ slug: pathToSlug(path) }));
+	if (versioned) slugs.push({ slug: '' });
+	return slugs;
 };
 
 export const load: PageLoad = ({ params }) => {
 	const slug = params.slug;
+
+	if (!slug && versioned) redirect(307, `${base}${defaultVersionPath}`);
 
 	const candidates = slug ? [`${BASE}${slug}.md`, `${BASE}${slug}/index.md`] : [`${BASE}index.md`];
 	const path = candidates.find((p) => p in pages);

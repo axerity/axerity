@@ -24,3 +24,7 @@ vite.config.ts.timestamp-*
 
 .axerity
 build
+
+# axerity:openapi (generated)
+src/content/docs/petstore-api
+# end axerity:openapi

@@ -116,10 +116,14 @@ function groupFor(folder: string): NavGroupResult {
 // Local alias so groupFor reads cleanly above its NavGroup return.
 type NavGroupResult = Extract<NavEntry, { items: NavEntry[] }>;
 
-/** Generate the full sidebar: root section + each top-level folder as a section. */
-export function buildSidebar(): NavSection[] {
-	const rootMeta = metaFor(ROOT);
-	const topSubfolders = subfoldersOf(ROOT);
+/**
+ * Generate the sidebar rooted at a folder: its own pages as a lead section, then
+ * each subfolder as a section. Pass a version folder (e.g. `/src/content/docs/v2`)
+ * to build that version's sidebar.
+ */
+export function buildSidebar(rootFolder: string = ROOT): NavSection[] {
+	const rootMeta = metaFor(rootFolder);
+	const topSubfolders = subfoldersOf(rootFolder);
 	const subByName = new Map(topSubfolders.map((f) => [f.slice(f.lastIndexOf('/') + 1), f]));
 
 	// Order top-level folders by the root meta.pages entries that name them.
@@ -130,12 +134,12 @@ export function buildSidebar(): NavSection[] {
 
 	const sections: NavSection[] = [];
 
-	// Root section: only the root folder's own pages (subfolders are promoted).
-	if (byFolder.has(ROOT)) {
+	// Lead section: only the root folder's own pages (subfolders are promoted).
+	if (byFolder.has(rootFolder)) {
 		sections.push({
 			title: rootMeta.title ?? 'Docs',
 			icon: rootMeta.icon,
-			items: entriesFor(ROOT).filter((entry) => 'href' in entry)
+			items: entriesFor(rootFolder).filter((entry) => 'href' in entry)
 		});
 	}
 

@@ -11,6 +11,8 @@ export { default as Callout } from './components/kit/Callout.svelte';
 export { default as Columns } from './components/kit/Columns.svelte';
 export { default as Kbd } from './components/kit/Kbd.svelte';
 export { default as Update } from './components/kit/Update.svelte';
+export { default as Roadmap } from './components/kit/Roadmap.svelte';
+export { default as RoadmapItem } from './components/kit/RoadmapItem.svelte';
 export { default as Card } from './components/kit/Card.svelte';
 export { default as CardGroup } from './components/kit/CardGroup.svelte';
 export { default as CodeGroup } from './components/kit/CodeGroup.svelte';
@@ -29,6 +31,15 @@ export { default as Folder } from './components/kit/Folder.svelte';
 export { default as File } from './components/kit/File.svelte';
 export { default as TypeTable } from './components/kit/TypeTable.svelte';
 export type { TypeTableProp } from './components/kit/TypeTable.svelte';
+
+// Webhook kit.
+export { default as Webhook } from './components/kit/api/Webhook.svelte';
+export { default as EventList } from './components/kit/EventList.svelte';
+export { default as Event } from './components/kit/Event.svelte';
+
+// WebSocket / AsyncAPI kit.
+export { default as Channel } from './components/kit/api/Channel.svelte';
+export { default as Message } from './components/kit/api/Message.svelte';
 
 // API reference kit.
 export { default as Api } from './components/kit/api/Api.svelte';

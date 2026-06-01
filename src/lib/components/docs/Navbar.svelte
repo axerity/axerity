@@ -9,7 +9,15 @@
 	import VersionSwitcher from './VersionSwitcher.svelte';
 	import { searchState } from '$lib/state/search.svelte';
 
-	let { site, onMenuClick }: { site: SiteConfig; onMenuClick?: () => void } = $props();
+	let {
+		site,
+		onMenuClick,
+		resolveVersion
+	}: {
+		site: SiteConfig;
+		onMenuClick?: () => void;
+		resolveVersion?: (pathname: string, versionPath: string) => string;
+	} = $props();
 
 	const innerClass = $derived(
 		(site.layout ?? 'flat') === 'boxed'
@@ -67,7 +75,7 @@
 		</a>
 
 		{#if site.versions && site.versions.length}
-			<VersionSwitcher versions={site.versions} />
+			<VersionSwitcher versions={site.versions} {resolveVersion} />
 		{/if}
 
 		<nav class="hidden items-center gap-1 md:flex" aria-label="Main">
@@ -93,13 +101,13 @@
 			<button
 				type="button"
 				onclick={() => (searchState.open = true)}
-				class="hidden items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-fg-subtle transition hover:border-border-strong hover:text-fg-muted sm:flex"
+				class="hidden w-56 items-center gap-2 rounded-lg border border-border bg-surface px-3 py-1.5 text-sm text-fg-subtle transition hover:border-border-strong hover:text-fg-muted sm:flex lg:w-72"
 				aria-label="Search documentation"
 			>
 				<Search size={15} />
 				<span>Search</span>
 				<kbd
-					class="ml-2 rounded border border-border bg-bg-subtle px-1.5 py-0.5 font-mono text-[10px] text-fg-subtle"
+					class="ml-auto rounded border border-border bg-bg-subtle px-1.5 py-0.5 font-mono text-[10px] text-fg-subtle"
 				>
 					⌘K
 				</kbd>

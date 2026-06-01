@@ -3,11 +3,12 @@
 	import { base } from '$app/paths';
 	import { DocsLayout } from '$lib';
 	import { site } from '$lib/config/site';
-	import { sidebar, flatPages } from '$lib/content';
+	import { navFor, pathInVersion } from '$lib/content';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
+	const nav = $derived(navFor(page.url.pathname));
 	const Content = $derived(data.component);
 	const fm = $derived(data.frontmatter);
 	const wide = $derived(fm.layout === 'api');
@@ -49,6 +50,14 @@
 	<meta name="twitter:image" content={ogImage} />
 </svelte:head>
 
-<DocsLayout {site} {sidebar} {flatPages} {wide} {editUrl} updated={fm.updated}>
+<DocsLayout
+	{site}
+	sidebar={nav.sidebar}
+	flatPages={nav.flatPages}
+	{wide}
+	{editUrl}
+	updated={fm.updated}
+	resolveVersion={pathInVersion}
+>
 	<Content />
 </DocsLayout>

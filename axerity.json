@@ -75,12 +75,51 @@
 					"icon": "user"
 				}
 			]
+		},
+		{
+			"label": "Petstore API",
+			"icon": "paw-print",
+			"href": "/petstore-api/pet/addpet",
+			"match": "/petstore-api",
+			"tabs": [
+				{
+					"title": "Pet",
+					"href": "/petstore-api/pet/addpet",
+					"match": "/petstore-api/pet",
+					"icon": "paw-print"
+				},
+				{
+					"title": "Store",
+					"href": "/petstore-api/store/getinventory",
+					"match": "/petstore-api/store",
+					"icon": "shopping-cart"
+				},
+				{
+					"title": "User",
+					"href": "/petstore-api/user/createuser",
+					"match": "/petstore-api/user",
+					"icon": "user"
+				},
+				{
+					"title": "Schemas",
+					"href": "/petstore-api/schemas/order",
+					"match": "/petstore-api/schemas",
+					"icon": "box"
+				}
+			]
 		}
 	],
 	"sidebarLinks": [
 		{
 			"title": "Issues",
 			"href": "https://github.com/axerity/axerity/issues"
+		}
+	],
+	"openapi": [
+		{
+			"spec": "petstore-openapi.json",
+			"output": "petstore-api",
+			"title": "Petstore API"
 		}
 	],
 	"topNav": [

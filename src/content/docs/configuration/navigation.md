@@ -122,13 +122,46 @@ nav scrolls, and open in a new tab.
 
 ## Versions
 
-Add a version switcher to the navbar.
+Add a version switcher to the navbar. Each entry has a `label` and an `href`.
 
 ```json title="axerity.json"
 {
 	"versions": [
-		{ "label": "v2.0", "href": "/docs" },
+		{ "label": "v2.0", "href": "/v2" },
+		{ "label": "v1.0", "href": "/v1" }
+	]
+}
+```
+
+An `href` can point anywhere, so the simplest setup sends old versions to a
+separate site:
+
+```json title="axerity.json"
+{
+	"versions": [
+		{ "label": "v2.0", "href": "/" },
 		{ "label": "v1.0", "href": "https://v1.example.com" }
 	]
 }
 ```
+
+### Versioned content
+
+When a version's `href` is a local path like `/v2`, put that version's pages in
+a matching top-level folder. Each folder is its own independent content tree
+with its own sidebar.
+
+```
+content/docs/
+  v2/
+    index.md          ->  /v2
+    installation.md   ->  /v2/installation
+  v1/
+    index.md          ->  /v1
+    installation.md   ->  /v1/installation
+```
+
+The switcher then keeps the reader on the same page across versions. Moving from
+`/v2/installation` to v1 lands on `/v1/installation` when that page exists, and
+falls back to the version's index when it does not. The site root redirects to
+the first version in the list.

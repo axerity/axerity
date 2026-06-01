@@ -181,6 +181,14 @@
 				"radius": { "type": "string", "description": "Base corner radius, e.g. \"0.5rem\"." }
 			}
 		},
+		"openapi": {
+			"description": "Generate API references from OpenAPI 3 specs (local path or URL, JSON or YAML). Use an array to group several specs.",
+			"oneOf": [
+				{ "type": "string", "description": "Local path or http(s) URL to an OpenAPI 3 spec." },
+				{ "$ref": "#/definitions/apiSource" },
+				{ "type": "array", "items": { "$ref": "#/definitions/apiSource" } }
+			]
+		},
 		"editLink": {
 			"type": "string",
 			"description": "Base URL for the 'Edit this page' link; the source path is appended."
@@ -228,6 +236,22 @@
 		}
 	},
 	"definitions": {
+		"apiSource": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": ["spec"],
+			"properties": {
+				"spec": {
+					"type": "string",
+					"description": "Local path or http(s) URL to an OpenAPI 3 spec (JSON or YAML)."
+				},
+				"output": {
+					"type": "string",
+					"description": "Content folder for this group (default api-reference)."
+				},
+				"title": { "type": "string", "description": "Section title (defaults to info.title)." }
+			}
+		},
 		"navLink": {
 			"type": "object",
 			"additionalProperties": false,

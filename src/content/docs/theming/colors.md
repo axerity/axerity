@@ -14,6 +14,24 @@ All colors are defined as [oklch](https://oklch.com) values on `:root` and
 `.dark` in `src/routes/layout.css`. oklch is `lightness chroma hue`, it keeps
 colors perceptually even, which makes building a balanced scale much easier.
 
+## From the config
+
+You do not have to touch CSS to set a brand color. Add a `brand` block to
+`axerity.json` and it overrides the active theme's accent and corner radius in
+both light and dark:
+
+```json title="axerity.json"
+{
+	"brand": {
+		"accent": "#6d5efc",
+		"radius": "0.75rem"
+	}
+}
+```
+
+`accent` takes any CSS color (hex, `rgb()`, `oklch()`). `radius` sets the base
+corner rounding. For anything beyond the accent, edit the tokens below.
+
 ## Change the accent
 
 The accent drives links, active sidebar items, focus states, and highlights.

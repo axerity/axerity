@@ -6,6 +6,7 @@ import {
 	existsSync,
 	mkdirSync,
 	readFileSync,
+	readdirSync,
 	rmSync,
 	symlinkSync,
 	writeFileSync
@@ -72,14 +73,32 @@ function setupWorkspace() {
 		}
 	});
 
-	// User content -> the path the engine globs.
+	// User content -> the path the engine globs. A real folder with the user's
+	// entries symlinked in, so generated content (e.g. an API reference) can be
+	// written alongside without touching the user's repo.
 	const contentMount = join(workSrc, 'content', 'docs');
-	mkdirSync(dirname(contentMount), { recursive: true });
 	rmSync(contentMount, { recursive: true, force: true });
-	symlinkSync(contentDir, contentMount, symlinkType);
+	mkdirSync(contentMount, { recursive: true });
+	for (const entry of readdirSync(contentDir)) {
+		symlinkSync(join(contentDir, entry), join(contentMount, entry), symlinkType);
+	}
 
 	// User config.
 	cpSync(join(userRoot, 'axerity.json'), join(workDir, 'axerity.json'));
+
+	// Copy any local OpenAPI specs in so the build can read them (URLs are fetched
+	// at build time, so they need no copying).
+	const openapi = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8')).openapi;
+	const sources = (Array.isArray(openapi) ? openapi : openapi ? [openapi] : []).map((o) =>
+		typeof o === 'string' ? { spec: o } : o
+	);
+	for (const source of sources) {
+		if (!source.spec || /^https?:\/\//.test(source.spec)) continue;
+		if (!existsSync(join(userRoot, source.spec))) continue;
+		const dest = join(workDir, source.spec);
+		mkdirSync(dirname(dest), { recursive: true });
+		cpSync(join(userRoot, source.spec), dest);
+	}
 
 	// Static assets: engine defaults, then overlay the user's `public/`.
 	const workStatic = join(workDir, 'static');

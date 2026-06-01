@@ -139,6 +139,15 @@ export interface BrandConfig {
 	radius?: string;
 }
 
+export interface OpenApiConfig {
+	/** Local path or http(s) URL to an OpenAPI 3 spec (JSON or YAML). */
+	spec: string;
+	/** Content folder for this reference (its own group). Default `api-reference`. */
+	output?: string;
+	/** Section title (defaults to the spec's `info.title`). */
+	title?: string;
+}
+
 export interface OgConfig {
 	/** Generate a per-page OpenGraph image. Off uses the static `ogImage`. */
 	enabled?: boolean;
@@ -168,6 +177,7 @@ export interface SiteConfig {
 	banner?: Banner;
 	analytics?: AnalyticsConfig;
 	brand?: BrandConfig;
+	openapi?: string | OpenApiConfig | OpenApiConfig[];
 	editLink?: string;
 	github?: string;
 	layout?: LayoutVariant;

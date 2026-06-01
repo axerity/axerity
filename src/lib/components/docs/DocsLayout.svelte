@@ -23,6 +23,7 @@
 		wide = false,
 		editUrl,
 		updated,
+		resolveVersion,
 		children
 	}: {
 		site: SiteConfig;
@@ -31,6 +32,7 @@
 		wide?: boolean;
 		editUrl?: string;
 		updated?: string;
+		resolveVersion?: (pathname: string, versionPath: string) => string;
 		children: Snippet;
 	} = $props();
 
@@ -99,7 +101,7 @@
 	{#if site.banner}
 		<Banner banner={site.banner} />
 	{/if}
-	<Navbar {site} onMenuClick={() => (mobileOpen = true)} />
+	<Navbar {site} {resolveVersion} onMenuClick={() => (mobileOpen = true)} />
 	<SearchDialog />
 	<Mermaid />
 
