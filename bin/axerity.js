@@ -279,9 +279,11 @@ function init() {
 	console.log('  axerity dev');
 }
 
+const pkgVersion = () =>
+	JSON.parse(readFileSync(join(engineRoot, 'package.json'), 'utf8')).version;
+
 function help() {
-	const { version } = JSON.parse(readFileSync(join(engineRoot, 'package.json'), 'utf8'));
-	console.log(`Axerity ${version} — a documentation site generator\n`);
+	console.log(`Axerity ${pkgVersion()} — a documentation site generator\n`);
 	console.log('Usage: axerity <command>\n');
 	console.log('Commands:');
 	console.log('  init [dir]   Scaffold a new docs site');
@@ -295,6 +297,11 @@ const command = process.argv[2];
 const extra = process.argv.slice(3);
 
 switch (command) {
+	case '--version':
+	case '-v':
+	case 'version':
+		console.log(pkgVersion());
+		break;
 	case 'init':
 		init();
 		break;
