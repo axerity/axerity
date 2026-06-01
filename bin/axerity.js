@@ -10,6 +10,7 @@ import {
 	readdirSync,
 	rmSync,
 	symlinkSync,
+	watch,
 	writeFileSync
 } from 'node:fs';
 import { basename, dirname, join, relative, resolve } from 'node:path';
@@ -67,6 +68,11 @@ function mountSpecs(config) {
 	return { ...config, openapi };
 }
 
+function writeConfig() {
+	const config = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8'));
+	writeFileSync(ENGINE_CONFIG, JSON.stringify(mountSpecs(config), null, '\t'));
+}
+
 function mount(contentDir) {
 	rmSync(ENGINE_DOCS, { recursive: true, force: true });
 	mkdirSync(ENGINE_DOCS, { recursive: true });
@@ -74,8 +80,7 @@ function mount(contentDir) {
 		symlinkSync(join(contentDir, entry), join(ENGINE_DOCS, entry), symlinkType);
 	}
 
-	const config = JSON.parse(readFileSync(join(userRoot, 'axerity.json'), 'utf8'));
-	writeFileSync(ENGINE_CONFIG, JSON.stringify(mountSpecs(config), null, '\t'));
+	writeConfig();
 
 	rmSync(ASSETS_DIR, { recursive: true, force: true });
 	cpSync(ENGINE_STATIC, ASSETS_DIR, { recursive: true });
@@ -102,7 +107,9 @@ const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
 const banner = (sub) => process.stdout.write(`\n  ${mark} ${bold('axerity')} ${dim(sub)}\n\n`);
 
 const NOISE =
-	/^\s*(VITE v|➜|press h|ready in|Local:|Network:|\[vite\].*(optimiz|dependencies)|\[optimizer\]|Forced re-opt|watching for file changes|use --host)/i;
+	/^\s*(VITE v|➜|press h|ready in|Local:|Network:|use --host|watching for file changes)/i;
+const VITE_CHATTER =
+	/\[optimizer\]|\[vite\].*(re-?optimiz|optimized dependencies|new dependencies|page reload|hmr update|dependencies because)/i;
 
 function streamServer(child) {
 	let shown = false;
@@ -120,7 +127,7 @@ function streamServer(child) {
 				process.stdout.write(`  ${dim('Ctrl+C to stop')}\n\n`);
 				continue;
 			}
-			if (!clean.trim() || NOISE.test(clean.trim())) continue;
+			if (!clean.trim() || NOISE.test(clean.trim()) || VITE_CHATTER.test(clean)) continue;
 			process.stdout.write(`  ${line}\n`);
 		}
 	};
@@ -163,10 +170,27 @@ function runEngine(sub, extra, { mounted, onSuccess }) {
 	banner(sub);
 	const build = sub === 'build' ? streamBuild(child) : (streamServer(child), null);
 
+	let configWatcher = null;
+	if (mounted && sub === 'dev') {
+		let timer = null;
+		configWatcher = watch(userRoot, (_event, filename) => {
+			if (filename !== 'axerity.json') return;
+			clearTimeout(timer);
+			timer = setTimeout(() => {
+				try {
+					writeConfig();
+				} catch {
+					return;
+				}
+			}, 80);
+		});
+	}
+
 	let cleaned = false;
 	const cleanup = () => {
 		if (cleaned || !mounted) return;
 		cleaned = true;
+		configWatcher?.close();
 		tidy();
 	};
 

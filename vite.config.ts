@@ -1,11 +1,11 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, watch } from 'node:fs';
 import { resolve } from 'node:path';
 import tailwindcss from '@tailwindcss/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 import { generateApiDocs } from './src/lib/openapi/generate';
 
-const allow = process.env.AXERITY_FS_ALLOW;
+const mounted = !!process.env.AXERITY_FS_ALLOW;
 
 function openapi() {
 	const localSpecs: string[] = [];
@@ -40,7 +40,28 @@ function openapi() {
 	};
 }
 
+function configReload() {
+	const file = resolve('axerity.json');
+	let watcher: ReturnType<typeof watch> | null = null;
+	return {
+		name: 'axerity:config-reload',
+		configureServer(server: import('vite').ViteDevServer) {
+			if (!existsSync(file)) return;
+			let timer: ReturnType<typeof setTimeout> | null = null;
+			watcher = watch(file, () => {
+				if (timer) clearTimeout(timer);
+				timer = setTimeout(() => server.watcher.emit('change', file), 50);
+			});
+		},
+		closeBundle() {
+			watcher?.close();
+			watcher = null;
+		}
+	};
+}
+
 export default defineConfig({
-	plugins: [openapi(), tailwindcss(), sveltekit()],
-	server: allow ? { fs: { strict: false } } : undefined
+	plugins: [openapi(), ...(mounted ? [configReload()] : []), tailwindcss(), sveltekit()],
+	server: mounted ? { fs: { strict: false } } : undefined,
+	optimizeDeps: mounted ? { noDiscovery: true, include: ['@orama/orama', 'mermaid'] } : undefined
 });
