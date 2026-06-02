@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
+	import { browser } from '$app/environment';
 	import { afterNavigate } from '$app/navigation';
 	import { theme } from '$lib/state/theme.svelte';
 
@@ -7,6 +8,7 @@
 	let mermaid: MermaidApi | null = null;
 
 	async function render(resolved: 'light' | 'dark') {
+		if (!browser) return;
 		const blocks = Array.from(document.querySelectorAll('pre.mermaid')) as HTMLElement[];
 		if (!blocks.length) return;
 

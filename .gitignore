@@ -29,7 +29,12 @@ vite.config.ts.timestamp-*
 /axerity.json
 build
 /dist
+# Copied from the root schema for the demo site
+/static/axerity.schema.json
 
 # axerity:openapi (generated)
 src/content/docs/petstore-api
 # end axerity:openapi
+
+# npm pack artifacts
+*.tgz

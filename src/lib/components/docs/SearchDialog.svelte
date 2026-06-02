@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { goto } from '$app/navigation';
 	import { fade, scale } from 'svelte/transition';
-	import { create, insertMultiple, search } from '@orama/orama';
 	import SearchIcon from '@lucide/svelte/icons/search';
 	import FileText from '@lucide/svelte/icons/file-text';
 	import CornerDownLeft from '@lucide/svelte/icons/corner-down-left';
@@ -20,8 +20,10 @@
 	let loaded = $state(false);
 	let input = $state<HTMLInputElement>();
 
+	type Orama = typeof import('@orama/orama');
+	let orama: Orama | null = null;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const orama: { db: any } = { db: null };
+	let db: any = null;
 
 	const schema = {
 		title: 'string',
@@ -32,10 +34,11 @@
 	} as const;
 
 	async function ensureLoaded() {
-		if (orama.db) return;
+		if (!browser || db) return;
+		orama = await import('@orama/orama');
 		const docs = await (await fetch('/search.json')).json();
-		orama.db = create({ schema });
-		await insertMultiple(orama.db, docs);
+		db = orama.create({ schema });
+		await orama.insertMultiple(db, docs);
 		loaded = true;
 	}
 
@@ -65,12 +68,12 @@
 
 	$effect(() => {
 		const query = term.trim();
-		if (!query || !loaded || !orama.db) {
+		if (!query || !loaded || !db || !orama) {
 			results = [];
 			return;
 		}
 		Promise.resolve(
-			search(orama.db, {
+			orama.search(db, {
 				term: query,
 				properties: ['title', 'description', 'content', 'section'],
 				boost: { title: 4, description: 2 },

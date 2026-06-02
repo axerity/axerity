@@ -10,6 +10,7 @@ const demo = join(root, 'src', 'content', 'demo');
 const docs = join(root, 'src', 'content', 'docs');
 const defaultConfig = join(root, 'axerity.default.json');
 const config = join(root, 'axerity.json');
+const schema = join(root, 'axerity.schema.json');
 
 rmSync(docs, { recursive: true, force: true });
 mkdirSync(docs, { recursive: true });
@@ -18,3 +19,4 @@ for (const entry of readdirSync(demo)) {
 }
 
 if (existsSync(defaultConfig)) cpSync(defaultConfig, config);
+if (existsSync(schema)) cpSync(schema, join(root, 'static', 'axerity.schema.json'));

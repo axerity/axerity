@@ -29,9 +29,9 @@ API reference generation runs as a CLI pre step, so a project's `openapi` config
 Images, logos, and other static files are served straight from your project and copied into the build, so a logo or screenshot loads in dev and in production without any extra setup.
 
     </RoadmapItem>
-    <RoadmapItem title="Smaller installs" status="planned">
+    <RoadmapItem title="Smaller installs" status="shipped" eta="0.2.5">
 
-Move build only packages to dev dependencies, so a project installs a handful of runtime packages instead of the full toolchain.
+Build only packages live in dev dependencies, and client only libraries like the diagram renderer and the search engine are bundled into the prebuilt output instead of installed. A project pulls the runtime packages it needs, not the full toolchain.
 
     </RoadmapItem>
     <RoadmapItem title="Incremental builds" status="exploring">
