@@ -61,7 +61,7 @@
 		grid-template-columns: minmax(0, 1fr);
 		gap: 2rem;
 	}
-	@media (min-width: 1024px) {
+	@media (min-width: 1280px) {
 		.api {
 			grid-template-columns: minmax(0, 1fr) 28rem;
 			gap: 2.5rem;
@@ -106,7 +106,7 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
-	@media (min-width: 1024px) {
+	@media (min-width: 1280px) {
 		.api-rail-sticky {
 			position: sticky;
 			top: calc(var(--spacing-header) + 1.5rem);

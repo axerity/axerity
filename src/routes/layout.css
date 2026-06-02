@@ -890,7 +890,7 @@ body {
 	margin: 1.5rem 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
 	.doc-content.doc-api > :not(.api) {
 		max-width: calc(100% - 30.5rem);
 	}

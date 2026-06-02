@@ -123,7 +123,7 @@
 			class="flex min-h-[calc(100vh-var(--spacing-header))] min-w-0 flex-1 flex-col px-4 py-8 sm:px-8 lg:px-12"
 		>
 			<div class="mx-auto w-full {wide ? 'max-w-7xl' : 'max-w-content'}">
-				<div class="mb-3 flex items-center gap-3 {wide ? 'lg:max-w-[calc(100%-30.5rem)]' : ''}">
+				<div class="mb-3 flex items-center gap-3 {wide ? 'xl:max-w-[calc(100%-30.5rem)]' : ''}">
 					<Breadcrumbs {sidebar} />
 					<div class="ml-auto shrink-0">
 						<CopyPageMenu />
@@ -141,14 +141,14 @@
 			     pages (mt-auto on the first block). On API (wide) pages they stay
 			     aligned to the content column, not under the code rail. -->
 			<div class="mx-auto mt-auto w-full {wide ? 'max-w-7xl' : 'max-w-content'}">
-				<div class={wide ? 'lg:max-w-[calc(100%-30.5rem)]' : ''}>
+				<div class={wide ? 'xl:max-w-[calc(100%-30.5rem)]' : ''}>
 					<PageMeta {editUrl} {updated} />
 					<PageNav pages={flatPages} />
 				</div>
 			</div>
 
 			<div class="mx-auto w-full {wide ? 'max-w-7xl' : 'max-w-content'}">
-				<div class={wide ? 'lg:max-w-[calc(100%-30.5rem)]' : ''}>
+				<div class={wide ? 'xl:max-w-[calc(100%-30.5rem)]' : ''}>
 					<Footer {site} />
 				</div>
 			</div>

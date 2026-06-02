@@ -1,17 +1,30 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import Copy from '@lucide/svelte/icons/copy';
+	import Check from '@lucide/svelte/icons/check';
+	import { codeGroups } from './code-group-store.svelte';
 
 	let { children }: { children: Snippet } = $props();
 
 	let container = $state<HTMLElement>();
 	let tabs = $state<string[]>([]);
-	let active = $state(0);
+	let localActive = $state(0);
+	let copied = $state(false);
 
 	let blocks: HTMLElement[] = [];
-	let initialized = false;
+
+	const active = $derived.by(() => {
+		const preferred = codeGroups.get();
+		if (preferred) {
+			const match = tabs.indexOf(preferred);
+			if (match !== -1) return match;
+		}
+		return localActive;
+	});
 
 	$effect(() => {
-		if (!container || initialized) return;
+		codeGroups.init();
+		if (!container || tabs.length) return;
 		const found = Array.from(
 			container.querySelectorAll('.cg-blocks > .code-block')
 		) as HTMLElement[];
@@ -20,16 +33,37 @@
 		blocks = found;
 		tabs = found.map((block, index) => {
 			const title = block.querySelector('.code-title')?.textContent?.trim();
-			block.querySelector('.code-header')?.classList.add('hidden');
 			return title || `Tab ${index + 1}`;
 		});
-		select(0);
-		initialized = true;
+	});
+
+	$effect(() => {
+		const current = active;
+		if (!tabs.length) return;
+		blocks.forEach((block, index) => block.classList.toggle('hidden', index !== current));
 	});
 
 	function select(index: number) {
-		active = index;
-		blocks.forEach((block, i) => block.classList.toggle('hidden', i !== index));
+		localActive = index;
+		codeGroups.set(tabs[index]);
+	}
+
+	async function copyActive() {
+		const pre = blocks[active]?.querySelector('pre');
+		const lines = pre?.querySelectorAll('.line');
+		const code =
+			lines && lines.length
+				? Array.from(lines)
+						.map((line) => line.textContent)
+						.join('\n')
+				: (pre?.textContent ?? '');
+		try {
+			await navigator.clipboard.writeText(code);
+			copied = true;
+			setTimeout(() => (copied = false), 1500);
+		} catch {
+			copied = false;
+		}
 	}
 </script>
 
@@ -46,6 +80,18 @@
 					{tab}
 				</button>
 			{/each}
+			<button
+				type="button"
+				onclick={copyActive}
+				aria-label="Copy code"
+				class="ml-auto inline-flex h-7 w-7 items-center justify-center rounded-md text-fg-subtle transition hover:bg-surface hover:text-fg"
+			>
+				{#if copied}
+					<Check size={14} />
+				{:else}
+					<Copy size={14} />
+				{/if}
+			</button>
 		</div>
 	{/if}
 	<div class="cg-blocks">
@@ -56,9 +102,12 @@
 <style>
 	.code-group :global(.code-block) {
 		margin: 0;
-		border-radius: 0;
+	}
+	.code-group :global(.code-header) {
+		display: none;
 	}
 	.code-group :global(.code-block pre) {
+		margin: 0;
 		border: 0;
 		border-radius: 0;
 	}
