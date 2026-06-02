@@ -13,7 +13,7 @@
 
 {#if tabs.isActive(id)}
 	<div role="tabpanel" class="tab-panel">
-		{@render children()}
+		{@render children?.()}
 	</div>
 {/if}
 

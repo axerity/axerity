@@ -7,5 +7,5 @@
 <div
 	class="tree my-5 overflow-hidden rounded-lg border border-border bg-surface p-2 font-mono text-sm text-fg"
 >
-	{@render children()}
+	{@render children?.()}
 </div>

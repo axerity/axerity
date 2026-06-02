@@ -5,7 +5,7 @@
 </script>
 
 <div class="columns-grid" style="--cols: {cols};">
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style>

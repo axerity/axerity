@@ -9,5 +9,5 @@
 </script>
 
 <div class="my-5 divide-y divide-border overflow-hidden rounded-xl border border-border">
-	{@render children()}
+	{@render children?.()}
 </div>

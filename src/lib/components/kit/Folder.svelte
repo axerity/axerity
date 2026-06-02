@@ -40,7 +40,7 @@
 
 	{#if isOpen && children}
 		<div transition:slide={{ duration: 150 }} class="ml-[0.6875rem] border-l border-border pl-2">
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

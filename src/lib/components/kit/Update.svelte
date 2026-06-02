@@ -14,7 +14,7 @@
 		{/if}
 	</div>
 	<div class="update-body text-sm text-fg-muted">
-		{@render children()}
+		{@render children?.()}
 	</div>
 </div>
 

@@ -9,9 +9,9 @@
 	const examples = $state<ApiExampleEntry[]>([]);
 	let counter = 0;
 
-	const requests = $derived(examples.filter((example) => example.kind === 'request'));
-	const responses = $derived(examples.filter((example) => example.kind === 'response'));
-	const objects = $derived(examples.filter((example) => example.kind === 'object'));
+	const requests = $derived(examples.filter((example) => example?.kind === 'request'));
+	const responses = $derived(examples.filter((example) => example?.kind === 'response'));
+	const objects = $derived(examples.filter((example) => example?.kind === 'object'));
 
 	setContext<ApiContext>(API, {
 		registerExample(entry) {
@@ -20,7 +20,7 @@
 			return id;
 		},
 		unregisterExample(id) {
-			const index = examples.findIndex((example) => example.id === id);
+			const index = examples.findIndex((example) => example?.id === id);
 			if (index !== -1) examples.splice(index, 1);
 		}
 	});
@@ -28,7 +28,7 @@
 
 <div class="api">
 	<div class="api-main">
-		{@render children()}
+		{@render children?.()}
 	</div>
 
 	<div class="api-rail">

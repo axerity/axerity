@@ -37,7 +37,7 @@
 		</div>
 		{#if children}
 			<div class="body">
-				{@render children()}
+				{@render children?.()}
 			</div>
 		{/if}
 	</div>

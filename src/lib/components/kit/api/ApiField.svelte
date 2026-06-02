@@ -43,7 +43,7 @@
 	</div>
 	{#if children}
 		<div class="field-desc">
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

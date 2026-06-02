@@ -8,7 +8,11 @@
 	import SidebarLink from './SidebarLink.svelte';
 	import Self from './SidebarGroup.svelte';
 
-	let { group, depth = 0 }: { group: NavGroup; depth?: number } = $props();
+	let {
+		group,
+		depth = 0,
+		defaultOpen = false
+	}: { group: NavGroup; depth?: number; defaultOpen?: boolean } = $props();
 
 	function containsActive(items: NavEntry[], path: string): boolean {
 		return items.some((entry) =>
@@ -16,10 +20,14 @@
 		);
 	}
 
-	// Open when the meta sets `defaultOpen`, or when a descendant is the current
-	// page (so the active page is never hidden).
+	// Open when the group (or the site default) sets `defaultOpen`, or when a
+	// descendant is the current page (so the active page is never hidden).
 	let open = $state(
-		untrack(() => group.defaultOpen === true || containsActive(group.items, page.url.pathname))
+		untrack(
+			() =>
+				(group.defaultOpen ?? defaultOpen) === true ||
+				containsActive(group.items, page.url.pathname)
+		)
 	);
 
 	const key = (entry: NavEntry) => ('href' in entry ? entry.href : entry.title);
@@ -46,7 +54,7 @@
 				{#if 'href' in entry}
 					<SidebarLink item={entry} depth={depth + 1} />
 				{:else}
-					<Self group={entry} depth={depth + 1} />
+					<Self group={entry} depth={depth + 1} {defaultOpen} />
 				{/if}
 			{/each}
 		</div>

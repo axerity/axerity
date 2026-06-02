@@ -80,16 +80,46 @@ function runScript(name, vars, onExit) {
 	});
 }
 
-function dev() {
-	ensureDist();
-	banner('dev');
-	runScript('serve.js', env(context(), { AXERITY_DEV: '1' }));
+function runStep(name, vars, cwd) {
+	return new Promise((resolveStep) => {
+		const child = spawn(process.execPath, [join(engineRoot, 'runtime', name)], {
+			cwd,
+			stdio: 'inherit',
+			env: vars
+		});
+		child.on('exit', (code) => resolveStep(code ?? 0));
+	});
 }
 
-function build() {
+function hasOpenapi(ctx) {
+	if (isEngineRepo) return false;
+	try {
+		return Boolean(JSON.parse(readFileSync(ctx.config, 'utf8')).openapi);
+	} catch {
+		return false;
+	}
+}
+
+async function generateOpenapi(ctx) {
+	if (!hasOpenapi(ctx)) return;
+	if (!existsSync(join(DIST, 'openapi.js'))) return;
+	await runStep('openapi.js', env(ctx), userRoot);
+}
+
+async function dev() {
+	ensureDist();
+	banner('dev');
+	const ctx = context();
+	await generateOpenapi(ctx);
+	runScript('serve.js', env(ctx, { AXERITY_DEV: '1' }));
+}
+
+async function build() {
 	ensureDist();
 	banner('build');
-	runScript('crawl.js', env(context(), { AXERITY_OUT: join(userRoot, 'build') }), (code) => {
+	const ctx = context();
+	await generateOpenapi(ctx);
+	runScript('crawl.js', env(ctx, { AXERITY_OUT: join(userRoot, 'build') }), (code) => {
 		if (code === 0) process.stdout.write(`  ${green('✓')} built ${dim('→')} ./build\n\n`);
 	});
 }

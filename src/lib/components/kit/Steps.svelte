@@ -5,7 +5,7 @@
 </script>
 
 <div class="steps">
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style>

@@ -37,7 +37,7 @@
 		{#if title}
 			<p class="mb-0.5 font-semibold">{title}</p>
 		{/if}
-		{@render children()}
+		{@render children?.()}
 	</div>
 </div>
 

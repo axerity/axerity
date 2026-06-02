@@ -28,5 +28,5 @@
 	]}"
 	style="--c: {colors[color]};"
 >
-	{@render children()}
+	{@render children?.()}
 </span>

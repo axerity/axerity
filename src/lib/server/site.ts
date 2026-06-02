@@ -30,6 +30,7 @@ export function getSite(): SiteConfig {
 			dark: asset(raw.logo.dark),
 			href: p(raw.logo.href)
 		},
+		favicon: asset(raw.favicon),
 		og: raw.og && { ...raw.og, logo: asset(raw.og.logo) },
 		topNav: raw.topNav?.map(link),
 		versions: raw.versions?.map((v) => ({ ...v, href: p(v.href)! })),

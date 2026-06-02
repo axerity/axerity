@@ -6,7 +6,7 @@
 
 <span class="tooltip group relative inline-flex">
 	<button type="button" class="tooltip-trigger" aria-label={tip}>
-		{@render children()}
+		{@render children?.()}
 	</button>
 	<span
 		role="tooltip"

@@ -7,7 +7,11 @@
 	import SidebarGroup from './SidebarGroup.svelte';
 	import SidebarDropdown from './SidebarDropdown.svelte';
 
-	let { sections, dropdowns }: { sections: NavSection[]; dropdowns?: Dropdown[] } = $props();
+	let {
+		sections,
+		dropdowns,
+		defaultOpen = false
+	}: { sections: NavSection[]; dropdowns?: Dropdown[]; defaultOpen?: boolean } = $props();
 
 	const activeDropdown = $derived(
 		dropdowns && dropdowns.length
@@ -77,7 +81,7 @@
 				{#if 'href' in entry}
 					<SidebarLink item={entry} />
 				{:else}
-					<SidebarGroup group={entry} />
+					<SidebarGroup group={entry} {defaultOpen} />
 				{/if}
 			{/each}
 		</div>

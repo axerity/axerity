@@ -9,10 +9,20 @@
 	let { data, children } = $props();
 
 	const site = $derived(data.site);
+	const favicon = $derived(site.favicon ?? `${base}/favicon.svg`);
+	const faviconType = $derived(
+		favicon.endsWith('.svg')
+			? 'image/svg+xml'
+			: favicon.endsWith('.png')
+				? 'image/png'
+				: favicon.endsWith('.ico')
+					? 'image/x-icon'
+					: undefined
+	);
 </script>
 
 <svelte:head>
-	<link rel="icon" href="{base}/favicon.svg" type="image/svg+xml" />
+	<link rel="icon" href={favicon} type={faviconType} />
 	{#if site.url}
 		<link
 			rel="alternate"

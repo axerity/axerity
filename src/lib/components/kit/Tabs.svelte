@@ -24,7 +24,7 @@
 	const activeValue = $derived(group ? tabGroups.get(group) : localValue);
 
 	const activeId = $derived.by(() => {
-		const match = activeValue !== undefined ? tabs.find((t) => t.title === activeValue) : undefined;
+		const match = activeValue !== undefined ? tabs.find((t) => t?.title === activeValue) : undefined;
 		return match?.id ?? tabs[0]?.id;
 	});
 
@@ -40,7 +40,7 @@
 			return id;
 		},
 		unregister(id) {
-			const index = tabs.findIndex((tab) => tab.id === id);
+			const index = tabs.findIndex((tab) => tab?.id === id);
 			if (index !== -1) tabs.splice(index, 1);
 		},
 		isActive: (id) => activeId === id
@@ -49,7 +49,7 @@
 
 <div class="my-5 flex flex-col overflow-hidden rounded-xl border border-border">
 	<div class="order-2 p-4">
-		{@render children()}
+		{@render children?.()}
 	</div>
 
 	<div

@@ -5,7 +5,7 @@
 </script>
 
 <div class="roadmap">
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style>

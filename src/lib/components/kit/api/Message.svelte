@@ -30,7 +30,7 @@
 	</div>
 	{#if children}
 		<div class="message-body">
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

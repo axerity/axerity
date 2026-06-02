@@ -52,7 +52,7 @@
 		</div>
 		{#if children}
 			<div class="card-body mt-1 text-sm text-fg-muted">
-				{@render children()}
+				{@render children?.()}
 			</div>
 		{/if}
 	</div>

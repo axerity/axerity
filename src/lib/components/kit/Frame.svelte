@@ -33,13 +33,13 @@
 			onclick={() => (open = true)}
 			class="frame-inner flex w-full cursor-zoom-in justify-center rounded-xl border border-border bg-surface-raised p-4 transition hover:border-border-strong"
 		>
-			{@render children()}
+			{@render children?.()}
 		</button>
 	{:else}
 		<div
 			class="frame-inner flex justify-center rounded-xl border border-border bg-surface-raised p-4"
 		>
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 	{#if caption}
@@ -56,7 +56,7 @@
 		transition:fade={{ duration: 150 }}
 	>
 		<span class="frame-overlay-inner block max-h-full max-w-5xl" transition:scale={{ start: 0.96 }}>
-			{@render children()}
+			{@render children?.()}
 		</span>
 	</button>
 {/if}

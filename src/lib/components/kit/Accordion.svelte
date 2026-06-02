@@ -43,7 +43,7 @@
 	{#if isOpen}
 		<div transition:slide={{ duration: 200 }}>
 			<div class="accordion-body px-4 pb-4 text-sm text-fg-muted">
-				{@render children()}
+				{@render children?.()}
 			</div>
 		</div>
 	{/if}

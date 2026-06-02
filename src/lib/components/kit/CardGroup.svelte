@@ -5,7 +5,7 @@
 </script>
 
 <div class="card-group my-5 grid gap-3" style="--cols: {cols};">
-	{@render children()}
+	{@render children?.()}
 </div>
 
 <style>

@@ -6,7 +6,9 @@
 
 	let { pages }: { pages: NavLink[] } = $props();
 
-	const index = $derived(pages.findIndex((entry) => entry.href === page.url.pathname));
+	const trim = (path: string): string => (path.length > 1 ? path.replace(/\/$/, '') : path);
+	const current = $derived(trim(page.url.pathname));
+	const index = $derived(pages.findIndex((entry) => trim(entry.href) === current));
 	const prev = $derived(index > 0 ? pages[index - 1] : undefined);
 	const next = $derived(index >= 0 && index < pages.length - 1 ? pages[index + 1] : undefined);
 </script>

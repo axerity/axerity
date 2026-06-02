@@ -14,8 +14,8 @@
 	const examples = $state<ApiExampleEntry[]>([]);
 	let counter = 0;
 
-	const objects = $derived(examples.filter((example) => example.kind === 'object'));
-	const payloads = $derived(examples.filter((example) => example.kind !== 'object'));
+	const objects = $derived(examples.filter((example) => example?.kind === 'object'));
+	const payloads = $derived(examples.filter((example) => example?.kind !== 'object'));
 
 	setContext<ApiContext>(API, {
 		registerExample(entry) {
@@ -24,7 +24,7 @@
 			return id;
 		},
 		unregisterExample(id) {
-			const index = examples.findIndex((example) => example.id === id);
+			const index = examples.findIndex((example) => example?.id === id);
 			if (index !== -1) examples.splice(index, 1);
 		}
 	});
@@ -42,7 +42,7 @@
 		{#if description}
 			<p>{description}</p>
 		{/if}
-		{@render children()}
+		{@render children?.()}
 	</div>
 
 	<div class="api-rail">

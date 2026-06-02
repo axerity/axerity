@@ -20,9 +20,11 @@
 	const ogImagePath = $derived(
 		site.og?.enabled
 			? `${base}/og/${data.sourcePath.replace(/\.md$/, '')}.png`
-			: `${base}${site.ogImage ?? '/og-image.png'}`
+			: site.ogImage
+				? `${base}${site.ogImage}`
+				: undefined
 	);
-	const ogImage = $derived(site.url ? site.url + ogImagePath : ogImagePath);
+	const ogImage = $derived(ogImagePath && (site.url ? site.url + ogImagePath : ogImagePath));
 </script>
 
 <svelte:head>
@@ -40,13 +42,17 @@
 	{#if pageDescription}
 		<meta property="og:description" content={pageDescription} />
 	{/if}
-	<meta property="og:image" content={ogImage} />
+	{#if ogImage}
+		<meta property="og:image" content={ogImage} />
+	{/if}
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={fm.title ?? site.name} />
 	{#if pageDescription}
 		<meta name="twitter:description" content={pageDescription} />
 	{/if}
-	<meta name="twitter:image" content={ogImage} />
+	{#if ogImage}
+		<meta name="twitter:image" content={ogImage} />
+	{/if}
 </svelte:head>
 
 <DocsLayout

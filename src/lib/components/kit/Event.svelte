@@ -15,7 +15,7 @@
 >
 	<code class="shrink-0 font-mono text-fg">{name}</code>
 	{#if children}
-		<span class="min-w-0 flex-1 truncate text-fg-muted">{@render children()}</span>
+		<span class="min-w-0 flex-1 truncate text-fg-muted">{@render children?.()}</span>
 	{/if}
 	{#if href}
 		<ArrowRight size={15} class="ml-auto shrink-0 text-fg-subtle" />

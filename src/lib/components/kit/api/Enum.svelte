@@ -8,7 +8,7 @@
 	<code class="enum-pill">{value}</code>
 	{#if children}
 		<div class="enum-desc">
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

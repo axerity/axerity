@@ -108,8 +108,8 @@
 	<div class={containerClass}>
 		<!-- Sidebar (desktop) -->
 		<aside class={asideClass}>
-			<div class="min-h-0 flex-1 overflow-y-auto py-8">
-				<Sidebar sections={sidebar} dropdowns={site.dropdowns} />
+			<div class="min-h-0 flex-1 overflow-y-auto py-8 scrollbar-none [&::-webkit-scrollbar]:hidden">
+				<Sidebar sections={sidebar} dropdowns={site.dropdowns} defaultOpen={site.sidebar?.defaultOpen} />
 			</div>
 			{#if site.sidebarLinks && site.sidebarLinks.length}
 				<div class="shrink-0 pb-6">
@@ -179,8 +179,8 @@
 			class="absolute top-0 left-0 flex h-full w-72 max-w-[85%] flex-col border-r border-border bg-sidebar"
 			transition:fly={{ x: -300, duration: 200 }}
 		>
-			<div class="min-h-0 flex-1 overflow-y-auto p-6">
-				<Sidebar sections={sidebar} dropdowns={site.dropdowns} />
+			<div class="min-h-0 flex-1 overflow-y-auto p-6 scrollbar-none [&::-webkit-scrollbar]:hidden">
+				<Sidebar sections={sidebar} dropdowns={site.dropdowns} defaultOpen={site.sidebar?.defaultOpen} />
 			</div>
 			{#if site.sidebarLinks && site.sidebarLinks.length}
 				<div class="shrink-0 px-6 pb-6">

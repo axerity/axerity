@@ -31,7 +31,7 @@
 
 	{#if isOpen}
 		<div class="expandable-body" transition:slide={{ duration: 150 }}>
-			{@render children()}
+			{@render children?.()}
 		</div>
 	{/if}
 </div>

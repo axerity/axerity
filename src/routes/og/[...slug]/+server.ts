@@ -4,8 +4,11 @@ import { error } from '@sveltejs/kit';
 import { base } from '$app/paths';
 import { getSite } from '$lib/server/site';
 import { renderOgImage } from '$lib/server/og';
-import { frontmatterByPath } from '$lib/server/content-store';
+import { frontmatterByPath, getNav } from '$lib/server/content-store';
+import type { NavEntry } from '$lib/types';
 import type { RequestHandler } from './$types';
+
+const LOGO_HEIGHT = 46;
 
 const ASSETS = process.env.AXERITY_ASSETS ?? 'static';
 const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
@@ -31,9 +34,28 @@ function getFonts() {
 	return fontCache;
 }
 
-let logoCache: string | null | undefined;
+interface LoadedLogo {
+	src: string;
+	width: number;
+	height: number;
+}
 
-function getLogo(): string | undefined {
+function imageDims(buf: Buffer, mime: string): { w: number; h: number } | null {
+	if (mime === 'image/png') return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+	if (mime === 'image/svg+xml') {
+		const text = buf.toString('utf8');
+		const vb = text.match(/viewBox\s*=\s*["']\s*[\d.]+[ ,]+[\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)/);
+		if (vb) return { w: parseFloat(vb[1]), h: parseFloat(vb[2]) };
+		const w = text.match(/\bwidth\s*=\s*["']([\d.]+)/);
+		const h = text.match(/\bheight\s*=\s*["']([\d.]+)/);
+		if (w && h) return { w: parseFloat(w[1]), h: parseFloat(h[1]) };
+	}
+	return null;
+}
+
+let logoCache: LoadedLogo | null | undefined;
+
+function getLogo(): LoadedLogo | undefined {
 	const site = getSite();
 	const logoPath = site.og?.logo ?? site.logo?.dark ?? site.logo?.light;
 	if (logoCache === undefined) {
@@ -45,7 +67,13 @@ function getLogo(): string | undefined {
 				if (!root) continue;
 				try {
 					const buf = readFileSync(join(root, rel));
-					logoCache = `data:${mime};base64,${buf.toString('base64')}`;
+					const dims = imageDims(buf, mime);
+					const aspect = dims ? dims.w / dims.h : 1;
+					logoCache = {
+						src: `data:${mime};base64,${buf.toString('base64')}`,
+						width: Math.round(LOGO_HEIGHT * aspect),
+						height: LOGO_HEIGHT
+					};
 					break;
 				} catch {
 					continue;
@@ -54,6 +82,17 @@ function getLogo(): string | undefined {
 		}
 	}
 	return logoCache ?? undefined;
+}
+
+function eyebrowFor(key: string): string | undefined {
+	const clean = key.replace(/\/index$/, '');
+	const target = clean === 'index' || clean === '' ? `${base}/` : `${base}/${clean}`;
+	const hrefsOf = (items: NavEntry[]): string[] =>
+		items.flatMap((entry) => ('href' in entry ? [entry.href] : hrefsOf(entry.items)));
+	for (const section of getNav().sidebar) {
+		if (hrefsOf(section.items).includes(target)) return section.title;
+	}
+	return undefined;
 }
 
 export const GET: RequestHandler = async ({ params }) => {
@@ -68,6 +107,7 @@ export const GET: RequestHandler = async ({ params }) => {
 		title: fm.title ?? site.name,
 		description: fm.description ?? site.description,
 		siteName: site.name,
+		eyebrow: eyebrowFor(key),
 		og: site.og,
 		fonts,
 		logo

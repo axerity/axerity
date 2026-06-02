@@ -49,7 +49,7 @@
 		</div>
 	{/if}
 	<div class="cg-blocks">
-		{@render children()}
+		{@render children?.()}
 	</div>
 </div>
 

@@ -8,7 +8,7 @@
 <div class="enum">
 	<div class="enum-head">{title}</div>
 	<div class="enum-body">
-		{@render children()}
+		{@render children?.()}
 	</div>
 </div>
 

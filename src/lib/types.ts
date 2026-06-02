@@ -120,6 +120,8 @@ export interface Banner {
  */
 export interface SidebarConfig {
 	variant?: 'flush' | 'card' | 'floating';
+	/** Expand every collapsible group by default. A group's own `defaultOpen` wins. */
+	defaultOpen?: boolean;
 }
 
 export interface AnalyticsConfig {
@@ -166,6 +168,8 @@ export interface SiteConfig {
 	description?: string;
 	url?: string;
 	ogImage?: string;
+	/** Path to the favicon (e.g. `/favicon.png`). Defaults to the bundled SVG. */
+	favicon?: string;
 	og?: OgConfig;
 	logo?: Logo;
 	topNav: TopNavLink[];
