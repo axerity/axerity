@@ -126,10 +126,10 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
 
 // Escape characters Svelte would otherwise read as markup/expressions in the
 // Markdown body (outside code blocks, which mdsvex already escapes).
-const escapeText = (text: string): string =>
+export const escapeText = (text: string): string =>
 	text.replace(/[<{}]/g, (c) => ({ '<': '&lt;', '{': '&#123;', '}': '&#125;' })[c] ?? c);
 
-function slugify(value: string): string {
+export function slugify(value: string): string {
 	return value
 		.replace(/\{[^}]+\}/g, (m) => m.slice(1, -1))
 		.replace(/[^a-zA-Z0-9]+/g, '-')
@@ -166,7 +166,7 @@ function composed(spec: Spec, schema: Schema): Schema {
 const baseType = (type?: string | string[]): string | undefined =>
 	Array.isArray(type) ? type.find((t) => t !== 'null') : type;
 
-function typeLabel(spec: Spec, schema?: Schema): string {
+export function typeLabel(spec: Spec, schema?: Schema): string {
 	if (!schema) return 'any';
 	if (schema.$ref) return refName(schema.$ref);
 	if (schema.oneOf || schema.anyOf) {
@@ -182,7 +182,7 @@ function typeLabel(spec: Spec, schema?: Schema): string {
 	return schema.format ?? type ?? 'object';
 }
 
-function describe(schema: Schema): string {
+export function describe(schema: Schema): string {
 	const lines: string[] = [];
 	if (schema.description) lines.push(schema.description);
 	const notes: string[] = [];
@@ -256,7 +256,7 @@ function fields(spec: Spec, schema: Schema, group: string, component: string, de
 	return out.join('\n');
 }
 
-function sample(spec: Spec, schema: Schema | undefined, depth = 0): unknown {
+export function sample(spec: Spec, schema: Schema | undefined, depth = 0): unknown {
 	const s = composed(spec, schema ?? {});
 	if (depth > 5) return null;
 	if (s.example !== undefined) return s.example;
@@ -351,7 +351,7 @@ function authLines(spec: Spec, op: Operation): string[] {
 	return ['## Authentication', '', escapeText(text), ''];
 }
 
-function operationPage(
+export function operationPage(
 	spec: Spec,
 	specBaseUrl: string,
 	group: string,
@@ -476,7 +476,7 @@ function operationPage(
 	return { tag, slug: slugify(op.operationId ?? `${method}-${path}`), body: lines.join('\n') };
 }
 
-function schemaPage(spec: Spec, group: string, name: string, schema: Schema): string {
+export function schemaPage(spec: Spec, group: string, name: string, schema: Schema): string {
 	const resolved = composed(spec, schema);
 	return [
 		...frontmatter(name, resolved.description ?? `The ${name} object.`, '', 'box'),
