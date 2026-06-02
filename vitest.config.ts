@@ -18,9 +18,11 @@ export default defineConfig({
 			include: [
 				'src/lib/markdown/**',
 				'src/lib/content/**',
+				'src/lib/openapi/generate.ts',
 				'src/lib/nav-match.ts',
 				'runtime/static.js'
-			]
+			],
+			thresholds: { statements: 80, lines: 80, functions: 80, branches: 60 }
 		},
 		projects: [
 			{

@@ -1,0 +1,410 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`parse golden snapshots > a callout with a markdown body 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "Be ",
+          },
+          {
+            "children": [
+              {
+                "type": "text",
+                "value": "careful",
+              },
+            ],
+            "props": {},
+            "tag": "strong",
+            "type": "element",
+          },
+          {
+            "type": "text",
+            "value": " here.",
+          },
+        ],
+        "props": {},
+        "tag": "p",
+        "type": "element",
+      },
+    ],
+    "name": "Callout",
+    "props": {
+      "type": "warn",
+    },
+    "type": "component",
+  },
+]
+`;
+
+exports[`parse golden snapshots > a card group with props 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "First",
+          },
+        ],
+        "name": "Card",
+        "props": {
+          "href": "/a",
+          "title": "A",
+        },
+        "type": "component",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "Second",
+          },
+        ],
+        "name": "Card",
+        "props": {
+          "href": "/b",
+          "title": "B",
+        },
+        "type": "component",
+      },
+    ],
+    "name": "CardGroup",
+    "props": {
+      "cols": 2,
+    },
+    "type": "component",
+  },
+]
+`;
+
+exports[`parse golden snapshots > a list and a table 1`] = `
+[
+  {
+    "children": [
+      {
+        "type": "text",
+        "value": "
+",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "one",
+          },
+        ],
+        "props": {},
+        "tag": "li",
+        "type": "element",
+      },
+      {
+        "type": "text",
+        "value": "
+",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "two",
+          },
+        ],
+        "props": {},
+        "tag": "li",
+        "type": "element",
+      },
+      {
+        "type": "text",
+        "value": "
+",
+      },
+    ],
+    "props": {},
+    "tag": "ul",
+    "type": "element",
+  },
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "
+",
+          },
+          {
+            "children": [
+              {
+                "type": "text",
+                "value": "
+",
+              },
+              {
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                  {
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Head",
+                      },
+                    ],
+                    "props": {},
+                    "tag": "th",
+                    "type": "element",
+                  },
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                  {
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Value",
+                      },
+                    ],
+                    "props": {},
+                    "tag": "th",
+                    "type": "element",
+                  },
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                ],
+                "props": {},
+                "tag": "tr",
+                "type": "element",
+              },
+              {
+                "type": "text",
+                "value": "
+",
+              },
+            ],
+            "props": {},
+            "tag": "thead",
+            "type": "element",
+          },
+          {
+            "type": "text",
+            "value": "
+",
+          },
+          {
+            "children": [
+              {
+                "type": "text",
+                "value": "
+",
+              },
+              {
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                  {
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "a",
+                      },
+                    ],
+                    "props": {},
+                    "tag": "td",
+                    "type": "element",
+                  },
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                  {
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "b",
+                      },
+                    ],
+                    "props": {},
+                    "tag": "td",
+                    "type": "element",
+                  },
+                  {
+                    "type": "text",
+                    "value": "
+",
+                  },
+                ],
+                "props": {},
+                "tag": "tr",
+                "type": "element",
+              },
+              {
+                "type": "text",
+                "value": "
+",
+              },
+            ],
+            "props": {},
+            "tag": "tbody",
+            "type": "element",
+          },
+          {
+            "type": "text",
+            "value": "
+",
+          },
+        ],
+        "props": {},
+        "tag": "table",
+        "type": "element",
+      },
+    ],
+    "props": {
+      "class": "table-wrapper",
+    },
+    "tag": "div",
+    "type": "element",
+  },
+]
+`;
+
+exports[`parse golden snapshots > an external link and an image 1`] = `
+[
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "site",
+          },
+        ],
+        "props": {
+          "href": "https://example.com",
+          "rel": "noreferrer noopener",
+          "target": "_blank",
+        },
+        "tag": "a",
+        "type": "element",
+      },
+    ],
+    "props": {},
+    "tag": "p",
+    "type": "element",
+  },
+  {
+    "children": [],
+    "props": {
+      "alt": "logo",
+      "src": "/logo.png",
+    },
+    "tag": "img",
+    "type": "element",
+  },
+]
+`;
+
+exports[`parse golden snapshots > headings and inline marks 1`] = `
+[
+  {
+    "children": [
+      {
+        "type": "text",
+        "value": "Title",
+      },
+    ],
+    "props": {
+      "id": "title",
+    },
+    "tag": "h1",
+    "type": "element",
+  },
+  {
+    "children": [
+      {
+        "type": "text",
+        "value": "Section",
+      },
+    ],
+    "props": {
+      "id": "section",
+    },
+    "tag": "h2",
+    "type": "element",
+  },
+  {
+    "children": [
+      {
+        "type": "text",
+        "value": "Some ",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "bold",
+          },
+        ],
+        "props": {},
+        "tag": "strong",
+        "type": "element",
+      },
+      {
+        "type": "text",
+        "value": " and ",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "italic",
+          },
+        ],
+        "props": {},
+        "tag": "em",
+        "type": "element",
+      },
+      {
+        "type": "text",
+        "value": " text with a ",
+      },
+      {
+        "children": [
+          {
+            "type": "text",
+            "value": "link",
+          },
+        ],
+        "props": {
+          "href": "/page",
+        },
+        "tag": "a",
+        "type": "element",
+      },
+      {
+        "type": "text",
+        "value": ".",
+      },
+    ],
+    "props": {},
+    "tag": "p",
+    "type": "element",
+  },
+]
+`;

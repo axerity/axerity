@@ -38,3 +38,6 @@ src/content/docs/petstore-api
 
 # npm pack artifacts
 *.tgz
+
+# Coverage reports
+coverage
