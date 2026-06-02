@@ -19,17 +19,18 @@ This bumps the version in `package.json`, commits it, tags it, and pushes the ta
 
 The workflow runs `pnpm check` so a type error never ships.
 
-	</Step>
-	<Step title="Compile">
+    </Step>
+    <Step title="Compile">
 
 It runs `pnpm build:engine`, which produces a fresh `dist/`. The compiled engine is built in CI, not committed to the repository.
 
-	</Step>
-	<Step title="Publish">
+    </Step>
+    <Step title="Publish">
 
 It runs `pnpm publish` with provenance, so the package is signed and traceable to the commit it came from.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ## What ships

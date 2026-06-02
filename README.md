@@ -39,11 +39,11 @@ pnpm add -D @axerity/cli
 
 ```json
 {
-  "scripts": {
-    "dev": "axerity dev",
-    "build": "axerity build",
-    "preview": "axerity preview"
-  }
+	"scripts": {
+		"dev": "axerity dev",
+		"build": "axerity build",
+		"preview": "axerity preview"
+	}
 }
 ```
 
@@ -77,11 +77,11 @@ Everything global lives in `axerity.json`. A few of the common keys:
 
 ```json
 {
-  "$schema": "https://axerity.com/axerity.schema.json",
-  "name": "My Docs",
-  "theme": "neutral",
-  "openapi": "./openapi.json",
-  "topNav": [{ "title": "Docs", "href": "/" }]
+	"$schema": "https://axerity.com/axerity.schema.json",
+	"name": "My Docs",
+	"theme": "neutral",
+	"openapi": "./openapi.json",
+	"topNav": [{ "title": "Docs", "href": "/" }]
 }
 ```
 

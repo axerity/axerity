@@ -24,7 +24,8 @@
 	const activeValue = $derived(group ? tabGroups.get(group) : localValue);
 
 	const activeId = $derived.by(() => {
-		const match = activeValue !== undefined ? tabs.find((t) => t?.title === activeValue) : undefined;
+		const match =
+			activeValue !== undefined ? tabs.find((t) => t?.title === activeValue) : undefined;
 		return match?.id ?? tabs[0]?.id;
 	});
 

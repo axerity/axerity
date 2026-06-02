@@ -4,8 +4,8 @@ import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = ({ url }) => {
 	const origin = getSite().url ?? url.origin;
-	const urls = getNav().flatPages
-		.map((page) => `\t<url>\n\t\t<loc>${origin}${page.href}</loc>\n\t</url>`)
+	const urls = getNav()
+		.flatPages.map((page) => `\t<url>\n\t\t<loc>${origin}${page.href}</loc>\n\t</url>`)
 		.join('\n');
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>

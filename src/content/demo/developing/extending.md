@@ -24,8 +24,8 @@ Add a Svelte component under `src/lib/components/kit/`. It receives its attribut
 </aside>
 ```
 
-	</Step>
-	<Step title="Export it">
+    </Step>
+    <Step title="Export it">
 
 Export it from `src/lib/index.ts`, the kit's public surface.
 
@@ -33,8 +33,8 @@ Export it from `src/lib/index.ts`, the kit's public surface.
 export { default as Note } from './components/kit/Note.svelte';
 ```
 
-	</Step>
-	<Step title="Register the tag">
+    </Step>
+    <Step title="Register the tag">
 
 Map the tag name to the component in `src/lib/markdown/registry.ts`. This is what lets the renderer find it.
 
@@ -44,10 +44,17 @@ import { Note } from '$lib';
 export const registry = { Note /* ...the rest */ };
 ```
 
-	</Step>
+    </Step>
+
 </Steps>
 
 After a `pnpm build:engine`, an author can write `<Note title="Heads up">...</Note>` in any page.
+
+<Callout type="info">
+
+A new component is covered against the self-closing crash the moment it is in the registry, because `tests/components/kit-children.test.ts` renders every registered component with no children. Write a focused test for anything beyond rendering, and pair every bug fix with a regression test.
+
+</Callout>
 
 ## How components receive content
 

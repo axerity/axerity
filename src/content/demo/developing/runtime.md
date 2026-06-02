@@ -31,31 +31,32 @@ When you run `pnpm dev` inside the engine repo itself, `userRoot` and `engineRoo
 
 `findContentDir()` checks `docs`, then `content/docs`, then `content`, and returns the first that exists. This is why a user can drop their Markdown in any of those folders and the CLI just picks it up.
 
-	</Step>
-	<Step title="Require a config">
+    </Step>
+    <Step title="Require a config">
 
 A user project must have an `axerity.json` at its root. If it is missing the CLI tells the user to run `axerity init` and exits. The engine repo uses its own `axerity.json` instead.
 
-	</Step>
-	<Step title="Set the static directory">
+    </Step>
+    <Step title="Set the static directory">
 
 For a user project the static directory is the project root, so logos and images sit next to the config. For the engine repo it is the content directory.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ### Handing off through the environment
 
 The CLI never imports the server. It spawns a runtime script as a child process and passes everything through `AXERITY_*` variables. The compiled server and every runtime script read these and nothing else, so the same `dist/` works for any project without being rebuilt.
 
-| Variable | Meaning |
-| --- | --- |
-| `AXERITY_CONTENT_DIR` | The resolved Markdown folder |
-| `AXERITY_CONFIG` | The path to `axerity.json` |
-| `AXERITY_ASSETS` | The compiled client assets in `dist/client` |
-| `AXERITY_STATIC_DIR` | Where the project's own static files live |
-| `AXERITY_OUT` | The build output folder, set only for `build` |
-| `AXERITY_DEV` | Set to `1` only for `dev` |
+| Variable              | Meaning                                       |
+| --------------------- | --------------------------------------------- |
+| `AXERITY_CONTENT_DIR` | The resolved Markdown folder                  |
+| `AXERITY_CONFIG`      | The path to `axerity.json`                    |
+| `AXERITY_ASSETS`      | The compiled client assets in `dist/client`   |
+| `AXERITY_STATIC_DIR`  | Where the project's own static files live     |
+| `AXERITY_OUT`         | The build output folder, set only for `build` |
+| `AXERITY_DEV`         | Set to `1` only for `dev`                     |
 
 `runScript` spawns the matching file in `runtime/` with `process.execPath`, inherits stdio so the child's output is the user's output, and forwards `SIGINT` and `SIGTERM` so Ctrl+C stops the server cleanly. The child always runs with its cwd set to `engineRoot`, because that is where `dist/` lives.
 
@@ -101,12 +102,13 @@ A request is handled in two stages.
 
 For a `GET`, `resolveAsset` checks whether the URL maps to a real file under the static directory. If it does, the file is streamed with the right MIME type and the handler is never reached. This is what lets a logo referenced as `/logo.svg` resolve straight from the project root.
 
-	</Step>
-	<Step title="Delegate to the handler">
+    </Step>
+    <Step title="Delegate to the handler">
 
 Anything that is not a static asset is passed to the compiled handler, with a fallback that returns a plain `404`.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ### Live reload
@@ -159,22 +161,23 @@ Serving assets straight from the project is what makes logos and images work wit
 
 It wraps the same `handler` in an `http` server and listens on port `0`, so the OS picks a free port. Nothing is exposed to the network. The origin is built from the assigned port and used only for in process fetches.
 
-	</Step>
-	<Step title="Prepare the output folder">
+    </Step>
+    <Step title="Prepare the output folder">
 
 It clears `./build`, recreates it, copies `dist/client` in, then copies the user's static assets over using `walkAssets`. The build folder's own name is passed as an extra ignore so the output cannot copy itself.
 
-	</Step>
-	<Step title="Read the manifest">
+    </Step>
+    <Step title="Read the manifest">
 
 It fetches `/__manifest` to get the full list of routes to write. This is the single source of truth for what ends up on disk.
 
-	</Step>
-	<Step title="Write every route">
+    </Step>
+    <Step title="Write every route">
 
 For each page it writes the HTML and the matching `__data.json`. For raw Markdown, OG images, and fixed routes it writes the response body. It also writes the `404.html` page from the not found route.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ### Failing loudly
@@ -213,12 +216,12 @@ A broken page must fail the build loudly because a static site has no server to 
 
 It returns `base` and four lists.
 
-| List | Source | Contents |
-| --- | --- | --- |
-| `pages` | `allSlugs()` | Every rendered page, with the empty slug mapped to the root |
-| `md` | `getNav().flatPages` | The raw `.md` source for each page |
-| `og` | `allSourcePaths()` | One `.png` per page, only when `og.enabled` is set |
-| `fixed` | a constant list | `search.json`, `sitemap.xml`, `rss.xml`, `llms.txt`, `llms-full.txt` |
+| List    | Source               | Contents                                                             |
+| ------- | -------------------- | -------------------------------------------------------------------- |
+| `pages` | `allSlugs()`         | Every rendered page, with the empty slug mapped to the root          |
+| `md`    | `getNav().flatPages` | The raw `.md` source for each page                                   |
+| `og`    | `allSourcePaths()`   | One `.png` per page, only when `og.enabled` is set                   |
+| `fixed` | a constant list      | `search.json`, `sitemap.xml`, `rss.xml`, `llms.txt`, `llms-full.txt` |
 
 Every path is prefixed with `base`, so the crawler can strip that prefix back off to get an on disk location. Because the OG list is gated on `og.enabled`, a project with OG images turned off never has the crawler request a route that would not exist.
 
@@ -235,7 +238,7 @@ transformPageChunk: ({ html }) =>
 	html
 		.replace('<html', `<html data-theme="${theme}"`)
 		.replace('</head>', `${brandTag}</head>`)
-		.replace('</body>', `${liveReload}</body>`)
+		.replace('</body>', `${liveReload}</body>`);
 ```
 
 `brandStyle` turns the config's brand colors and radius into a small `<style>` block of CSS variables, sanitizing each value so a stray brace cannot break out of the style. The theme name lands on the `<html>` tag. Because this happens in the hook on every render, one compiled server themes itself from whatever project's config it was pointed at, with no rebuild.

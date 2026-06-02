@@ -58,7 +58,10 @@
 		"check": "node scripts/prepare-engine.mjs && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . --ignore-path .gitignore --ignore-path .prettierignore && eslint .",
-		"format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore"
+		"format": "prettier --write . --ignore-path .gitignore --ignore-path .prettierignore",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
 	},
 	"dependencies": {
 		"@fontsource-variable/geist": "^5.2.9",
@@ -97,6 +100,8 @@
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^10.0.1",
 		"@sveltejs/adapter-node": "^5.5.4",
+		"@testing-library/jest-dom": "^6.9.1",
+		"@testing-library/svelte": "^5.3.1",
 		"@types/hast": "^3.0.4",
 		"@types/mdast": "^4.0.4",
 		"@types/node": "^25.9.1",
@@ -105,12 +110,14 @@
 		"eslint-plugin-svelte": "^3.19.0",
 		"github-slugger": "^2.0.0",
 		"globals": "^17.6.0",
+		"jsdom": "^29.1.1",
 		"mdast-util-to-hast": "^13.2.1",
 		"prettier": "^3.8.3",
 		"prettier-plugin-svelte": "^4.0.1",
 		"prettier-plugin-tailwindcss": "^0.8.0",
 		"remark-smartypants": "^3.0.2",
 		"svelte-check": "^4.4.8",
-		"typescript-eslint": "^8.60.0"
+		"typescript-eslint": "^8.60.0",
+		"vitest": "^4.1.8"
 	}
 }

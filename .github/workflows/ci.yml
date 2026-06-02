@@ -1,24 +1,19 @@
-name: Publish
+name: CI
 
 on:
+  pull_request:
   push:
-    tags:
-      - 'v*'
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
-  publish:
+  verify:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
 
       - run: corepack enable
 
@@ -26,10 +21,8 @@ jobs:
 
       - run: pnpm check
 
+      - run: pnpm lint
+
       - run: pnpm build:engine
 
       - run: pnpm test
-
-      - run: pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

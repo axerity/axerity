@@ -97,11 +97,11 @@ bun add -d @axerity/cli
 
 ```json title="package.json"
 {
-  "scripts": {
-    "dev": "axerity dev",
-    "build": "axerity build",
-    "preview": "axerity preview"
-  }
+	"scripts": {
+		"dev": "axerity dev",
+		"build": "axerity build",
+		"preview": "axerity preview"
+	}
 }
 ```
 

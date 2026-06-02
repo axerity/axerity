@@ -31,12 +31,13 @@ A prebuilt server cannot compile a new Svelte component for every Markdown file,
 
 The document model is serializable, so it travels to the browser as page data and hydrates. There is one rendering path to reason about, on the server and in the client, and no per page compilation.
 
-	</Card>
-	<Card title="What it costs" icon="x">
+    </Card>
+    <Card title="What it costs" icon="x">
 
 You cannot drop arbitrary Svelte or JavaScript into a page. Authoring is data and a known set of components, not a programming surface.
 
-	</Card>
+    </Card>
+
 </CardGroup>
 
 Real content almost never needs to be a program, so this trade has been worth it many times over. When a page does need behavior, that behavior lives in a kit component, written once in the engine.
@@ -102,20 +103,21 @@ Images, logos, and other static files are served straight from the project, filt
 
 How a Markdown file becomes a document model.
 
-	</Card>
-	<Card title="Rendering and components" icon="blocks" href="/developing/rendering">
+    </Card>
+    <Card title="Rendering and components" icon="blocks" href="/developing/rendering">
 
 How the model becomes UI, and how the kit handles state.
 
-	</Card>
-	<Card title="The runtime" icon="terminal" href="/developing/runtime">
+    </Card>
+    <Card title="The runtime" icon="terminal" href="/developing/runtime">
 
 How the CLI drives the prebuilt server.
 
-	</Card>
-	<Card title="Architecture" icon="layers" href="/developing">
+    </Card>
+    <Card title="Architecture" icon="layers" href="/developing">
 
 The short version of the model.
 
-	</Card>
+    </Card>
+
 </CardGroup>

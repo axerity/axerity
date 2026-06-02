@@ -16,10 +16,10 @@ This is the single most important thing to understand while developing.
 Editing content reloads instantly. Editing engine code needs a recompile, because the server is prebuilt.
 </Callout>
 
-| You change | What to do |
-| --- | --- |
-| Content or config (`src/content/demo`, `axerity.json`) | Nothing. The dev server live reloads. |
-| Engine code (anything in `src`, a route, a component) | Run `pnpm build:engine`, or restart `pnpm dev`. |
+| You change                                             | What to do                                      |
+| ------------------------------------------------------ | ----------------------------------------------- |
+| Content or config (`src/content/demo`, `axerity.json`) | Nothing. The dev server live reloads.           |
+| Engine code (anything in `src`, a route, a component)  | Run `pnpm build:engine`, or restart `pnpm dev`. |
 
 ## Dev
 
@@ -36,17 +36,18 @@ The live reload script is injected into the page by a server hook, only when run
 
 It imports the compiled handler from `dist/` and starts it on a local port. No socket needs to be exposed.
 
-	</Step>
-	<Step title="Ask for the route list">
+    </Step>
+    <Step title="Ask for the route list">
 
 It fetches an internal manifest endpoint that returns every page, raw Markdown file, OpenGraph image, and feed to generate.
 
-	</Step>
-	<Step title="Fetch and write">
+    </Step>
+    <Step title="Fetch and write">
 
 It requests each route from the in process server and writes the response to `./build`, then copies the client assets across.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 The result is a plain folder of HTML and assets that hosts anywhere. The same compiled server powers both dev and build, so there is only ever one rendering path to reason about.

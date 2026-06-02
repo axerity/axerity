@@ -1,6 +1,12 @@
 import type { PageFrontmatter } from '$lib/types';
 
-export type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+export type JsonValue =
+	| string
+	| number
+	| boolean
+	| null
+	| JsonValue[]
+	| { [key: string]: JsonValue };
 
 export interface TocEntry {
 	id: string;

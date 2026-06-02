@@ -98,7 +98,8 @@ function mdastToDoc(node: AnyNode): DocNode[] {
 }
 
 function hastToDoc(node: AnyNode): DocNode[] {
-	if (node.type === 'root') return (node.children as AnyNode[] | undefined ?? []).flatMap(hastToDoc);
+	if (node.type === 'root')
+		return ((node.children as AnyNode[] | undefined) ?? []).flatMap(hastToDoc);
 	if (node.type === 'text') return [{ type: 'text', value: node.value as string }];
 	if (node.type === 'raw') return [{ type: 'raw', html: node.value as string }];
 	if (isMdxJsx(node.type)) return mdastToDoc(node);
@@ -108,7 +109,7 @@ function hastToDoc(node: AnyNode): DocNode[] {
 				type: 'element',
 				tag: node.tagName as string,
 				props: hastProps(node.properties as Record<string, unknown>),
-				children: (node.children as AnyNode[] | undefined ?? []).flatMap(hastToDoc)
+				children: ((node.children as AnyNode[] | undefined) ?? []).flatMap(hastToDoc)
 			}
 		];
 	}
@@ -117,7 +118,8 @@ function hastToDoc(node: AnyNode): DocNode[] {
 
 function textOf(node: DocNode): string {
 	if (node.type === 'text') return node.value;
-	if (node.type === 'element' || node.type === 'component') return node.children.map(textOf).join('');
+	if (node.type === 'element' || node.type === 'component')
+		return node.children.map(textOf).join('');
 	return '';
 }
 

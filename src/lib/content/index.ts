@@ -14,8 +14,11 @@ export const defaultVersionPathOf = (site: SiteConfig): string => versionPathsOf
 export function pathInVersion(site: SiteConfig, pathname: string, versionPath: string): string {
 	const versionPaths = versionPathsOf(site);
 	const current =
-		versionPaths.find((vp) => stripBase(pathname) === vp || stripBase(pathname).startsWith(`${vp}/`)) ??
-		(versionPaths[0] ?? '');
+		versionPaths.find(
+			(vp) => stripBase(pathname) === vp || stripBase(pathname).startsWith(`${vp}/`)
+		) ??
+		versionPaths[0] ??
+		'';
 	const rest = stripBase(pathname).slice(current.length);
 	return base + `${versionPath}${rest}`;
 }

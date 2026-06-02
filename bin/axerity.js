@@ -18,7 +18,8 @@ const dim = paint('2');
 const bold = paint('1');
 const green = paint('32');
 const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
-const banner = (sub) => process.stdout.write(`\n  ${brand('◆')} ${bold('axerity')} ${dim(sub)}\n\n`);
+const banner = (sub) =>
+	process.stdout.write(`\n  ${brand('◆')} ${bold('axerity')} ${dim(sub)}\n\n`);
 
 function findContentDir() {
 	for (const candidate of ['docs', join('content', 'docs'), 'content']) {

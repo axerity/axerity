@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import adapter from '@sveltejs/adapter-node';
 
-let basePath = '';
+let basePath;
 
 try {
 	basePath = JSON.parse(readFileSync('./axerity.json', 'utf8')).basePath ?? '';

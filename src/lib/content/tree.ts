@@ -16,8 +16,7 @@ interface PageEntry {
 type NavGroupResult = Extract<NavEntry, { items: NavEntry[] }>;
 
 const dirOf = (path: string): string => path.slice(0, path.lastIndexOf('/'));
-const slugOf = (path: string): string =>
-	path.slice(path.lastIndexOf('/') + 1).replace(/\.md$/, '');
+const slugOf = (path: string): string => path.slice(path.lastIndexOf('/') + 1).replace(/\.md$/, '');
 
 export function buildSidebar(maps: ContentMaps, rootFolder: string = ROOT): NavSection[] {
 	const metaFor = (folder: string): FolderMeta =>
@@ -114,7 +113,11 @@ export function buildSidebar(maps: ContentMaps, rootFolder: string = ROOT): NavS
 
 	for (const folder of [...named, ...rest]) {
 		const meta = metaFor(folder);
-		sections.push({ title: meta.title ?? folder.slice(folder.lastIndexOf('/') + 1), icon: meta.icon, items: entriesFor(folder) });
+		sections.push({
+			title: meta.title ?? folder.slice(folder.lastIndexOf('/') + 1),
+			icon: meta.icon,
+			items: entriesFor(folder)
+		});
 	}
 
 	return sections;

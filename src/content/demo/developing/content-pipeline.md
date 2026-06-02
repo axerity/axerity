@@ -19,27 +19,28 @@ A request for a page slug turns into a tree of plain objects, then into HTML. He
 
 `render(slug)` in `src/lib/server/content-store.ts` maps the slug to a file key, reads the file off disk with `readFileSync`, and hands the text to `parseMarkdown`. It reads at request time on purpose, so the same prebuilt server can serve any project's content without rebuilding. The base path from `$app/paths` is passed in so internal links can be rewritten.
 
-	</Step>
-	<Step title="parseMarkdown(text, base)">
+    </Step>
+    <Step title="parseMarkdown(text, base)">
 
 `parseMarkdown` in `src/lib/markdown/parse.ts` runs the unified pipeline, pulls the frontmatter off the front, highlights every code fence, walks the tree into `DocNode`s, and runs a transform pass for headings, the table of contents, and links. It returns a `CompiledDoc`.
 
-	</Step>
-	<Step title="DocNode tree">
+    </Step>
+    <Step title="DocNode tree">
 
 The result is a tree of plain JSON objects. No functions, no component references, no class instances. Just `element`, `component`, `text`, and `raw` shapes. This is the whole reason the pipeline exists in this form.
 
-	</Step>
-	<Step title="Page data">
+    </Step>
+    <Step title="Page data">
 
 `+page.server.ts` returns the `CompiledDoc` as load data. Because the tree is plain JSON it serializes cleanly and travels to the browser as part of the page payload. That payload is what lets interactive components hydrate on the client.
 
-	</Step>
-	<Step title="Markdown.svelte">
+    </Step>
+    <Step title="Markdown.svelte">
 
 The renderer walks the tree and emits each node. An `element` becomes its HTML tag, a `raw` node is inserted as HTML, and a `component` is looked up by name in the registry and rendered with its parsed props and a children snippet. The renderer never parses or highlights anything. It only reads data.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ### Caching and why content is read at request time
@@ -128,11 +129,11 @@ function remarkMdxJsx(this) {
 
 </CodeGroup>
 
-`mdxJsx` from `micromark-extension-mdx-jsx` and `mdxJsxFromMarkdown` from `mdast-util-mdx-jsx` add JSX *syntax* to the parser. That is the whole extent of what they do here. They recognize `<Component prop={...}>` tags and produce `mdxJsxFlowElement` and `mdxJsxTextElement` nodes with parsed attributes. No JavaScript is ever evaluated. `addResult: true` asks the extension to attach the parsed ESTree for each attribute expression, which the attribute grammar walks later.
+`mdxJsx` from `micromark-extension-mdx-jsx` and `mdxJsxFromMarkdown` from `mdast-util-mdx-jsx` add JSX _syntax_ to the parser. That is the whole extent of what they do here. They recognize `<Component prop={...}>` tags and produce `mdxJsxFlowElement` and `mdxJsxTextElement` nodes with parsed attributes. No JavaScript is ever evaluated. `addResult: true` asks the extension to attach the parsed ESTree for each attribute expression, which the attribute grammar walks later.
 
 <Callout type="warning">
 
-This is syntax only. There is no MDX runtime, no module evaluation, no JavaScript execution. The engine borrows JSX's tag and attribute *grammar* and nothing else. That is what keeps the no-bundler and no-eval guarantee intact even when content uses components.
+This is syntax only. There is no MDX runtime, no module evaluation, no JavaScript execution. The engine borrows JSX's tag and attribute _grammar_ and nothing else. That is what keeps the no-bundler and no-eval guarantee intact even when content uses components.
 
 </Callout>
 
@@ -151,17 +152,18 @@ The tree is walked by two functions that call each other: `mdastToDoc` and `hast
 
 If the node is an `mdxJsxFlowElement` or `mdxJsxTextElement`, its attributes are resolved into props and its children are walked recursively. A node with no name (a JSX fragment) collapses to just its children.
 
-	</Step>
-	<Step title="Plain Markdown is handed to mdast-util-to-hast">
+    </Step>
+    <Step title="Plain Markdown is handed to mdast-util-to-hast">
 
 For any other node, `mdastToDoc` calls `toHast` and then `hastToDoc` on the result. This reuses the standard, well-tested Markdown-to-HTML mapping for paragraphs, lists, emphasis, links, and everything else, instead of reimplementing it.
 
-	</Step>
-	<Step title="hast walks back into DocNodes">
+    </Step>
+    <Step title="hast walks back into DocNodes">
 
 `hastToDoc` turns hast `element` nodes into `DocNode` elements, `text` into text, and `raw` into raw HTML. If it meets an `mdxJsx` node again (a component nested inside Markdown), it calls back into `mdastToDoc`. That is the mutual recursion, and it is what lets a component sit inside a list item, and a list sit inside a component.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 The break works because of one option passed to `toHast`:
@@ -198,11 +200,11 @@ Markdown wraps loose inline content in a paragraph. So a component written on it
 
 ### Stripping scripts, fence-aware
 
-Before parsing, `stripScripts` removes any `<script>` blocks from the source. This matters because content is not code: a stray script tag in a Markdown file should never run. The stripping is fence-aware. It tracks whether it is inside a fenced code block (backticks or tildes, matching the opening fence length and character) and leaves anything inside a fence alone. So a `<script>` shown as an *example* inside a code block survives untouched, while a real `<script>` in the document body is dropped. The same removal is mirrored when building the `raw` copy of the document.
+Before parsing, `stripScripts` removes any `<script>` blocks from the source. This matters because content is not code: a stray script tag in a Markdown file should never run. The stripping is fence-aware. It tracks whether it is inside a fenced code block (backticks or tildes, matching the opening fence length and character) and leaves anything inside a fence alone. So a `<script>` shown as an _example_ inside a code block survives untouched, while a real `<script>` in the document body is dropped. The same removal is mirrored when building the `raw` copy of the document.
 
 ## The eval-free attribute grammar
 
-Component attributes are where it would be easiest to let arbitrary JavaScript leak in, because `prop={...}` looks exactly like a JSX expression. The grammar in `src/lib/markdown/attr-grammar.ts` reads those expressions as *data* and refuses anything that is *logic*.
+Component attributes are where it would be easiest to let arbitrary JavaScript leak in, because `prop={...}` looks exactly like a JSX expression. The grammar in `src/lib/markdown/attr-grammar.ts` reads those expressions as _data_ and refuses anything that is _logic_.
 
 `resolveAttributes` walks the attributes the JSX extension parsed for a tag. It handles three shapes:
 
@@ -211,17 +213,18 @@ Component attributes are where it would be easiest to let arbitrary JavaScript l
 
 `<Card featured>` with no value becomes `featured: true`.
 
-	</Step>
-	<Step title="String attributes pass through">
+    </Step>
+    <Step title="String attributes pass through">
 
 `<Card title="Hello">` becomes `title: "Hello"` directly.
 
-	</Step>
-	<Step title="Expression attributes are evaluated as data">
+    </Step>
+    <Step title="Expression attributes are evaluated as data">
 
 `<CardGroup cols={2}>` carries an ESTree (attached because the extension ran with `addResult: true`). The grammar pulls the single `ExpressionStatement` and evaluates it into plain JSON.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 `evaluateExpression` is a small ESTree walker, not an interpreter. It accepts only literal data:
@@ -275,32 +278,33 @@ Meta on the fence (the text after the language) drives a set of Shiki transforme
 
 A copy button is injected into every block, either inside a header when the fence has a `title`, or floating when it does not.
 
-	</Card>
-	<Card title="Line numbers" icon="list-ordered">
+    </Card>
+    <Card title="Line numbers" icon="list-ordered">
 
 `showLineNumbers` adds a class to the `pre` so CSS can render the gutter.
 
-	</Card>
-	<Card title="Highlight lines" icon="highlighter">
+    </Card>
+    <Card title="Highlight lines" icon="highlighter">
 
 A range like `{1,3-5}` marks those lines with a `highlighted` class.
 
-	</Card>
-	<Card title="Dim YAML markers" icon="minus">
+    </Card>
+    <Card title="Dim YAML markers" icon="minus">
 
 In YAML, the `---` document markers are dimmed so frontmatter examples read cleanly.
 
-	</Card>
-	<Card title="Remove line breaks" icon="scissors">
+    </Card>
+    <Card title="Remove line breaks" icon="scissors">
 
 The stray newline text nodes Shiki emits between lines are stripped so line layout is clean.
 
-	</Card>
-	<Card title="Twoslash" icon="badge-info">
+    </Card>
+    <Card title="Twoslash" icon="badge-info">
 
 With `twoslash` on the fence, the Twoslash transformer runs type-aware rendering. It uses an explicit trigger, so it only runs when asked.
 
-	</Card>
+    </Card>
+
 </CardGroup>
 
 A fence with a `title` gets a header element with the escaped title and the copy button. The wrapper class records whether the block has a header and whether Twoslash is active, so the styles can adapt.

@@ -95,7 +95,9 @@ export function allSourcePaths(): string[] {
 
 function keyForSlug(slug: string): string | null {
 	const { pages } = tree().maps;
-	const candidates = slug ? [`${BASE_KEY}${slug}.md`, `${BASE_KEY}${slug}/index.md`] : [`${BASE_KEY}index.md`];
+	const candidates = slug
+		? [`${BASE_KEY}${slug}.md`, `${BASE_KEY}${slug}/index.md`]
+		: [`${BASE_KEY}index.md`];
 	return candidates.find((key) => key in pages) ?? null;
 }
 
@@ -118,9 +120,7 @@ export function allPages(): { slug: string; frontmatter: PageFrontmatter; source
 
 const renders = new Map<string, (CompiledDoc & { sourcePath: string }) | null>();
 
-export async function render(
-	slug: string
-): Promise<(CompiledDoc & { sourcePath: string }) | null> {
+export async function render(slug: string): Promise<(CompiledDoc & { sourcePath: string }) | null> {
 	if (!DEV && renders.has(slug)) return renders.get(slug)!;
 	const key = keyForSlug(slug);
 	if (!key) {

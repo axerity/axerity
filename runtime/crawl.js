@@ -78,7 +78,8 @@ write('404.html', await bytes(await get(`${base}/__axerity_not_found__`)));
 
 server.close();
 
-const total = manifest.pages.length + manifest.md.length + manifest.og.length + manifest.fixed.length;
+const total =
+	manifest.pages.length + manifest.md.length + manifest.og.length + manifest.fixed.length;
 
 if (failures.length) {
 	process.stderr.write(

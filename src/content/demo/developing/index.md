@@ -17,17 +17,18 @@ Axerity is a prebuilt server. Most documentation generators ship their source an
 
 The engine source is compiled into `dist/` with Vite. This is the only time a bundler runs, and it happens in CI before publish, never on a user's machine.
 
-	</Step>
-	<Step title="Serve content as data">
+    </Step>
+    <Step title="Serve content as data">
 
 `dist/` is a self contained server built with `adapter-node`. It reads a project's Markdown and config from the filesystem at request time, rather than baking them in at build time.
 
-	</Step>
-	<Step title="Drive it with the CLI">
+    </Step>
+    <Step title="Drive it with the CLI">
 
 The CLI runs that prebuilt server. `dev` wraps it for local editing, `build` crawls it into a static site. No bundler runs in your project either way.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ## Why it is built this way

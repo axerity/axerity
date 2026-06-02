@@ -61,12 +61,7 @@ function configReload() {
 }
 
 export default defineConfig({
-	plugins: [
-		openapi(),
-		...(mounted ? [configReload()] : []),
-		tailwindcss(),
-		sveltekit()
-	],
+	plugins: [openapi(), ...(mounted ? [configReload()] : []), tailwindcss(), sveltekit()],
 	server: mounted ? { fs: { strict: false } } : undefined,
 	optimizeDeps: mounted ? { noDiscovery: true, include: ['@orama/orama', 'mermaid'] } : undefined
 });

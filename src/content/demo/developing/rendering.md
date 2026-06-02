@@ -19,22 +19,23 @@ There are five node types, defined in `src/lib/markdown/types.ts`: `text`, `raw`
 
 A `text` node is just a string. It renders as `{node.value}`, which means Svelte escapes it. No author text can inject markup through this path.
 
-	</Step>
-	<Step title="Raw and code nodes">
+    </Step>
+    <Step title="Raw and code nodes">
 
 A `raw` node and a `code` node both carry a pre-built `html` string. Raw is sanitized inline HTML, code is the output of Shiki highlighting. Both render with `{@html node.html}`. This is the one place the renderer trusts a string, and it trusts it because that string was produced by the engine during parsing, not by the browser.
 
-	</Step>
-	<Step title="Element nodes">
+    </Step>
+    <Step title="Element nodes">
 
 An `element` node is a plain HTML tag like `<p>` or `<a>`. It renders with `<svelte:element this={node.tag} {...node.props}>`. The tag name and the attributes are both data, so one branch covers every HTML element the parser can emit.
 
-	</Step>
-	<Step title="Component nodes">
+    </Step>
+    <Step title="Component nodes">
 
 A `component` node names a kit component. The renderer looks the name up in the registry and, if it resolves, renders `<Comp {...node.props}>` with the children recursed through another `Markdown` instance.
 
-	</Step>
+    </Step>
+
 </Steps>
 
 ### Void elements
@@ -106,22 +107,23 @@ This is a deliberate design choice and the reason for several of the engine's pr
 
 An author can only reach components the engine ships. A Markdown file cannot introduce arbitrary Svelte, so it cannot run arbitrary code in the serving path.
 
-	</Card>
-	<Card title="No compilation" icon="zap">
+    </Card>
+    <Card title="No compilation" icon="zap">
 
 The registry is resolved at runtime against already-compiled components. Nothing in a project gets bundled, which is why a page renders without a bundler anywhere near it.
 
-	</Card>
-	<Card title="Predictable surface" icon="list">
+    </Card>
+    <Card title="Predictable surface" icon="list">
 
 The set of usable tags is exactly the keys of this map. That makes the authoring surface documentable and stable, and it makes adding a component a deliberate registration rather than an implicit import.
 
-	</Card>
-	<Card title="Consistent props" icon="check">
+    </Card>
+    <Card title="Consistent props" icon="check">
 
 Every component is fed by the same attribute grammar, so values arrive typed the same way no matter which component receives them.
 
-	</Card>
+    </Card>
+
 </CardGroup>
 
 ## How components receive content

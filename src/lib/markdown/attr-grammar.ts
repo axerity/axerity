@@ -45,7 +45,10 @@ export function evaluateExpression(node: EsNode): JsonValue {
 				})
 			);
 		case 'TemplateLiteral': {
-			const tpl = node as unknown as { expressions: unknown[]; quasis: { value: { cooked: string } }[] };
+			const tpl = node as unknown as {
+				expressions: unknown[];
+				quasis: { value: { cooked: string } }[];
+			};
 			if (tpl.expressions.length) throw new AttrError('template interpolation is not allowed');
 			return tpl.quasis.map((q) => q.value.cooked).join('');
 		}
@@ -73,7 +76,10 @@ interface MdxAttribute {
 	value?: string | null | { data?: { estree?: { body: EsNode[] } } };
 }
 
-export function resolveAttributes(attributes: MdxAttribute[], tag: string): Record<string, JsonValue> {
+export function resolveAttributes(
+	attributes: MdxAttribute[],
+	tag: string
+): Record<string, JsonValue> {
 	const props: Record<string, JsonValue> = {};
 	for (const attr of attributes) {
 		if (attr.type === 'mdxJsxExpressionAttribute') {
