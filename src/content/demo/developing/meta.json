@@ -1,5 +1,15 @@
 {
 	"title": "Development",
 	"icon": "code",
-	"pages": ["index", "content-pipeline", "dev-and-build", "extending", "releasing", "roadmap"]
+	"pages": [
+		"index",
+		"design-decisions",
+		"content-pipeline",
+		"rendering",
+		"runtime",
+		"dev-and-build",
+		"extending",
+		"releasing",
+		"roadmap"
+	]
 }
