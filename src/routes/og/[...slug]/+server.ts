@@ -1,12 +1,23 @@
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 import { error } from '@sveltejs/kit';
+import { base } from '$app/paths';
 import { getSite } from '$lib/server/site';
 import { renderOgImage } from '$lib/server/og';
 import { frontmatterByPath } from '$lib/server/content-store';
 import type { RequestHandler } from './$types';
 
 const ASSETS = process.env.AXERITY_ASSETS ?? 'static';
+const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
+
+const LOGO_MIME: Record<string, string> = {
+	'.svg': 'image/svg+xml',
+	'.png': 'image/png',
+	'.jpg': 'image/jpeg',
+	'.jpeg': 'image/jpeg',
+	'.gif': 'image/gif',
+	'.webp': 'image/webp'
+};
 const WEIGHTS = [400, 600, 700] as const;
 let fontCache: { data: ArrayBuffer; weight: 400 | 600 | 700 }[] | null = null;
 
@@ -26,14 +37,19 @@ function getLogo(): string | undefined {
 	const site = getSite();
 	const logoPath = site.og?.logo ?? site.logo?.dark ?? site.logo?.light;
 	if (logoCache === undefined) {
-		if (!logoPath) {
-			logoCache = null;
-		} else {
-			try {
-				const svg = readFileSync(join(ASSETS, logoPath.replace(/^\//, '')), 'utf8');
-				logoCache = `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
-			} catch {
-				logoCache = null;
+		logoCache = null;
+		const mime = logoPath && LOGO_MIME[extname(logoPath).toLowerCase()];
+		if (logoPath && mime) {
+			const rel = logoPath.replace(base, '').replace(/^\/+/, '');
+			for (const root of [STATIC_DIR, ASSETS]) {
+				if (!root) continue;
+				try {
+					const buf = readFileSync(join(root, rel));
+					logoCache = `data:${mime};base64,${buf.toString('base64')}`;
+					break;
+				} catch {
+					continue;
+				}
 			}
 		}
 	}

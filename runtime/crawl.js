@@ -1,9 +1,11 @@
 import { createServer } from 'node:http';
 import { cpSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import { handler } from '../dist/handler.js';
+import { walkAssets } from './static.js';
 
 const OUT = process.env.AXERITY_OUT ?? 'build';
+const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
 
 const server = createServer((req, res) =>
 	handler(req, res, () => {
@@ -25,6 +27,14 @@ const write = (rel, data) => {
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
 cpSync('dist/client', OUT, { recursive: true });
+
+if (STATIC_DIR) {
+	for (const { file, rel } of walkAssets(STATIC_DIR, [basename(OUT)])) {
+		const dest = join(OUT, rel);
+		mkdirSync(dirname(dest), { recursive: true });
+		cpSync(file, dest);
+	}
+}
 
 const manifest = await (await get('/__manifest')).json();
 const { base } = manifest;

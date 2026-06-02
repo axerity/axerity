@@ -30,9 +30,11 @@ function findContentDir() {
 
 function context() {
 	if (isEngineRepo) {
+		const contentDir = join(engineRoot, 'src', 'content', 'docs');
 		return {
-			contentDir: join(engineRoot, 'src', 'content', 'docs'),
-			config: join(engineRoot, 'axerity.json')
+			contentDir,
+			config: join(engineRoot, 'axerity.json'),
+			staticDir: contentDir
 		};
 	}
 	if (!existsSync(join(userRoot, 'axerity.json'))) {
@@ -44,7 +46,7 @@ function context() {
 		console.error('No content found. Create a `docs/` folder with your Markdown.');
 		process.exit(1);
 	}
-	return { contentDir, config: join(userRoot, 'axerity.json') };
+	return { contentDir, config: join(userRoot, 'axerity.json'), staticDir: userRoot };
 }
 
 function ensureDist() {
@@ -59,6 +61,7 @@ function env(ctx, extra) {
 		AXERITY_CONTENT_DIR: ctx.contentDir,
 		AXERITY_CONFIG: ctx.config,
 		AXERITY_ASSETS: ASSETS,
+		AXERITY_STATIC_DIR: ctx.staticDir,
 		...extra
 	};
 }

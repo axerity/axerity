@@ -1,11 +1,14 @@
+import { createReadStream } from 'node:fs';
 import { createServer } from 'node:http';
 import { basename, relative, resolve } from 'node:path';
 import chokidar from 'chokidar';
 import { handler } from '../dist/handler.js';
+import { mimeFor, resolveAsset } from './static.js';
 
 const PORT = Number(process.env.PORT ?? 5173);
 const CONTENT_DIR = resolve(process.env.AXERITY_CONTENT_DIR ?? 'src/content/docs');
 const CONFIG = resolve(process.env.AXERITY_CONFIG ?? 'axerity.json');
+const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
 
 const tty = process.stdout.isTTY;
 const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
@@ -25,6 +28,12 @@ const server = createServer((req, res) => {
 		res.write(':ok\n\n');
 		clients.add(res);
 		req.on('close', () => clients.delete(res));
+		return;
+	}
+	const asset = req.method === 'GET' && resolveAsset(STATIC_DIR, req.url);
+	if (asset) {
+		res.writeHead(200, { 'content-type': mimeFor(asset), 'cache-control': 'no-cache' });
+		createReadStream(asset).pipe(res);
 		return;
 	}
 	handler(req, res, () => {
