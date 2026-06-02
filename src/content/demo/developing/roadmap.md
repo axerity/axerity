@@ -19,14 +19,14 @@ The engine ships compiled. Content and config are read from the filesystem at ru
 Resolve the base path at request time instead of at compile time, so a site can be hosted under a sub path, like a project page.
 
 	</RoadmapItem>
-	<RoadmapItem title="OpenAPI for user projects" status="planned">
+	<RoadmapItem title="OpenAPI for user projects" status="shipped" eta="0.2.2">
 
-Run API reference generation as a CLI pre step, so a project's `openapi` config produces pages without needing the engine compile.
+API reference generation runs as a CLI pre step, so a project's `openapi` config produces pages without needing the engine compile.
 
 	</RoadmapItem>
-	<RoadmapItem title="Merge the public folder" status="planned">
+	<RoadmapItem title="Static assets from your project" status="shipped" eta="0.2.1">
 
-Fold a project's `public/` folder into the built output, for custom images and other static assets.
+Images, logos, and other static files are served straight from your project and copied into the build, so a logo or screenshot loads in dev and in production without any extra setup.
 
 	</RoadmapItem>
 	<RoadmapItem title="Smaller installs" status="planned">

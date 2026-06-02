@@ -17,27 +17,85 @@ start writing Markdown.
 
 Scaffold a new site with `init`, then start the dev server:
 
-```bash
+<CodeGroup>
+
+```bash title="pnpm"
 pnpm dlx @axerity/cli init my-docs
 cd my-docs
 pnpm dlx @axerity/cli dev
 ```
 
-Your site is running at `http://localhost:5173`. `pnpm dlx` runs the CLI without
-installing it. `npx @axerity/cli <command>` works the same way.
+```bash title="npm"
+npx @axerity/cli init my-docs
+cd my-docs
+npx @axerity/cli dev
+```
 
-## Install it
+```bash title="bun"
+bunx @axerity/cli init my-docs
+cd my-docs
+bunx @axerity/cli dev
+```
 
-For a project you build often, add it as a dev dependency so the version is
-pinned:
+</CodeGroup>
 
-```bash
+Your site is running at `http://localhost:5173`.
+
+## Run any command
+
+Run every command the same way, straight through your package runner. There is
+no install step and no `package.json` to maintain, so your repo stays just
+content and config:
+
+<CodeGroup>
+
+```bash title="pnpm"
+pnpm dlx @axerity/cli dev
+pnpm dlx @axerity/cli build
+pnpm dlx @axerity/cli preview
+```
+
+```bash title="npm"
+npx @axerity/cli dev
+npx @axerity/cli build
+npx @axerity/cli preview
+```
+
+```bash title="bun"
+bunx @axerity/cli dev
+bunx @axerity/cli build
+bunx @axerity/cli preview
+```
+
+</CodeGroup>
+
+`dev` starts the dev server, `build` writes the static site to `./build`, and
+`preview` serves that build locally. This is the setup we recommend. It is also
+all you need to deploy: point your host's build command at `npx @axerity/cli build`
+and set the output directory to `build`.
+
+## Pin a version
+
+Prefer a `package.json`? Add Axerity as a dev dependency so the version is
+pinned, then call it through scripts:
+
+<CodeGroup>
+
+```bash title="pnpm"
 pnpm add -D @axerity/cli
 ```
 
-Then wire up scripts in your `package.json`:
+```bash title="npm"
+npm install -D @axerity/cli
+```
 
-```json
+```bash title="bun"
+bun add -d @axerity/cli
+```
+
+</CodeGroup>
+
+```json title="package.json"
 {
   "scripts": {
     "dev": "axerity dev",
@@ -47,7 +105,7 @@ Then wire up scripts in your `package.json`:
 }
 ```
 
-Now `pnpm dev` and `pnpm build` just work, no global install or PATH setup.
+Now `pnpm dev` and `pnpm build` run the pinned version.
 
 ## Project layout
 

@@ -1,6 +1,6 @@
 import { getSite } from '$lib/server/site';
 import type { BrandConfig } from '$lib/types';
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, HandleServerError } from '@sveltejs/kit';
 
 // Reject anything that could break out of the <style> block. Config is authored
 // by the site owner, but this keeps a stray brace or tag from corrupting the CSS.
@@ -41,6 +41,15 @@ const liveReload =
 	process.env.AXERITY_DEV === '1'
 		? `<script>(function(){var s=new EventSource('/__axerity_livereload');s.onmessage=function(e){if(e.data==='reload')location.reload()}})()</script>`
 		: '';
+
+export const handleError: HandleServerError = ({ error, event }) => {
+	const message = error instanceof Error ? error.message : String(error);
+	const tty = process.stderr.isTTY;
+	const mark = tty ? '\x1b[31m✗\x1b[0m' : '✗';
+	const sep = tty ? '\x1b[2m—\x1b[0m' : '—';
+	process.stderr.write(`  ${mark} ${event.url.pathname} ${sep} ${message}\n`);
+	return { message };
+};
 
 export const handle: Handle = ({ event, resolve }) => {
 	const site = getSite();

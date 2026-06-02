@@ -7,6 +7,10 @@ import { walkAssets } from './static.js';
 const OUT = process.env.AXERITY_OUT ?? 'build';
 const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
 
+const tty = process.stderr.isTTY;
+const red = (s) => (tty ? `\x1b[31m${s}\x1b[0m` : s);
+const dim = (s) => (tty ? `\x1b[2m${s}\x1b[0m` : s);
+
 const server = createServer((req, res) =>
 	handler(req, res, () => {
 		res.statusCode = 404;
@@ -23,6 +27,21 @@ const write = (rel, data) => {
 	mkdirSync(dirname(file), { recursive: true });
 	writeFileSync(file, data);
 };
+
+const failures = [];
+async function fetchOk(path) {
+	try {
+		const res = await get(path);
+		if (!res.ok) {
+			failures.push({ path, reason: `HTTP ${res.status}` });
+			return null;
+		}
+		return res;
+	} catch (error) {
+		failures.push({ path, reason: error.message });
+		return null;
+	}
+}
 
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
@@ -42,17 +61,34 @@ const relOf = (path) => path.slice(base.length).replace(/^\//, '');
 
 for (const path of manifest.pages) {
 	const rel = relOf(path);
-	write(rel === '' ? 'index.html' : `${rel}.html`, await bytes(await get(path)));
+	const res = await fetchOk(path);
+	if (!res) continue;
+	write(rel === '' ? 'index.html' : `${rel}.html`, await bytes(res));
 	const dataUrl = rel === '' ? `${base}/__data.json` : `${base}/${rel}/__data.json`;
 	const dataRes = await get(dataUrl);
 	if (dataRes.ok) write(rel === '' ? '__data.json' : `${rel}/__data.json`, await bytes(dataRes));
 }
 
 for (const path of [...manifest.md, ...manifest.og, ...manifest.fixed]) {
-	write(relOf(path), await bytes(await get(path)));
+	const res = await fetchOk(path);
+	if (res) write(relOf(path), await bytes(res));
 }
 
 write('404.html', await bytes(await get(`${base}/__axerity_not_found__`)));
 
 server.close();
+
+const total = manifest.pages.length + manifest.md.length + manifest.og.length + manifest.fixed.length;
+
+if (failures.length) {
+	process.stderr.write(
+		`\n  ${red('✗')} build failed ${dim('·')} ${failures.length} of ${total} routes could not be rendered\n`
+	);
+	for (const { path, reason } of failures) {
+		process.stderr.write(`    ${red('·')} ${relOf(path) || '/'} ${dim(`(${reason})`)}\n`);
+	}
+	process.stderr.write(`\n  ${dim('Fix the errors above and run the build again.')}\n\n`);
+	process.exit(1);
+}
+
 console.log(`crawled ${manifest.pages.length} pages to ./${OUT}`);

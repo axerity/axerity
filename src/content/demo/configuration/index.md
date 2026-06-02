@@ -35,6 +35,7 @@ editor gives you autocomplete and validation for every field:
 	"layout": "boxed",
 	"sidebar": { "variant": "floating" },
 	"logo": { "light": "/logo-light.svg", "dark": "/logo-dark.svg" },
+	"favicon": "/favicon.png",
 	"og": { "enabled": true },
 	"banner": { "text": "v1.0 is out", "href": "/docs", "id": "v1", "dismissible": true },
 	"versions": [{ "label": "v1.0", "href": "/docs" }],
@@ -68,8 +69,9 @@ editor gives you autocomplete and validation for every field:
 | `brand`        | object                   | Custom `{ accent, radius }` that override the theme. See [Colors](/theming/colors)          |
 | `layout`       | string                   | `flat` (default) or `boxed`. See [Layouts](/configuration/layouts)                          |
 | `basePath`     | string                   | Serve the whole site under a sub-path like `/docs`. Empty (default) is the root             |
-| `sidebar`      | object                   | Sidebar appearance: `{ "variant": "flush" \| "card" \| "floating" }`                        |
+| `sidebar`      | object                   | Sidebar look and behaviour: `{ variant, defaultOpen }`. `defaultOpen` expands every group   |
 | `logo`         | object                   | Navbar logo `{ light, dark, alt, href }`. Local SVGs are inlined                            |
+| `favicon`      | string                   | Favicon path, like `/favicon.png`. Defaults to the bundled icon                             |
 | `og`           | object                   | Per-page OpenGraph image generation `{ enabled, background, foreground, … }`                |
 | `ogImage`      | string                   | Static OG image path, used when `og.enabled` is off                                         |
 | `banner`       | object                   | Announcement bar `{ text, href, id, dismissible }`                                          |

@@ -1,5 +1,5 @@
-import type { ShikiTransformer } from 'shiki';
-import { createHighlighter } from 'shiki';
+import type { Highlighter, ShikiTransformer } from 'shiki';
+import { bundledLanguages, createHighlighter } from 'shiki';
 import { transformerTwoslash } from '@shikijs/twoslash';
 
 const themes = { light: 'github-light', dark: 'vesper' } as const;
@@ -8,13 +8,37 @@ const langs = [
 	'svelte',
 	'typescript',
 	'javascript',
+	'jsx',
+	'tsx',
 	'json',
+	'jsonc',
 	'yaml',
+	'toml',
+	'ini',
 	'bash',
 	'shell',
+	'powershell',
+	'python',
+	'go',
+	'rust',
+	'java',
+	'kotlin',
+	'swift',
+	'c',
+	'cpp',
+	'csharp',
+	'ruby',
+	'php',
+	'sql',
+	'graphql',
 	'html',
 	'css',
-	'markdown'
+	'scss',
+	'xml',
+	'markdown',
+	'dockerfile',
+	'diff',
+	'http'
 ];
 
 let highlighterPromise: ReturnType<typeof createHighlighter> | undefined;
@@ -23,6 +47,22 @@ function getHighlighter() {
 		highlighterPromise = createHighlighter({ themes: Object.values(themes), langs });
 	}
 	return highlighterPromise;
+}
+
+// Any code block whose language is not prebundled is loaded on demand, so every
+// Shiki-supported language highlights instead of falling back to plain text.
+async function ensureLanguage(highlighter: Highlighter, lang: string): Promise<string> {
+	if (!lang) return 'text';
+	if (highlighter.getLoadedLanguages().includes(lang)) return lang;
+	if (lang in bundledLanguages) {
+		try {
+			await highlighter.loadLanguage(bundledLanguages[lang as keyof typeof bundledLanguages]);
+			return lang;
+		} catch {
+			return 'text';
+		}
+	}
+	return 'text';
 }
 
 function escapeHtml(str: string): string {
@@ -115,7 +155,7 @@ export async function highlightCode(code: string, lang: string, meta = ''): Prom
 	}
 
 	const highlighter = await getHighlighter();
-	const language = (lang && highlighter.getLoadedLanguages().includes(lang) && lang) || 'text';
+	const language = await ensureLanguage(highlighter, lang);
 
 	const title = parseTitle(meta);
 	const highlightLines = parseHighlightLines(meta);

@@ -12,7 +12,7 @@ feed, and OpenGraph images are all written out. Any static host can serve it, no
 server required.
 
 ```bash
-axerity build   # -> build/
+npx @axerity/cli build
 ```
 
 Most hosts write `.html` files (`installation.html`) but link to clean URLs
@@ -21,13 +21,12 @@ handling. Each guide below covers it.
 
 ## Vercel
 
-Add a `vercel.json` so Vercel serves the static output instead of looking for a
-SvelteKit server build:
+Add a `vercel.json` so Vercel serves the static output:
 
 ```json title="vercel.json"
 {
 	"framework": null,
-	"buildCommand": "axerity build",
+	"buildCommand": "npx @axerity/cli build",
 	"outputDirectory": "build",
 	"cleanUrls": true
 }
