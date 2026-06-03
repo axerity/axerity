@@ -76,4 +76,18 @@ describe.skipIf(!distReady)('build (integration)', () => {
 		);
 		expect(() => build(dir)).toThrow();
 	}, 90_000);
+
+	it('reads a docs.json config when there is no axerity.json', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'axerity-build-'));
+		fixtures.push(dir);
+		mkdirSync(join(dir, 'docs'), { recursive: true });
+		writeFileSync(join(dir, 'docs.json'), JSON.stringify({ ...baseConfig, name: 'Docs JSON' }));
+		writeFileSync(
+			join(dir, 'docs', 'meta.json'),
+			JSON.stringify({ title: 'Docs', pages: ['index'] })
+		);
+		writeFileSync(join(dir, 'docs', 'index.md'), '---\ntitle: Home\n---\n\n# Home\n');
+		build(dir);
+		expect(readFileSync(join(dir, 'build', 'index.html'), 'utf8')).toContain('Docs JSON');
+	}, 90_000);
 });

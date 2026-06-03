@@ -10,6 +10,10 @@ The whole site is configured from one file at the project root: `axerity.json`.
 You never edit code to change the site. Drop in Markdown, set up your
 `meta.json` files for ordering, and edit `axerity.json` for everything global.
 
+The file can also be named `docs.json`. The engine reads whichever it finds,
+preferring `axerity.json`, so a project moving over from another tool can keep
+its existing filename.
+
 ## Editor autocomplete
 
 The repo ships a JSON schema. Point your config at it on the first line and your
