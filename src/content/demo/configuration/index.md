@@ -65,32 +65,32 @@ editor gives you autocomplete and validation for every field:
 
 ## Fields at a glance
 
-| Field          | Type                     | What it does                                                              |
-| -------------- | ------------------------ | ------------------------------------------------------------------------ |
-| `name`         | string                   | Site name, used in the page title and navbar. **Required**               |
-| `topNav`       | array                    | Top navbar links, used when no dropdowns are set. **Required**           |
-| `tagline`      | string                   | Short phrase shown beside the name in some layouts                       |
-| `description`  | string                   | Site description for SEO and `llms.txt`                                  |
-| `url`          | string                   | Canonical site URL; powers absolute links in sitemap, RSS, and OG        |
-| `theme`        | string                   | A built-in [theme](/theming/themes) preset                               |
-| `brand`        | object                   | Accent and corner overrides on top of the theme                          |
-| `logo`         | object                   | Navbar logo with light and dark variants                                 |
-| `favicon`      | string                   | Favicon path, like `/favicon.png`                                        |
-| `layout`       | string                   | `flat` (default) or `boxed`                                              |
-| `sidebar`      | object                   | Sidebar look and default open state                                      |
-| `sidebarLinks` | array                    | Links pinned to the bottom of the sidebar                                |
-| `dropdowns`    | array                    | Navbar areas that swap the whole sidebar                                 |
-| `versions`     | array                    | Entries for the navbar version switcher                                  |
-| `og`           | object                   | Per-page OpenGraph image generation                                      |
-| `ogImage`      | string                   | Static OG image, used when `og.enabled` is off                           |
-| `banner`       | object                   | Announcement bar across the top                                          |
-| `footer`       | object                   | Footer note and links                                                    |
-| `social`       | array                    | Social links shown in the footer                                         |
-| `analytics`    | object                   | Plausible or Google Analytics scripts                                    |
-| `github`       | string                   | Repo URL, shown as the GitHub icon                                       |
-| `editLink`     | string                   | Base URL for the "Edit this page" link                                   |
-| `openapi`      | string, object, or array | Generate an API reference from an OpenAPI spec                            |
-| `basePath`     | string                   | Serve the whole site under a sub-path like `/docs`                       |
+| Field          | Type                     | What it does                                                      |
+| -------------- | ------------------------ | ----------------------------------------------------------------- |
+| `name`         | string                   | Site name, used in the page title and navbar. **Required**        |
+| `topNav`       | array                    | Top navbar links, used when no dropdowns are set. **Required**    |
+| `tagline`      | string                   | Short phrase shown beside the name in some layouts                |
+| `description`  | string                   | Site description for SEO and `llms.txt`                           |
+| `url`          | string                   | Canonical site URL; powers absolute links in sitemap, RSS, and OG |
+| `theme`        | string                   | A built-in [theme](/theming/themes) preset                        |
+| `brand`        | object                   | Accent and corner overrides on top of the theme                   |
+| `logo`         | object                   | Navbar logo with light and dark variants                          |
+| `favicon`      | string                   | Favicon path, like `/favicon.png`                                 |
+| `layout`       | string                   | `flat` (default) or `boxed`                                       |
+| `sidebar`      | object                   | Sidebar look and default open state                               |
+| `sidebarLinks` | array                    | Links pinned to the bottom of the sidebar                         |
+| `dropdowns`    | array                    | Navbar areas that swap the whole sidebar                          |
+| `versions`     | array                    | Entries for the navbar version switcher                           |
+| `og`           | object                   | Per-page OpenGraph image generation                               |
+| `ogImage`      | string                   | Static OG image, used when `og.enabled` is off                    |
+| `banner`       | object                   | Announcement bar across the top                                   |
+| `footer`       | object                   | Footer note and links                                             |
+| `social`       | array                    | Social links shown in the footer                                  |
+| `analytics`    | object                   | Plausible or Google Analytics scripts                             |
+| `github`       | string                   | Repo URL, shown as the GitHub icon                                |
+| `editLink`     | string                   | Base URL for the "Edit this page" link                            |
+| `openapi`      | string, object, or array | Generate an API reference from an OpenAPI spec                    |
+| `basePath`     | string                   | Serve the whole site under a sub-path like `/docs`                |
 
 ## Identity and SEO
 
@@ -156,12 +156,12 @@ Overrides layered on top of the chosen `theme`. Set your own accent color and
 corner radius without leaving the preset for everything else. Colors take any
 CSS color value; `radius` takes a length such as `0.5rem`.
 
-| Sub-field         | Type   | What it does                                            |
-| ----------------- | ------ | ------------------------------------------------------- |
-| `accent`          | string | Primary accent color in light mode                      |
-| `accentDark`      | string | Accent color in dark mode, if it should differ          |
-| `accentContrast`  | string | Text color placed on top of the accent                  |
-| `radius`          | string | Corner radius for buttons, cards, and inputs            |
+| Sub-field        | Type   | What it does                                   |
+| ---------------- | ------ | ---------------------------------------------- |
+| `accent`         | string | Primary accent color in light mode             |
+| `accentDark`     | string | Accent color in dark mode, if it should differ |
+| `accentContrast` | string | Text color placed on top of the accent         |
+| `radius`         | string | Corner radius for buttons, cards, and inputs   |
 
 ```json
 {
@@ -181,12 +181,12 @@ The navbar logo. Provide separate `light` and `dark` files so the right one
 shows in each color scheme. Local SVGs are inlined so they pick up the current
 text color. Without a logo, the `name` renders as text instead.
 
-| Sub-field | Type   | What it does                                              |
-| --------- | ------ | -------------------------------------------------------- |
-| `light`   | string | Logo shown in light mode                                  |
-| `dark`    | string | Logo shown in dark mode                                   |
-| `alt`     | string | Alt text for the image                                    |
-| `href`    | string | Where the logo links to. Defaults to the site root        |
+| Sub-field | Type   | What it does                                       |
+| --------- | ------ | -------------------------------------------------- |
+| `light`   | string | Logo shown in light mode                           |
+| `dark`    | string | Logo shown in dark mode                            |
+| `alt`     | string | Alt text for the image                             |
+| `href`    | string | Where the logo links to. Defaults to the site root |
 
 ```json
 {
@@ -225,10 +225,10 @@ See [Layouts](/configuration/layouts) for the difference in detail.
 
 How the sidebar looks and whether its groups start expanded.
 
-| Sub-field     | Type    | What it does                                                            |
-| ------------- | ------- | ---------------------------------------------------------------------- |
-| `variant`     | string  | `flush` (default), `card`, or `floating`                                |
-| `defaultOpen` | boolean | Expand every collapsible group by default                               |
+| Sub-field     | Type    | What it does                              |
+| ------------- | ------- | ----------------------------------------- |
+| `variant`     | string  | `flush` (default), `card`, or `floating`  |
+| `defaultOpen` | boolean | Expand every collapsible group by default |
 
 The variants: `flush` is a tinted panel against the edge with a divider; `card`
 is a bordered, rounded panel inset from the edges; `floating` is a detached,
@@ -261,13 +261,13 @@ support or changelog link. Each entry is a `title` and an `href`.
 row of links. When you set `dropdowns`, those take over the navbar and `topNav`
 is the fallback. Each link:
 
-| Sub-field  | Type    | What it does                                                  |
-| ---------- | ------- | ------------------------------------------------------------ |
-| `title`    | string  | The link text                                                |
-| `href`     | string  | Where it goes                                                |
-| `icon`     | string  | Optional [Lucide](https://lucide.dev) icon name              |
+| Sub-field  | Type    | What it does                                                      |
+| ---------- | ------- | ----------------------------------------------------------------- |
+| `title`    | string  | The link text                                                     |
+| `href`     | string  | Where it goes                                                     |
+| `icon`     | string  | Optional [Lucide](https://lucide.dev) icon name                   |
 | `match`    | string  | Path prefix that marks the link active, if it differs from `href` |
-| `external` | boolean | Force the link to open in a new tab                          |
+| `external` | boolean | Force the link to open in a new tab                               |
 
 ```json
 {
@@ -284,13 +284,13 @@ Top-level areas that each swap the entire sidebar when you enter them, with an
 optional row of tabs underneath the navbar. Use these when the site has distinct
 sections such as Guides, API, and SDK that should not share one sidebar.
 
-| Sub-field | Type   | What it does                                                  |
-| --------- | ------ | ------------------------------------------------------------ |
-| `label`   | string | The dropdown label in the navbar                             |
-| `icon`    | string | Optional icon next to the label                              |
-| `href`    | string | Landing path for the area                                    |
-| `match`   | string | Path prefix that marks this area active                      |
-| `tabs`    | array  | Optional sub-tabs, each a `topNav`-style link                |
+| Sub-field | Type   | What it does                                  |
+| --------- | ------ | --------------------------------------------- |
+| `label`   | string | The dropdown label in the navbar              |
+| `icon`    | string | Optional icon next to the label               |
+| `href`    | string | Landing path for the area                     |
+| `match`   | string | Path prefix that marks this area active       |
+| `tabs`    | array  | Optional sub-tabs, each a `topNav`-style link |
 
 ```json
 {
@@ -330,14 +330,14 @@ Per-page OpenGraph image generation. When enabled, every page gets its own
 social card rendered at build time, using the page title and the colors below.
 The colors default to your theme, so most sites only need `enabled`.
 
-| Sub-field    | Type    | What it does                                              |
-| ------------ | ------- | -------------------------------------------------------- |
-| `enabled`    | boolean | Turn per-page image generation on                        |
-| `background` | string  | Card background color                                    |
-| `foreground` | string  | Title text color                                         |
-| `muted`      | string  | Secondary text color                                     |
-| `accent`     | string  | Accent used for detail in the card                       |
-| `logo`       | string  | Logo in the card. Defaults to the dark site logo         |
+| Sub-field    | Type    | What it does                                     |
+| ------------ | ------- | ------------------------------------------------ |
+| `enabled`    | boolean | Turn per-page image generation on                |
+| `background` | string  | Card background color                            |
+| `foreground` | string  | Title text color                                 |
+| `muted`      | string  | Secondary text color                             |
+| `accent`     | string  | Accent used for detail in the card               |
+| `logo`       | string  | Logo in the card. Defaults to the dark site logo |
 
 ```json
 {
@@ -366,12 +366,12 @@ generated per-page images. It is used whenever `og.enabled` is off.
 A dismissible announcement bar across the top of every page. Use it for a
 release or a notice.
 
-| Sub-field     | Type    | What it does                                                       |
-| ------------- | ------- | ----------------------------------------------------------------- |
-| `text`        | string  | The message. **Required** when `banner` is set                    |
-| `href`        | string  | Makes the banner a link                                           |
-| `id`          | string  | A stable id; bump it to re-show a banner readers dismissed        |
-| `dismissible` | boolean | Let readers close the banner                                      |
+| Sub-field     | Type    | What it does                                               |
+| ------------- | ------- | ---------------------------------------------------------- |
+| `text`        | string  | The message. **Required** when `banner` is set             |
+| `href`        | string  | Makes the banner a link                                    |
+| `id`          | string  | A stable id; bump it to re-show a banner readers dismissed |
+| `dismissible` | boolean | Let readers close the banner                               |
 
 ```json
 {
@@ -388,10 +388,10 @@ release or a notice.
 
 The site footer. A short note and a list of links.
 
-| Sub-field | Type   | What it does                                          |
-| --------- | ------ | ---------------------------------------------------- |
-| `note`    | string | A line of text, such as a copyright                  |
-| `links`   | array  | Footer links, each a `title` and an `href`           |
+| Sub-field | Type   | What it does                               |
+| --------- | ------ | ------------------------------------------ |
+| `note`    | string | A line of text, such as a copyright        |
+| `links`   | array  | Footer links, each a `title` and an `href` |
 
 ```json
 {
@@ -422,10 +422,10 @@ screen readers.
 Drop-in analytics scripts injected on every page. Set the field for the provider
 you use.
 
-| Sub-field         | Type   | What it does                                          |
-| ----------------- | ------ | ---------------------------------------------------- |
-| `plausible`       | string | Your Plausible domain, such as `axerity.com`         |
-| `googleAnalytics` | string | A Google Analytics measurement id, such as `G-XXXX`  |
+| Sub-field         | Type   | What it does                                        |
+| ----------------- | ------ | --------------------------------------------------- |
+| `plausible`       | string | Your Plausible domain, such as `axerity.com`        |
+| `googleAnalytics` | string | A Google Analytics measurement id, such as `G-XXXX` |
 
 ```json
 { "analytics": { "plausible": "axerity.com" } }
@@ -458,17 +458,15 @@ the content folder.
 Generate a full API reference from one or more OpenAPI 3 specs. The value can be
 a single spec path, one config object, or an array of them.
 
-| Sub-field | Type   | What it does                                                         |
-| --------- | ------ | ------------------------------------------------------------------- |
-| `spec`    | string | Local path or http(s) URL to the spec (JSON or YAML). **Required**  |
-| `output`  | string | Content folder for this reference. Default `api-reference`           |
-| `title`   | string | Section title. Defaults to the spec's `info.title`                   |
+| Sub-field | Type   | What it does                                                       |
+| --------- | ------ | ------------------------------------------------------------------ |
+| `spec`    | string | Local path or http(s) URL to the spec (JSON or YAML). **Required** |
+| `output`  | string | Content folder for this reference. Default `api-reference`         |
+| `title`   | string | Section title. Defaults to the spec's `info.title`                 |
 
 ```json
 {
-	"openapi": [
-		{ "spec": "./openapi.json", "output": "api", "title": "API" }
-	]
+	"openapi": [{ "spec": "./openapi.json", "output": "api", "title": "API" }]
 }
 ```
 
