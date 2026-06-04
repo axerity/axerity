@@ -7,6 +7,7 @@ export const registry: Record<string, Component> = {
 	Columns: kit.Columns,
 	Kbd: kit.Kbd,
 	Update: kit.Update,
+	Changelog: kit.Changelog,
 	Roadmap: kit.Roadmap,
 	RoadmapItem: kit.RoadmapItem,
 	Card: kit.Card,

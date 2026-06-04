@@ -11,6 +11,7 @@ export { default as Callout } from './components/kit/Callout.svelte';
 export { default as Columns } from './components/kit/Columns.svelte';
 export { default as Kbd } from './components/kit/Kbd.svelte';
 export { default as Update } from './components/kit/Update.svelte';
+export { default as Changelog } from './components/kit/Changelog.svelte';
 export { default as Roadmap } from './components/kit/Roadmap.svelte';
 export { default as RoadmapItem } from './components/kit/RoadmapItem.svelte';
 export { default as Card } from './components/kit/Card.svelte';

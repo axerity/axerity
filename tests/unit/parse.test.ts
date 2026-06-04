@@ -36,6 +36,17 @@ describe('parseMarkdown', () => {
 		]);
 	});
 
+	it('lifts an Update label into the toc and keeps its inner headings out', async () => {
+		const md =
+			'# Changelog\n\n<Update label="v1.0" tags={["Release"]}>\n\n## Features\n\n- a\n\n</Update>';
+		const { toc, doc } = await parseMarkdown(md);
+		expect(toc.some((t) => t.title === 'Features')).toBe(false);
+		const entry = toc.find((t) => t.title === 'v1.0');
+		expect(entry).toBeTruthy();
+		const update = find(doc, (n) => n.type === 'component' && n.name === 'Update');
+		if (update?.type === 'component') expect(update.props.anchor).toBe(entry?.id);
+	});
+
 	it('resolves a capitalized tag to a component node with parsed props', async () => {
 		const { doc } = await parseMarkdown(
 			'<Callout type="info" cols={2} open path={\'/x\'}>\n\nbody\n\n</Callout>'

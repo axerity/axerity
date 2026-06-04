@@ -127,6 +127,7 @@ interface TransformContext {
 	slugger: GithubSlugger;
 	toc: TocEntry[];
 	basePath: string;
+	suppressToc: number;
 }
 
 const HEADINGS = new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
@@ -146,7 +147,7 @@ function transform(nodes: DocNode[], ctx: TransformContext): DocNode[] {
 			if (HEADINGS.has(next.tag)) {
 				if (typeof next.props.id !== 'string') next.props.id = ctx.slugger.slug(textOf(next));
 				const depth = Number(next.tag.slice(1));
-				if (depth === 2 || depth === 3) {
+				if (!ctx.suppressToc && (depth === 2 || depth === 3)) {
 					ctx.toc.push({ id: next.props.id as string, title: textOf(next), depth });
 				}
 			}
@@ -168,7 +169,19 @@ function transform(nodes: DocNode[], ctx: TransformContext): DocNode[] {
 			}
 			return next;
 		}
-		if (node.type === 'component') return { ...node, children: transform(node.children, ctx) };
+		if (node.type === 'component') {
+			if (node.name === 'Update') {
+				const label = typeof node.props.label === 'string' ? node.props.label : '';
+				const anchor = label ? ctx.slugger.slug(label) : '';
+				if (anchor) ctx.toc.push({ id: anchor, title: label, depth: 2 });
+				return {
+					...node,
+					props: { ...node.props, anchor },
+					children: transform(node.children, { ...ctx, suppressToc: ctx.suppressToc + 1 })
+				};
+			}
+			return { ...node, children: transform(node.children, ctx) };
+		}
 		return node;
 	});
 }
@@ -244,7 +257,7 @@ export async function parseMarkdown(markdown: string, basePath = ''): Promise<Co
 	await highlightAll(tree);
 
 	const doc = childrenToDoc(children);
-	const ctx: TransformContext = { slugger: new GithubSlugger(), toc: [], basePath };
+	const ctx: TransformContext = { slugger: new GithubSlugger(), toc: [], basePath, suppressToc: 0 };
 	const transformed = transform(doc, ctx);
 
 	return { frontmatter, toc: ctx.toc, doc: transformed, raw: cleanRaw(markdown) };
