@@ -1,6 +1,6 @@
 {
 	"name": "@axerity/cli",
-	"version": "0.2.6",
+	"version": "0.3.0",
 	"description": "A documentation site generator built with Svelte.",
 	"type": "module",
 	"license": "MIT",
