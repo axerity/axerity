@@ -2,12 +2,51 @@
 import { describe, expect, it } from 'vitest';
 import { render } from '@testing-library/svelte';
 import Markdown from '$lib/markdown/Markdown.svelte';
+import NavDoc from './NavDoc.svelte';
 import type { DocNode } from '$lib/markdown/types';
 
 const code = (text: string): DocNode => ({
 	type: 'raw',
 	html: `<pre class="shiki"><code>${text}</code></pre>`
 });
+const h2 = (text: string): DocNode => ({
+	type: 'element',
+	tag: 'h2',
+	props: {},
+	children: [{ type: 'text', value: text }]
+});
+const endpoint = (path: string): DocNode => ({
+	type: 'component',
+	name: 'Endpoint',
+	props: { method: 'GET', path },
+	children: []
+});
+const req = (body: string): DocNode => ({
+	type: 'component',
+	name: 'RequestExample',
+	props: { title: 'cURL' },
+	children: [code(body)]
+});
+const resp = (title: string, body: string): DocNode => ({
+	type: 'component',
+	name: 'ResponseExample',
+	props: { title },
+	children: [code(body)]
+});
+const apiBlock = (children: DocNode[]): DocNode[] => [
+	{ type: 'component', name: 'Api', props: {}, children }
+];
+
+const getPage = apiBlock([endpoint('/a'), h2('Response 200'), req('REQ-A'), resp('200', 'RESP-A')]);
+const postPage = apiBlock([
+	endpoint('/b'),
+	h2('Body parameters'),
+	h2('Response 201'),
+	req('REQ-B'),
+	resp('201', 'RESP-B-201'),
+	h2('Response 400'),
+	resp('400', 'RESP-B-400')
+]);
 
 const apiTree: DocNode[] = [
 	{
@@ -63,6 +102,21 @@ describe('Api context collection', () => {
 	it('tears down without crashing (the null-safe reactive filter)', () => {
 		const { unmount } = render(Markdown, { props: { nodes: apiTree } });
 		expect(() => unmount()).not.toThrow();
+	});
+
+	it('rebuilds the request and response rail when navigating between endpoints', async () => {
+		const { container, rerender } = render(NavDoc, {
+			props: { path: '/api/get', nodes: getPage }
+		});
+		expect(container.textContent).toContain('REQ-A');
+		expect(container.textContent).toContain('RESP-A');
+
+		await rerender({ path: '/api/post', nodes: postPage });
+		const text = container.textContent ?? '';
+		expect(text).toContain('REQ-B');
+		expect(text).toContain('RESP-B-201');
+		expect(text).not.toContain('REQ-A');
+		expect(text).not.toContain('RESP-A');
 	});
 });
 

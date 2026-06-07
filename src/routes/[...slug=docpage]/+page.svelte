@@ -64,5 +64,7 @@
 	updated={fm.updated}
 	resolveVersion={(pathname, versionPath) => pathInVersion(site, pathname, versionPath)}
 >
-	<Markdown nodes={data.doc} />
+	{#key page.url.pathname}
+		<Markdown nodes={data.doc} />
+	{/key}
 </DocsLayout>
