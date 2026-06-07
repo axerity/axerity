@@ -5,6 +5,7 @@
 
 	let {
 		label,
+		title,
 		description,
 		date,
 		tags = [],
@@ -12,6 +13,7 @@
 		children
 	}: {
 		label: string;
+		title?: string;
 		description?: string;
 		date?: string;
 		tags?: string[];
@@ -51,6 +53,9 @@
 			{/if}
 		</div>
 		<div class="update-body">
+			{#if title}
+				<a class="update-title" href={anchor ? `#${anchor}` : undefined}>{title}</a>
+			{/if}
 			{@render children?.()}
 		</div>
 	</div>
@@ -110,6 +115,19 @@
 		border-left: 1px solid var(--border);
 		padding-left: 2rem;
 		padding-bottom: 3rem;
+	}
+	.update-title {
+		display: block;
+		margin-bottom: 1.25rem;
+		font-size: 1.375rem;
+		font-weight: 600;
+		line-height: 1.3;
+		color: var(--fg);
+		text-decoration: none;
+		scroll-margin-top: 6rem;
+	}
+	.update-title:hover {
+		color: var(--accent);
 	}
 	.update-body::before {
 		content: '';

@@ -57,13 +57,14 @@ export const GET: RequestHandler = async () => {
 			for (const node of updates) {
 				if (node.type !== 'component') continue;
 				const label = typeof node.props.label === 'string' ? node.props.label : '';
+				const title = typeof node.props.title === 'string' ? node.props.title : '';
 				const description =
 					typeof node.props.description === 'string' ? node.props.description : '';
 				const dateProp = typeof node.props.date === 'string' ? node.props.date : '';
 				const anchor = typeof node.props.anchor === 'string' ? node.props.anchor : '';
 				const parsed = new Date(dateProp || label).getTime();
 				items.push({
-					title: label || entry.fm.title || entry.slug,
+					title: title || label || entry.fm.title || entry.slug,
 					link: anchor ? `${link}#${anchor}` : link,
 					description: description || textOf(node.children).trim(),
 					time: Number.isNaN(parsed) ? pageTime : parsed

@@ -15,14 +15,16 @@ Use the `Update` component to display changelog entries, version updates, and
 release notes with consistent formatting. Each entry has a label rail on the
 left and its content on the right. Stack several to build a changelog.
 
-Headings inside an entry stay out of the page outline, so the table of contents
-lists the updates themselves rather than the headings within them.
+Give an entry a `title` and it becomes the heading at the top of the entry and
+the one line that entry contributes to the table of contents. Headings inside an
+entry stay out of the page outline, so the contents list the updates themselves
+rather than every heading within them.
 
 ## Example
 
 <Changelog>
 
-<Update label="2026-06-01" description="v1.1.0" tags={["Feature"]}>
+<Update label="2026-06-01" title="Plan changes, proration & analytics" description="v1.1.0" tags={["Feature"]}>
 
 You can add anything here, like a screenshot, a code snippet, or a list of
 changes. <Badge color="success">new</Badge>
@@ -35,13 +37,13 @@ changes. <Badge color="success">new</Badge>
 
 </Update>
 
-<Update label="2026-05-20" description="v1.0.1" tags={["Fix"]}>
+<Update label="2026-05-20" title="Narrow-screen rendering fix" description="v1.0.1" tags={["Fix"]}>
 
 Patched a rendering bug on narrow screens.
 
 </Update>
 
-<Update label="2026-05-01" description="v1.0.0" tags={["Release"]}>
+<Update label="2026-05-01" title="First stable release" description="v1.0.0" tags={["Release"]}>
 
 The first stable release.
 
@@ -56,10 +58,18 @@ The first stable release.
 	import { Update } from '$lib';
 </script>
 
-<Update label="2026-06-01" description="v1.1.0" tags={['Feature']}>
-	This is an update with a label, description, and tag.
+<Update
+	label="2026-06-01"
+	title="Plan changes, proration & analytics"
+	description="v1.1.0"
+	tags={['Feature']}
+>
+	This is an update with a label, title, description, and tag.
 </Update>
 ```
+
+The `title` is what the table of contents shows for this entry. Leave it off and
+the contents fall back to the `label`.
 
 Add a `date` to the page frontmatter and each update becomes its own entry in
 the RSS feed, linked to its anchor.
@@ -89,10 +99,11 @@ no filter bar appears.
 | Prop          | Type       | Description                                                |
 | ------------- | ---------- | ---------------------------------------------------------- |
 | `label`       | `string`   | The label on the rail, usually a date or version. Required |
+| `title`       | `string`   | A heading at the top of the entry, and its line in the toc |
 | `description` | `string`   | A secondary line under the label, such as a version        |
 | `date`        | `string`   | An optional date shown under the label                     |
 | `tags`        | `string[]` | Short pills shown under the label, and the filter values   |
 
-The `label` is also the entry's anchor, so the table of contents and the RSS
-feed link straight to it. `Changelog` takes no props; it reads the tags from the
-updates inside it.
+The entry's anchor comes from its `title`, or the `label` when there is no
+title, so the table of contents and the RSS feed link straight to it.
+`Changelog` takes no props; it reads the tags from the updates inside it.

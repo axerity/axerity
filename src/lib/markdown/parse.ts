@@ -172,8 +172,10 @@ function transform(nodes: DocNode[], ctx: TransformContext): DocNode[] {
 		if (node.type === 'component') {
 			if (node.name === 'Update') {
 				const label = typeof node.props.label === 'string' ? node.props.label : '';
-				const anchor = label ? ctx.slugger.slug(label) : '';
-				if (anchor) ctx.toc.push({ id: anchor, title: label, depth: 2 });
+				const title = typeof node.props.title === 'string' ? node.props.title : '';
+				const heading = title || label;
+				const anchor = heading ? ctx.slugger.slug(heading) : '';
+				if (anchor) ctx.toc.push({ id: anchor, title: heading, depth: 2 });
 				return {
 					...node,
 					props: { ...node.props, anchor },

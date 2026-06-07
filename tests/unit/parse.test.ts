@@ -47,6 +47,18 @@ describe('parseMarkdown', () => {
 		if (update?.type === 'component') expect(update.props.anchor).toBe(entry?.id);
 	});
 
+	it('uses an Update title for the toc entry when one is given, not the label', async () => {
+		const md =
+			'# Changelog\n\n<Update label="2026-06-07" title="Plan changes" tags={["Feature"]}>\n\n## Features\n\n- a\n\n</Update>';
+		const { toc, doc } = await parseMarkdown(md);
+		expect(toc.some((t) => t.title === 'Features')).toBe(false);
+		expect(toc.some((t) => t.title === '2026-06-07')).toBe(false);
+		const entry = toc.find((t) => t.title === 'Plan changes');
+		expect(entry).toBeTruthy();
+		const update = find(doc, (n) => n.type === 'component' && n.name === 'Update');
+		if (update?.type === 'component') expect(update.props.anchor).toBe(entry?.id);
+	});
+
 	it('resolves a capitalized tag to a component node with parsed props', async () => {
 		const { doc } = await parseMarkdown(
 			'<Callout type="info" cols={2} open path={\'/x\'}>\n\nbody\n\n</Callout>'
