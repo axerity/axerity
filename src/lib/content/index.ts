@@ -20,5 +20,5 @@ export function pathInVersion(site: SiteConfig, pathname: string, versionPath: s
 		versionPaths[0] ??
 		'';
 	const rest = stripBase(pathname).slice(current.length);
-	return base + `${versionPath}${rest}`;
+	return base + (versionPath === '/' ? rest || '/' : `${versionPath}${rest}`);
 }

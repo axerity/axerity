@@ -25,4 +25,14 @@ describe('versioning', () => {
 		expect(pathInVersion(site, '/v1/guide/setup', '/v2')).toBe('/v2/guide/setup');
 		expect(pathInVersion(site, '/v2/api', '/v1')).toBe('/v1/api');
 	});
+
+	it('maps a root version path without a leading double slash', () => {
+		const rootSite = {
+			name: 'X',
+			topNav: [],
+			versions: [{ label: 'current', href: '/' }]
+		} as unknown as SiteConfig;
+		expect(pathInVersion(rootSite, '/getting-started', '/')).toBe('/getting-started');
+		expect(pathInVersion(rootSite, '/', '/')).toBe('/');
+	});
 });
