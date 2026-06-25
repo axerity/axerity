@@ -3,6 +3,8 @@
 	import '@fontsource-variable/geist-mono/index.css';
 	import '@shikijs/twoslash/style-rich.css';
 	import './layout.css';
+	import geistLatin from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+	import geistMonoLatin from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 	import { base } from '$app/paths';
 	import Analytics from '$lib/components/docs/Analytics.svelte';
 
@@ -22,6 +24,8 @@
 </script>
 
 <svelte:head>
+	<link rel="preload" as="font" type="font/woff2" href={geistLatin} crossorigin="anonymous" />
+	<link rel="preload" as="font" type="font/woff2" href={geistMonoLatin} crossorigin="anonymous" />
 	<link rel="icon" href={favicon} type={faviconType} />
 	{#if site.url}
 		<link

@@ -2,7 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { afterNavigate } from '$app/navigation';
-	import type { NavLink, NavSection, SiteConfig } from '$lib/types';
+	import type { NavLink, NavSection, SiteConfig, TocEntry } from '$lib/types';
 	import Banner from './Banner.svelte';
 	import Mermaid from './Mermaid.svelte';
 	import Navbar from './Navbar.svelte';
@@ -20,6 +20,7 @@
 		site,
 		sidebar,
 		flatPages = [],
+		toc = [],
 		wide = false,
 		editUrl,
 		updated,
@@ -29,6 +30,7 @@
 		site: SiteConfig;
 		sidebar: NavSection[];
 		flatPages?: NavLink[];
+		toc?: TocEntry[];
 		wide?: boolean;
 		editUrl?: string;
 		updated?: string;
@@ -163,7 +165,7 @@
 			<aside
 				class="sticky top-(--spacing-header) hidden h-[calc(100vh-var(--spacing-header))] w-toc shrink-0 overflow-y-auto py-8 pl-4 xl:block"
 			>
-				<TableOfContents />
+				<TableOfContents {toc} />
 			</aside>
 		{/if}
 	</div>

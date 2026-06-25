@@ -59,6 +59,7 @@
 	{site}
 	sidebar={data.nav.sidebar}
 	flatPages={data.nav.flatPages}
+	toc={data.toc}
 	{wide}
 	{editUrl}
 	updated={fm.updated}

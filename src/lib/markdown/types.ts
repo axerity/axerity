@@ -11,7 +11,7 @@ export type JsonValue =
 export interface TocEntry {
 	id: string;
 	title: string;
-	depth: number;
+	depth: 2 | 3;
 }
 
 export interface ElementNode {
