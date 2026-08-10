@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join } from 'node:path';
+import { brand, dim, lanAddress } from './ui.js';
 
 const OUT = process.env.AXERITY_OUT ?? 'build';
 const PORT = Number(process.env.PORT ?? 4173);
@@ -39,4 +40,10 @@ createServer((req, res) => {
 	}
 	res.setHeader('content-type', TYPES[extname(file)] ?? 'application/octet-stream');
 	res.end(readFileSync(file));
-}).listen(PORT, () => console.log(`axerity preview → http://localhost:${PORT}`));
+}).listen(PORT, () => {
+	const lan = lanAddress();
+	const pad = (s) => dim(s.padEnd(9));
+	process.stdout.write(`  ${pad('Local')} ${brand(`http://localhost:${PORT}`)}\n`);
+	if (lan) process.stdout.write(`  ${pad('Network')} ${brand(`http://${lan}:${PORT}`)}\n`);
+	process.stdout.write('\n');
+});

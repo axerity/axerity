@@ -3,6 +3,7 @@ import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
+import { banner, bold, brand, dim } from '../runtime/ui.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const engineRoot = resolve(here, '..');
@@ -11,15 +12,6 @@ const isEngineRepo = userRoot === engineRoot;
 
 const DIST = join(engineRoot, 'dist');
 const ASSETS = join(DIST, 'client');
-
-const tty = process.stdout.isTTY;
-const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
-const dim = paint('2');
-const bold = paint('1');
-const green = paint('32');
-const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
-const banner = (sub) =>
-	process.stdout.write(`\n  ${brand('◆')} ${bold('axerity')} ${dim(sub)}\n\n`);
 
 function findContentDir() {
 	for (const candidate of ['docs', join('content', 'docs'), 'content']) {
@@ -123,7 +115,7 @@ async function dev() {
 	banner('dev');
 	const ctx = context();
 	await generateOpenapi(ctx);
-	runScript('serve.js', env(ctx, { AXERITY_DEV: '1' }));
+	runScript('serve.js', env(ctx, { AXERITY_DEV: '1', AXERITY_START: String(Date.now()) }));
 }
 
 async function build() {
@@ -131,9 +123,7 @@ async function build() {
 	banner('build');
 	const ctx = context();
 	await generateOpenapi(ctx);
-	runScript('crawl.js', env(ctx, { AXERITY_OUT: join(userRoot, 'build') }), (code) => {
-		if (code === 0) process.stdout.write(`  ${green('✓')} built ${dim('→')} ./build\n\n`);
-	});
+	runScript('crawl.js', env(ctx, { AXERITY_OUT: join(userRoot, 'build'), AXERITY_OUT_DISPLAY: './build' }));
 }
 
 function preview() {
@@ -180,23 +170,32 @@ function init() {
 	}
 
 	const where = relative(userRoot, target) || '.';
-	console.log(`Created an Axerity site in ${where}.\n`);
-	console.log('Next:');
-	if (where !== '.') console.log(`  cd ${where}`);
-	console.log('  axerity dev');
+	process.stdout.write(
+		`\n  ${brand('◆')} ${bold('axerity')} ${dim(`created a new site in ${where}`)}\n\n`
+	);
+	process.stdout.write(`  ${dim('Next steps')}\n`);
+	if (where !== '.') process.stdout.write(`    ${dim('cd')} ${where}\n`);
+	process.stdout.write(`    ${brand('axerity dev')}\n\n`);
 }
 
 const pkgVersion = () => JSON.parse(readFileSync(join(engineRoot, 'package.json'), 'utf8')).version;
 
 function help() {
-	console.log(`Axerity ${pkgVersion()} — a documentation site generator\n`);
-	console.log('Usage: axerity <command>\n');
-	console.log('Commands:');
-	console.log('  init [dir]   Scaffold a new docs site');
-	console.log('  dev          Start the dev server');
-	console.log('  build        Build the static site');
-	console.log('  preview      Preview the production build');
-	console.log('\nWrite Markdown in docs/ and configure the site in axerity.json.');
+	const pad = (s) => s.padEnd(12);
+	const commands = [
+		['init [dir]', 'Scaffold a new docs site'],
+		['dev', 'Start the dev server'],
+		['build', 'Build the static site'],
+		['preview', 'Preview the production build']
+	];
+	process.stdout.write(`\n  ${brand('◆')} ${bold('axerity')} ${dim(pkgVersion())}\n`);
+	process.stdout.write(`  ${dim('a documentation site generator')}\n\n`);
+	process.stdout.write(`  ${dim('Usage')}  axerity <command>\n\n`);
+	process.stdout.write(`  ${dim('Commands')}\n`);
+	for (const [name, desc] of commands) {
+		process.stdout.write(`    ${bold(pad(name))} ${dim(desc)}\n`);
+	}
+	process.stdout.write(`\n  ${dim('Write Markdown in')} docs/ ${dim('· configure')} axerity.json\n\n`);
 }
 
 const command = process.argv[2];

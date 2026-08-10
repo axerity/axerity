@@ -4,14 +4,13 @@ import { availableParallelism } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import { handler } from '../dist/handler.js';
 import { walkAssets } from './static.js';
+import { bold, brand, dim, dirSize, formatBytes, formatDuration, green, red, tty } from './ui.js';
 
 const OUT = process.env.AXERITY_OUT ?? 'build';
 const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
 const CONCURRENCY = Math.max(4, Math.min(16, availableParallelism()));
 
-const tty = process.stderr.isTTY;
-const red = (s) => (tty ? `\x1b[31m${s}\x1b[0m` : s);
-const dim = (s) => (tty ? `\x1b[2m${s}\x1b[0m` : s);
+const start = Date.now();
 
 const server = createServer((req, res) =>
 	handler(req, res, () => {
@@ -69,27 +68,36 @@ const manifest = await (await get('/__manifest')).json();
 const { base } = manifest;
 const relOf = (path) => path.slice(base.length).replace(/^\//, '');
 
+const total =
+	manifest.pages.length + manifest.md.length + manifest.og.length + manifest.fixed.length;
+let done = 0;
+const tick = () => {
+	done += 1;
+	if (tty) process.stdout.write(`\r\x1b[K  ${brand('◆')} ${dim('building')} ${dim(`· ${done}/${total}`)}`);
+};
+
 await pool(manifest.pages, async (path) => {
 	const rel = relOf(path);
 	const res = await fetchOk(path);
-	if (!res) return;
+	if (!res) return tick();
 	write(rel === '' ? 'index.html' : `${rel}.html`, await bytes(res));
 	const dataUrl = rel === '' ? `${base}/__data.json` : `${base}/${rel}/__data.json`;
 	const dataRes = await get(dataUrl);
 	if (dataRes.ok) write(rel === '' ? '__data.json' : `${rel}/__data.json`, await bytes(dataRes));
+	tick();
 });
 
 await pool([...manifest.md, ...manifest.og, ...manifest.fixed], async (path) => {
 	const res = await fetchOk(path);
 	if (res) write(relOf(path), await bytes(res));
+	tick();
 });
 
 write('404.html', await bytes(await get(`${base}/__axerity_not_found__`)));
 
 server.close();
 
-const total =
-	manifest.pages.length + manifest.md.length + manifest.og.length + manifest.fixed.length;
+if (tty) process.stdout.write('\r\x1b[K');
 
 if (failures.length) {
 	process.stderr.write(
@@ -102,4 +110,10 @@ if (failures.length) {
 	process.exit(1);
 }
 
-console.log(`crawled ${manifest.pages.length} pages to ./${OUT}`);
+const pages = manifest.pages.length;
+const size = formatBytes(dirSize(OUT));
+const elapsed = formatDuration(Date.now() - start);
+const display = process.env.AXERITY_OUT_DISPLAY ?? `./${OUT}`;
+process.stdout.write(
+	`  ${green('✓')} ${bold('built')} ${pages} ${pages === 1 ? 'page' : 'pages'} ${dim(`· ${size} in ${elapsed}`)} ${dim('→')} ${display}\n\n`
+);

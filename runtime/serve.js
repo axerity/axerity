@@ -4,17 +4,13 @@ import { basename, relative, resolve } from 'node:path';
 import chokidar from 'chokidar';
 import { handler } from '../dist/handler.js';
 import { mimeFor, resolveAsset } from './static.js';
+import { brand, dim, formatDuration, lanAddress, strip, tty } from './ui.js';
 
 const PORT = Number(process.env.PORT ?? 5173);
 const CONTENT_DIR = resolve(process.env.AXERITY_CONTENT_DIR ?? 'src/content/docs');
 const CONFIG = resolve(process.env.AXERITY_CONFIG ?? 'axerity.json');
 const STATIC_DIR = process.env.AXERITY_STATIC_DIR;
-
-const tty = process.stdout.isTTY;
-const paint = (code) => (s) => (tty ? `\x1b[${code}m${s}\x1b[0m` : s);
-const dim = paint('2');
-const brand = (s) => (tty ? `\x1b[38;2;124;108;246m${s}\x1b[0m` : s);
-const strip = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
+const START = Number(process.env.AXERITY_START) || Date.now();
 
 const clients = new Set();
 
@@ -72,7 +68,10 @@ chokidar.watch([CONTENT_DIR, CONFIG], { ignoreInitial: true }).on('all', (event,
 });
 
 server.listen(PORT, () => {
-	const url = `http://localhost:${PORT}`;
-	process.stdout.write(`  ${dim('ready at')}  ${brand(url)}\n`);
-	process.stdout.write(`  ${dim('watching for changes · Ctrl+C to stop')}\n\n`);
+	const lan = lanAddress();
+	const pad = (s) => dim(s.padEnd(9));
+	process.stdout.write(`  ${dim('ready in')} ${formatDuration(Date.now() - START)}\n\n`);
+	process.stdout.write(`  ${pad('Local')} ${brand(`http://localhost:${PORT}`)}\n`);
+	if (lan) process.stdout.write(`  ${pad('Network')} ${brand(`http://${lan}:${PORT}`)}\n`);
+	process.stdout.write(`\n  ${dim('watching for changes · Ctrl+C to stop')}\n\n`);
 });
